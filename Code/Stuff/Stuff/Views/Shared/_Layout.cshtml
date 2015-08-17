@@ -38,7 +38,7 @@
                             <li><a href='@Url.Action("Index", "Department")'>Оргструктура</a></li>
                             <li><a href='@Url.Action("Employees", "Department")'>Подразделения</a></li>
                             <li><a href='@Url.Action("List", "Employee")'>Сотрудники</a></li>
-                        </ul>
+                        </ul> 
                     </li>
                     @if (userCanEdit)
                     {
@@ -53,6 +53,13 @@
                         </li>
                     }
                     @*<li>@Html.ActionLink("Новый запрос", "Request", "Home")</li>*@
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li>
+                        <p class="navbar-btn">
+                            <a href="https://www.google.ru/" class="btn btn-default">Google</a>
+                        </p>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="navbar-text">Вы вошли как <strong>@ViewBag.CurUser.ShortName</strong></li>
