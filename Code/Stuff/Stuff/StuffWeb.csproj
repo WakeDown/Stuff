@@ -400,6 +400,8 @@
     <Content Include="Views\Document\StatementRest.cshtml" />
     <Content Include="Views\Budget\Index.cshtml" />
     <Content Include="Views\Report\ItBudgetView.cshtml" />
+    <Content Include="Views\Budget\New.cshtml" />
+    <Content Include="Views\Budget\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -1,0 +1,43 @@
+﻿using System.Web.UI.WebControls
+@using Stuff.Models
+@using Stuff.Objects
+@model Stuff.Models.Budget
+
+@{
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Новый бюджет
+}
+
+@section PanelBody
+{
+    @using (Html.BeginForm("Edit", "Budget", FormMethod.Post, new { @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+    {
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="parent">Головной бюджет</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.IdParent, Budget.GetSelectionList(), "--отсутствует--", new { @class = "form-control", @id = "parent" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label" for="name">Название</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control required-mark", @id = "name", required = "required", data_error = "Заполните Название" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-3 col-lg-5">
+                @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;добавить</button>
+                <p class="text-danger">
+                    @ViewData["ServerError"]
+                </p>
+            </div>
+        </div>
+    }
+}

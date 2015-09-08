@@ -14,6 +14,8 @@ namespace Stuff.Models
         public string Name { get; set; }
         public string Descr { get; set; }
         public int? EmpCount { get; set; }
+        public int? IdParent { get; set; }
+        public Budget Parent { get; set; }
 
         public Budget() { }
 
@@ -30,6 +32,7 @@ namespace Stuff.Models
             Id = model.Id;
             Name = model.Name;
             Descr = model.Descr;
+            IdParent = model.IdParent;
         }
 
         public static SelectList GetSelectionList()
