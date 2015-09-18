@@ -20,7 +20,7 @@ namespace StuffDelivery
     class Program
     {
         private static MailAddress defaultMailFrom = new MailAddress("UN1T@un1t.group");
-        private static readonly string stuffWebLeftPartUrl = "http://portal.unitgroup.ru";
+        private static readonly string stuffUrl = ConfigurationManager.AppSettings["stuffUrl"];
 
         static void Main(string[] args)
         {
@@ -37,7 +37,7 @@ namespace StuffDelivery
         public static void SendItBudget()
         {
             HtmlToPdf converter = new HtmlToPdf();
-            string url = String.Format("{0}/Report/ItBudgetView", stuffWebLeftPartUrl);
+            string url = String.Format("{0}/Report/ItBudgetView", stuffUrl);
             PdfDocument doc = converter.ConvertUrl(url);
             MemoryStream stream = new MemoryStream();
             doc.Save(stream);
@@ -127,7 +127,7 @@ namespace StuffDelivery
                 //mailBody.AppendLine("\r\n");
                 mailBody.AppendLine(String.Format("<p>У нас новые сотрудники:</p>"));
                 //mailBody.AppendLine("\r\n");
-                string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+                //string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
                 //birthdays = birthdays.OrderBy(e => e.BirthDate.HasValue ? e.BirthDate.Value : new DateTime()).ToArray();
                 mailBody.AppendLine("<table style='font-family: Calibri'>");
                 foreach (Employee emp in newbie)
@@ -135,7 +135,7 @@ namespace StuffDelivery
                     mailBody.AppendLine(
                         String.Format(
                             "<tr><td><p><a href='{1}/Employee/Index/{2}'>{0}</a>&nbsp;&nbsp;</p></td><td>{3}</td><tr>",
-                            emp.FullName, stuffUri, emp.Id, emp.Position.Name));
+                            emp.FullName, stuffUrl, emp.Id, emp.Position.Name));
                 }
                 mailBody.AppendLine("</table>");
 
@@ -165,13 +165,13 @@ namespace StuffDelivery
                 string monthName = TranslitDate.GetMonthNamePredl(DateTime.Now.AddMonths(1).Month);
                 mailBody.AppendLine(String.Format("<p>В {0} месяце свои дни рождения празднуют:</p>", monthName));
                 //mailBody.AppendLine("\r\n");
-                string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+                //string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
                 //birthdays = birthdays.OrderBy(e => e.BirthDate.HasValue ? e.BirthDate.Value : new DateTime()).ToArray();
                 mailBody.AppendLine("<table style='font-family: Calibri'>");
                 foreach (Employee emp in birthdays)
                 {
                     //mailBody.AppendLine(String.Format("<tr><td><p>{0}&nbsp;&nbsp;</p></td><td>{1:dd.MM}</td><tr>", emp.FullName, emp.BirthDate.HasValue ? emp.BirthDate.Value : new DateTime()));
-                    mailBody.AppendLine(String.Format("<tr><td><p><a href='{2}/Employee/Index/{3}'>{0}</a>&nbsp;&nbsp;</p></td><td>{1:dd.MM}</td><tr>", emp.FullName, emp.BirthDate.HasValue ? emp.BirthDate.Value : new DateTime(), stuffUri, emp.Id));
+                    mailBody.AppendLine(String.Format("<tr><td><p><a href='{2}/Employee/Index/{3}'>{0}</a>&nbsp;&nbsp;</p></td><td>{1:dd.MM}</td><tr>", emp.FullName, emp.BirthDate.HasValue ? emp.BirthDate.Value : new DateTime(), stuffUrl, emp.Id));
                 }
                 mailBody.AppendLine("</table>");
                 List<MailAddress> recipients = new List<MailAddress>();
@@ -203,12 +203,12 @@ namespace StuffDelivery
                 //mailBody.AppendLine("\r\n");
                 mailBody.AppendLine("<p>Уважаемые коллеги, сегодня день рождения у следующих сотрудников:</p>");
                 //mailBody.AppendLine("\r\n");
-                string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+                //string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
                 birthdays = birthdays.OrderBy(e => e.FullName).ToArray();
 
                 foreach (Employee emp in birthdays)
                 {
-                    mailBody.AppendLine(String.Format("<p><a href='{3}/Employee/Index/{4}'>{0}</a> - {1} | {2}</p>", emp.FullName, emp.Department.Name, emp.Position.Name, stuffUri, emp.Id));
+                    mailBody.AppendLine(String.Format("<p><a href='{3}/Employee/Index/{4}'>{0}</a> - {1} | {2}</p>", emp.FullName, emp.Department.Name, emp.Position.Name, stuffUrl, emp.Id));
                     //mailBody.AppendLine(String.Format("<p>{0}&nbsp;&nbsp;-&nbsp;&nbsp;{1} | {2}</p>", emp.FullName, emp.Department.Name, emp.Position.Name));
                 }
 
