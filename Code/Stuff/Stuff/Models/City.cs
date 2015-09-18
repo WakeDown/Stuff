@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -30,12 +31,9 @@ namespace Stuff.Models
             EmpCount = model.EmpCount;
         }
 
-        public static IEnumerable<City> GetSelectionList()
+        public static SelectList GetSelectionList()
         {
-            Uri uri = new Uri(String.Format("{0}/City/GetList", OdataServiceUri));
-            string jsonString = GetJson(uri);
-            var model = JsonConvert.DeserializeObject<IEnumerable<City>>(jsonString);
-            return model;
+            return new SelectList(City.GetList(), "Id", "Name");
         }
 
         public static IEnumerable<City> GetList()

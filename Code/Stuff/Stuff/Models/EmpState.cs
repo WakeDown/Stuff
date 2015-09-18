@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -28,7 +29,7 @@ namespace Stuff.Models
             Name = model.Name;
         }
 
-        public static IEnumerable<EmpState> GetSelectionList()
+        public static IEnumerable<EmpState> GetList()
         {
             Uri uri = new Uri(String.Format("{0}/EmpState/GetList", OdataServiceUri));
             string jsonString = GetJson(uri);
@@ -36,6 +37,11 @@ namespace Stuff.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<EmpState>>(jsonString);
 
             return model;
+        }
+
+        public static SelectList GetSelectionList()
+        {
+            return new SelectList(EmpState.GetList(), "Id", "Name");
         }
     }
 }

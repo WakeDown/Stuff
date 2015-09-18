@@ -22,7 +22,7 @@
         <div class="form-group">
            <label class="col-lg-2 control-label" for="Name">Вендор</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.VendorId, DbList.GetVendorNameList(), "--выберите--", new {@class = "form-control required-mark", @id = "Name", required = "required", data_error = "Выберите вендор"})
+                @Html.DropDownListFor(m => m.VendorId, Vendor.GetSelectionList(), "--выберите--", new {@class = "form-control required-mark", @id = "Name", required = "required", data_error = "Выберите вендор"})
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -60,7 +60,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="organization">Юр. лицо</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.UnitOrganizationId, DbList.GetUnitOrgList(), "--выберите--", new { @class = "form-control required-mark", @id = "organization", required = "required", data_error = "Выберите Юр. лицо" })
+                @Html.DropDownListFor(m => m.UnitOrganizationId, Organization.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "organization", required = "required", data_error = "Выберите Юр. лицо" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -68,7 +68,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="language">Язык оригинала</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.LanguageId, DbList.GetLangList(), "--выберите--", new {@class = "form-control required-mark", @id = "language", required = "required", data_error = "Выберите Язык оригинала"})
+                @Html.DropDownListFor(m => m.LanguageId, Language.GetSelectionList(), "--выберите--", new {@class = "form-control required-mark", @id = "language", required = "required", data_error = "Выберите Язык оригинала"})
                 <span class="help-block with-errors"></span>
             </div>
         </div>

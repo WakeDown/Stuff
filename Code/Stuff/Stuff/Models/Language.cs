@@ -28,5 +28,10 @@ namespace Stuff.Models
             var model = JsonConvert.DeserializeObject<IEnumerable<Language>>(jsonString);
             return model;
         }
+
+        public static SelectList GetSelectionList()
+        {
+            return new SelectList(Language.GetList(), "Id", "Name");
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿@using Stuff.Objects
+﻿@using Stuff.Models
+@using Stuff.Objects
 @model Stuff.Models.Organization
 @{
     ViewBag.Title = "Редактирование юр. лица";
@@ -25,7 +26,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="Manager">Руководитель</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.Director.Id, DbList.GetEmployeeList(), "--выберите руководителя--", new { @class = "form-control required-mark", @id = "Manager", required = "required", data_error = "Выберите Руководителя" })
+                @Html.DropDownListFor(m => m.Director.Id, Employee.GetSelectionList(), "--выберите руководителя--", new { @class = "form-control required-mark", @id = "Manager", required = "required", data_error = "Выберите Руководителя" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>

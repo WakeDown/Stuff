@@ -188,14 +188,14 @@ namespace Stuff.Models
             return emps;
         }
 
-        public static IEnumerable<Employee> GetSelectionList()
+        public static SelectList GetSelectionList()
         {
-            Uri uri = new Uri(String.Format("{0}/Employee/GetList", OdataServiceUri));
-            string jsonString = GetJson(uri);
+            return new SelectList(Employee.GetList(), "Id", "DisplayName");
+        }
 
-            var emps = JsonConvert.DeserializeObject<IEnumerable<Employee>>(jsonString);
-
-            return emps;
+        public static SelectList GetEmployeeListSid()
+        {
+            return new SelectList(Employee.GetSelectionList(), "AdSid", "DisplayName");
         }
 
         public Employee GetDirector()

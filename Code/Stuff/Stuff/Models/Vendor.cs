@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -50,6 +51,11 @@ namespace Stuff.Models
             string json = String.Empty;
             bool result = PostJson(uri, json, out responseMessage);
             return result;
+        }
+
+        public static SelectList GetSelectionList()
+        {
+            return new SelectList(Vendor.GetList(), "Id", "Name");
         }
     }
 }
