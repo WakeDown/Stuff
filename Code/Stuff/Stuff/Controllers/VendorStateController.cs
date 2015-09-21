@@ -33,8 +33,9 @@ namespace Stuff.Controllers
         {
             var vnd = new VendorState(id);
             byte[] imageData = vnd.Picture;
-            
-        return File(imageData, "image/jpeg"); // Might need to adjust the content type based on your actual image type
+            if (imageData != null)
+                return File(imageData, "image/jpeg");
+            else return null;// Might need to adjust the content type based on your actual image type
         }
         [HttpPost]
         public ActionResult New(VendorState vnd)
