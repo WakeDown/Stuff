@@ -185,6 +185,8 @@
     <Compile Include="Controllers\OrganizationController.cs" />
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="Controllers\VendorStateController.cs" />
     <Compile Include="Helpers\AdHelper.cs" />
     <Compile Include="Helpers\MultiButtonAttribute.cs" />
     <Compile Include="Helpers\PdfCreator.cs" />
@@ -196,6 +198,7 @@
     <Compile Include="Models\DocumentLink.cs" />
     <Compile Include="Models\ItBudgetReportItem.cs" />
     <Compile Include="Models\ItBudgetReportItemPeople.cs" />
+    <Compile Include="Models\Language.cs" />
     <Compile Include="Models\OrgStateImage.cs" />
     <Compile Include="Models\Report.cs" />
     <Compile Include="Models\Statement.cs" />
@@ -204,6 +207,8 @@
     <Compile Include="Models\StatementRest.cs" />
     <Compile Include="Models\StatementRestFewDays.cs" />
     <Compile Include="Models\StatementRestFewHours.cs" />
+    <Compile Include="Models\Vendor.cs" />
+    <Compile Include="Models\VendorState.cs" />
     <Compile Include="Objects\AdGroup.cs" />
     <Compile Include="Objects\AdUserGroup.cs" />
     <Compile Include="Objects\BinaryContentResult.cs" />
@@ -402,6 +407,12 @@
     <Content Include="Views\Report\ItBudgetView.cshtml" />
     <Content Include="Views\Budget\New.cshtml" />
     <Content Include="Views\Budget\Edit.cshtml" />
+    <Content Include="Views\Vendor\Index.cshtml" />
+    <Content Include="Views\VendorState\Edit.cshtml" />
+    <Content Include="Views\VendorState\History.cshtml" />
+    <Content Include="Views\VendorState\Image.cshtml" />
+    <Content Include="Views\VendorState\Index.cshtml" />
+    <Content Include="Views\VendorState\New.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
