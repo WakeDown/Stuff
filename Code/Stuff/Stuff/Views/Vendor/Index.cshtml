@@ -15,11 +15,11 @@
 
 @section PanelBody
 {
-  @using (Html.BeginForm("Index", "Vendor", FormMethod.Post, new { @id = "vndForm", @class = "form-horizontal", role = "form" }))
+    @using (Html.BeginForm("Index", "Vendor", FormMethod.Post, new {@id = "vndForm", @class = "form-horizontal", role = "form"}))
     {
         <div class="form-group">
             <div class="col-lg-5">
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control required-mark", @id = "name", required = "required", data_error = "Заполните Название", placeholder = "Название вендора" })
+                @Html.TextBoxFor(m => m.Name, new {@class = "form-control required-mark", @id = "name", required = "required", data_error = "Заполните Название", placeholder = "Название вендора"})
                 <span class="help-block with-errors"></span>
             </div>
             <div class="col-lg-1">
@@ -30,35 +30,35 @@
                 <span class="text-success">@TempData["ServerSuccess"]</span>
             </div>
         </div>
-   }
-  
-  @{
-      var list = Vendor.GetList();
+    }
 
-      if (list.Any())
-      { 
-        <table class="table table-bordered">
+    @{
+        var list = Vendor.GetList();
+    }
+
+    @if (list.Any())
+    {
+    <table class="table table-bordered">
+        <tr>
+            <th class="min-width">№</th>
+            <th>Название вендора</th>
+            <th class="min-width"></th>
+        </tr>
+        @{ int i = 0;}
+        @foreach (var vnd in list)
+        {
+            i++;
             <tr>
-                <th class="min-width">№</th>
-                <th>Название вендора</th>
-                <th class="min-width"></th>
+                <td>@i</td>
+                <td>@vnd.Name</td>
+                <td>
+                    <button class="btn btn-link" name="delele-vnd" vndid="@vnd.Id" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></button>
+                </td>
+
             </tr>
-            @{ int i = 0;}
-            @foreach (var vnd in list)
-            {
-                i++;
-                <tr>
-                    <td>@i</td>
-                    <td>@vnd.Name</td>
-                    <td>
-                            <button class="btn btn-link" name="delele-vnd" vndid="@vnd.Id" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></button>
-                        </td>
-                    }
-                </tr>
-            }
-        </table>
-                }
-}
+        }
+    </table>
+    }
 }
 
 @section scripts
