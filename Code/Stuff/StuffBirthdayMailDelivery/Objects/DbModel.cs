@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,7 @@ namespace Stuff.Objects
 {
     public class DbModel
     {
-        public const string OdataServiceUri = "http://localhost:10001/odata";
+        public readonly static string OdataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
 
         protected static string GetJson(Uri uri)
         {

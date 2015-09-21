@@ -33,7 +33,7 @@ namespace StuffDelivery
             if (args[0] != null && args[0] == "hldwrk") HolidayWorkDelivery();
             if (args[0] != null && args[0] == "hldwrklist") SendHolidayWorkConfirmList();
             if (args[0] != null && args[0] == "itbudget") SendItBudget();
-            if (args[0] != null && args[0] == "vendor") VendorStateExpiration();
+            if (args[0] != null && args[0] == "vendorexp") VendorStateExpiration();
         }
 
         public static void VendorStateExpiration()
@@ -54,8 +54,10 @@ namespace StuffDelivery
                         "У оргнизации {0} через 2 месяца истекает срок действия статуса {1} от {2}.<br/>",
                         vendorState.UnitOrganizationName, vendorState.StateName, vendorState.VendorName);
                     mailBody.AppendFormat("{0}<br/>", vendorState.StateDescription);
-                    mailBody.AppendFormat("<p><a href='{0}/VendorState/Index/'>{1}</a></p>", stuffUri, vendorState.StateName);
-                SendMailSmtp(subject,mailBody.ToString(),true,mailList,null,null,null,true);
+                    mailBody.AppendFormat("<p><a href='{0}/VendorState/Index/'>{0}/VendorState/Index/</a></p>", stuffUri);
+                    MemoryStream stream = new MemoryStream(vendorState.Picture.ToArray());
+                    var file = new AttachmentFile() { Data = stream.ToArray(), FileName = "state.jpeg", DataMimeType = MediaTypeNames.Image.Jpeg };
+                    SendMailSmtp(subject,mailBody.ToString(),true,mailList,null,null, file, isTest:true);
             }
             var responseMessage = new ResponseMessage();
             var complete = VendorState.SetExpiredDeliverySent(out responseMessage, vendorStateList.ToArray());
@@ -289,8 +291,13 @@ namespace StuffDelivery
                 mail.To.Clear();
                 mail.CC.Clear();
                 mail.Bcc.Clear();
-                mail.Bcc.Add(new MailAddress("alexandr.romanov@unitgroup.ru"));
-                //mail.Bcc.Add(new MailAddress("anton.rehov@unitgroup.ru"));
+                //mail.Bcc.Add(new MailAddress("alexandr.romanov@unitgroup.ru"));
+                string[] testMails = ConfigurationManager.AppSettings["TestMailTo"].Split('|');
+                foreach (string testMail in testMails)
+                {
+                    mail.Bcc.Add(new MailAddress(testMail));
+                }
+                
                 //mail.Bcc.Add(new MailAddress("alexander.medvedevskikh@unitgroup.ru"));
             }
 
