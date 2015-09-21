@@ -17,13 +17,10 @@ namespace Stuff.Controllers
             return View();
         }
         [HttpPost]
-        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Index(Vendor vnd)
         {
 
             var user = DisplayCurUser();
-           // if (!user.UserCanEdit()) return RedirectToAction("AccessDenied", "Error");
-
             try
             {
                 ResponseMessage responseMessage;
@@ -43,7 +40,6 @@ namespace Stuff.Controllers
         public void Delete(int id)
         {
             var user = DisplayCurUser();
-      //      if (!user.UserCanEdit()) RedirectToAction("AccessDenied", "Error");
             try
             {
                 ResponseMessage responseMessage;
