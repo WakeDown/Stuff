@@ -35,13 +35,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="col-lg-2 control-label" for="StateDescription">Описание статуса вендора</label>
-            <div class="col-lg-3">
-                @Html.TextAreaFor(m => m.StateDescription, new {@class = "form-control required-mark", @id = "stateDescription", required = "required", data_error = "Заполните поле Описание статуса"})
-                <div class="help-block with-errors"></div>
-            </div>
-        </div>
+        
 
         <div class="form-group">
             <label class="col-lg-2 control-label" for="photo">Картинка</label>
@@ -55,7 +49,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="endDate">Дата окончания</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(m => m.EndDate,"{0:dd.MM.yyyy}", new { @class = "form-control text-right", @id = "endDate", data_mask = "00.00.0000"/*, required = "required", data_error = "Заполните поле Дата окончания"*/ })
+                @Html.TextBoxFor(m => m.EndDate,"{0:dd.MM.yyyy}", new { @class = "form-control text-right required-mark", @id = "endDate" , required = "required", data_error = "Заполните поле Дата окончания" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -75,7 +69,13 @@
                 <span class="help-block with-errors"></span>
             </div>
         </div>
-
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="StateDescription">Описание статуса вендора</label>
+            <div class="col-lg-5">
+                @Html.TextAreaFor(m => m.StateDescription, new { @class = "form-control", @id = "stateDescription", data_error = "Заполните поле Описание статуса" })
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-lg-push-2 col-lg-5">
                 @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@

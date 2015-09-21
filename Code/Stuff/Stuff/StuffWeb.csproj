@@ -411,6 +411,7 @@
     <Content Include="Views\VendorState\Image.cshtml" />
     <Content Include="Views\VendorState\Index.cshtml" />
     <Content Include="Views\VendorState\New.cshtml" />
+    <Content Include="Views\VendorState\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
