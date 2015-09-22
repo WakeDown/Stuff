@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -39,16 +40,6 @@ namespace Stuff.Models
             NameDat = model.NameDat;
         }
 
-        public static IEnumerable<Position> GetSelectionList()
-        {
-            Uri uri = new Uri(String.Format("{0}/Position/GetList", OdataServiceUri));
-            string jsonString = GetJson(uri);
-
-            var model = JsonConvert.DeserializeObject<IEnumerable<Position>>(jsonString);
-
-            return model;
-        }
-
         public static IEnumerable<Position> GetList()
         {
             Uri uri = new Uri(String.Format("{0}/Position/GetList", OdataServiceUri));
@@ -73,6 +64,11 @@ namespace Stuff.Models
             string json = String.Empty;//String.Format("{{\"id\":{0}}}",id);
             bool result = PostJson(uri, json, out responseMessage);
             return result;
+        }
+
+        public static SelectList GetSelectionList()
+        {
+            return new SelectList(Position.GetList(), "Id", "Name");
         }
     }
 

@@ -136,35 +136,35 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="city">Город</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.City.Id, DbList.GetCityList(), "--выберите--", new { @class = "form-control required-mark", @id = "city", required = "required", data_error = "Выберите Город" })
+                @Html.DropDownListFor(m => m.City.Id, City.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "city", required = "required", data_error = "Выберите Город" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-lg-2 control-label" for="organization">Юр. лицо</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.Organization.Id, DbList.GetOrganizationList(), "--выберите--", new { @class = "form-control required-mark", @id = "organization", required = "required", data_error = "Выберите Юр. лицо" })
+                @Html.DropDownListFor(m => m.Organization.Id, Organization.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "organization", required = "required", data_error = "Выберите Юр. лицо" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-lg-2 control-label" for="positionOrg">Должность Юр. лицо</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.PositionOrg.Id, DbList.GetPositionList(), "--выберите--", new { @class = "form-control required-mark", @id = "positionOrg", required = "required", data_error = "Выберите Должность Юр. лицо" })
+                @Html.DropDownListFor(m => m.PositionOrg.Id, Position.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "positionOrg", required = "required", data_error = "Выберите Должность Юр. лицо" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-lg-2 control-label" for="position">Должность ГК</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.Position.Id, DbList.GetPositionList(), "--выберите--", new { @class = "form-control required-mark", @id = "position", required = "required", data_error = "Выберите Должность ГК" })
+                @Html.DropDownListFor(m => m.Position.Id, Position.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "position", required = "required", data_error = "Выберите Должность ГК" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-lg-2 control-label" for="department">Подразделение ГК</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.Department.Id, DbList.GetDepartmentList(), "--выберите--", new { @class = "form-control required-mark", @id = "department", required = "required", data_error = "Выберите Подрезделение ГК" })
+                @Html.DropDownListFor(m => m.Department.Id, Department.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "department", required = "required", data_error = "Выберите Подрезделение ГК" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>

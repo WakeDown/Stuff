@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Microsoft.OData.Client;
 using Newtonsoft.Json;
 using Stuff.Objects;
@@ -69,14 +70,9 @@ namespace Stuff.Models
             return result;
         }
 
-        public static IEnumerable<Department> GetSelectionList()
+        public static SelectList GetSelectionList()
         {
-            Uri uri = new Uri(String.Format("{0}/Department/GetList", OdataServiceUri));
-            string jsonString = GetJson(uri);
-
-            var deps = JsonConvert.DeserializeObject<IEnumerable<Department>>(jsonString);
-
-            return deps;
+           return new SelectList(Department.GetList(), "Id", "Name");
         }
 
         public IEnumerable<Employee> GetStuff()

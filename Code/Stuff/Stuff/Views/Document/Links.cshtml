@@ -53,7 +53,7 @@
             <div class="tab-content">
                 <div id="depList" class="tab-pane fade in active">
                     <table class="table table-bordered list4link" id="deps">
-                        @foreach (Department dep in Department.GetSelectionList())
+                        @foreach (Department dep in Department.GetList())
                         {
                             <tr depid="@dep.Id">
                                 <td>@dep.Name<span class="act pull-right text-success"><i class="fa fa-check-circle"></i></span></td>
@@ -63,7 +63,7 @@
                 </div>
                 <div id="posList" class="tab-pane fade">
                     <table class="table table-bordered list4link" id="poss">
-                        @foreach (Position pos in Position.GetSelectionList())
+                        @foreach (Position pos in Position.GetList())
                         {
                             <tr posid="@pos.Id">
                                 <td>@pos.Name<span class="act pull-right text-success"><i class="fa fa-check-circle"></i></span></td>
@@ -73,7 +73,7 @@
                 </div>
                 <div id="empList" class="tab-pane fade">
                     <table class="table table-bordered list4link" id="emps">
-                        @foreach (Employee emp in Employee.GetSelectionList())
+                        @foreach (Employee emp in Employee.GetList())
                         {
                             <tr empid="@emp.Id">
                                 <td>@emp.FullName<span class="act pull-right text-success"><i class="fa fa-check-circle"></i></span></td>

@@ -11,6 +11,7 @@ namespace Stuff.Helpers
     {
         public static string ShortName(string fullName)
         {
+            if (String.IsNullOrEmpty(fullName)) return String.Empty;
             string result = String.Empty;
             string[] nameArr = fullName.Split(' ');
             for (int i = 0; i < nameArr.Count(); i++)

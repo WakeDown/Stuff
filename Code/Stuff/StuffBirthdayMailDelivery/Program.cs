@@ -11,6 +11,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using SelectPdf;
+using Stuff.Models;
 using Stuff.Objects;
 using StuffDelivery.Models;
 using StuffDelivery.Objects;
@@ -20,7 +21,7 @@ namespace StuffDelivery
     class Program
     {
         private static MailAddress defaultMailFrom = new MailAddress("UN1T@un1t.group");
-        private static readonly string stuffWebLeftPartUrl = "http://portal.unitgroup.ru";
+        private static readonly string stuffUrl = ConfigurationManager.AppSettings["stuffUrl"];
 
         static void Main(string[] args)
         {
@@ -32,12 +33,42 @@ namespace StuffDelivery
             if (args[0] != null && args[0] == "hldwrk") HolidayWorkDelivery();
             if (args[0] != null && args[0] == "hldwrklist") SendHolidayWorkConfirmList();
             if (args[0] != null && args[0] == "itbudget") SendItBudget();
+            if (args[0] != null && args[0] == "vendorexp") VendorStateExpiration();
+        }
+
+        public static void VendorStateExpiration()
+        {
+            string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+            var vendorStateList = VendorState.GetExpiredList();
+            var addressList = VendorState.GetMailAddressList();
+            var mailList = (from s in addressList where !String.IsNullOrEmpty(s) select new MailAddress(s)).ToArray();
+            if (vendorStateList.Any())
+            {
+                foreach (var vendorState in vendorStateList)
+                {
+                    var subject = string.Format("Срок действия статуса {0} от {1} истекает через 2 месяца",
+                        vendorState.StateName, vendorState.VendorName);
+                    var mailBody = new StringBuilder();
+                    mailBody.Append("Добрый день.<br/>");
+                    mailBody.AppendFormat(
+                        "У оргнизации {0} через 2 месяца истекает срок действия статуса {1} от {2}.<br/>",
+                        vendorState.UnitOrganizationName, vendorState.StateName, vendorState.VendorName);
+                    mailBody.AppendFormat("{0}<br/>", vendorState.StateDescription);
+                    mailBody.AppendFormat("<p><a href='{0}/VendorState/Image/{1}'>{0}/VendorState/Image/{1}</a></p>", stuffUri, vendorState.Id);
+                    //MemoryStream stream = new MemoryStream(vendorState.Picture.ToArray());
+                    //var file = new AttachmentFile() { Data = stream.ToArray(), FileName = "state.jpeg", DataMimeType = MediaTypeNames.Image.Jpeg };
+                    SendMailSmtp(subject,mailBody.ToString(),true,mailList,null,null, isTest:true);
+            }
+            var responseMessage = new ResponseMessage();
+            var complete = VendorState.SetExpiredDeliverySent(out responseMessage, vendorStateList.ToArray());
+            }
+            
         }
 
         public static void SendItBudget()
         {
             HtmlToPdf converter = new HtmlToPdf();
-            string url = String.Format("{0}/Report/ItBudgetView", stuffWebLeftPartUrl);
+            string url = String.Format("{0}/Report/ItBudgetView", stuffUrl);
             PdfDocument doc = converter.ConvertUrl(url);
             MemoryStream stream = new MemoryStream();
             doc.Save(stream);
@@ -127,7 +158,7 @@ namespace StuffDelivery
                 //mailBody.AppendLine("\r\n");
                 mailBody.AppendLine(String.Format("<p>У нас новые сотрудники:</p>"));
                 //mailBody.AppendLine("\r\n");
-                string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+                //string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
                 //birthdays = birthdays.OrderBy(e => e.BirthDate.HasValue ? e.BirthDate.Value : new DateTime()).ToArray();
                 mailBody.AppendLine("<table style='font-family: Calibri'>");
                 foreach (Employee emp in newbie)
@@ -135,7 +166,7 @@ namespace StuffDelivery
                     mailBody.AppendLine(
                         String.Format(
                             "<tr><td><p><a href='{1}/Employee/Index/{2}'>{0}</a>&nbsp;&nbsp;</p></td><td>{3}</td><tr>",
-                            emp.FullName, stuffUri, emp.Id, emp.Position.Name));
+                            emp.FullName, stuffUrl, emp.Id, emp.Position.Name));
                 }
                 mailBody.AppendLine("</table>");
 
@@ -165,13 +196,13 @@ namespace StuffDelivery
                 string monthName = TranslitDate.GetMonthNamePredl(DateTime.Now.AddMonths(1).Month);
                 mailBody.AppendLine(String.Format("<p>В {0} месяце свои дни рождения празднуют:</p>", monthName));
                 //mailBody.AppendLine("\r\n");
-                string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+                //string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
                 //birthdays = birthdays.OrderBy(e => e.BirthDate.HasValue ? e.BirthDate.Value : new DateTime()).ToArray();
                 mailBody.AppendLine("<table style='font-family: Calibri'>");
                 foreach (Employee emp in birthdays)
                 {
                     //mailBody.AppendLine(String.Format("<tr><td><p>{0}&nbsp;&nbsp;</p></td><td>{1:dd.MM}</td><tr>", emp.FullName, emp.BirthDate.HasValue ? emp.BirthDate.Value : new DateTime()));
-                    mailBody.AppendLine(String.Format("<tr><td><p><a href='{2}/Employee/Index/{3}'>{0}</a>&nbsp;&nbsp;</p></td><td>{1:dd.MM}</td><tr>", emp.FullName, emp.BirthDate.HasValue ? emp.BirthDate.Value : new DateTime(), stuffUri, emp.Id));
+                    mailBody.AppendLine(String.Format("<tr><td><p><a href='{2}/Employee/Index/{3}'>{0}</a>&nbsp;&nbsp;</p></td><td>{1:dd.MM}</td><tr>", emp.FullName, emp.BirthDate.HasValue ? emp.BirthDate.Value : new DateTime(), stuffUrl, emp.Id));
                 }
                 mailBody.AppendLine("</table>");
                 List<MailAddress> recipients = new List<MailAddress>();
@@ -203,12 +234,12 @@ namespace StuffDelivery
                 //mailBody.AppendLine("\r\n");
                 mailBody.AppendLine("<p>Уважаемые коллеги, сегодня день рождения у следующих сотрудников:</p>");
                 //mailBody.AppendLine("\r\n");
-                string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
+                //string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
                 birthdays = birthdays.OrderBy(e => e.FullName).ToArray();
 
                 foreach (Employee emp in birthdays)
                 {
-                    mailBody.AppendLine(String.Format("<p><a href='{3}/Employee/Index/{4}'>{0}</a> - {1} | {2}</p>", emp.FullName, emp.Department.Name, emp.Position.Name, stuffUri, emp.Id));
+                    mailBody.AppendLine(String.Format("<p><a href='{3}/Employee/Index/{4}'>{0}</a> - {1} | {2}</p>", emp.FullName, emp.Department.Name, emp.Position.Name, stuffUrl, emp.Id));
                     //mailBody.AppendLine(String.Format("<p>{0}&nbsp;&nbsp;-&nbsp;&nbsp;{1} | {2}</p>", emp.FullName, emp.Department.Name, emp.Position.Name));
                 }
 
@@ -260,7 +291,13 @@ namespace StuffDelivery
                 mail.To.Clear();
                 mail.CC.Clear();
                 mail.Bcc.Clear();
-                mail.Bcc.Add(new MailAddress("anton.rehov@unitgroup.ru"));
+                //mail.Bcc.Add(new MailAddress("alexandr.romanov@unitgroup.ru"));
+                string[] testMails = ConfigurationManager.AppSettings["TestMailTo"].Split('|');
+                foreach (string testMail in testMails)
+                {
+                    mail.Bcc.Add(new MailAddress(testMail));
+                }
+                
                 //mail.Bcc.Add(new MailAddress("alexander.medvedevskikh@unitgroup.ru"));
             }
 

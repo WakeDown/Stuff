@@ -40,6 +40,7 @@
         }
 
         .level-1 td:first-child {
+            padding-left: 15px;
         }
 
         .level-1.it-bud-peaple-row td:first-child {
@@ -47,7 +48,7 @@
         }
 
         .level-2 td:first-child {
-            padding-left: 15px;
+            padding-left: 20px;
         }
 
         .level-2.it-bud-peaple-row td:first-child {
@@ -107,9 +108,29 @@
 
             <table class="it-bud-list">
                 @{
+                    var peopleList = new List<ItBudgetReportItemPeople>();
+                    foreach (ItBudgetReportItem item in Model)
+                    {
+                        peopleList.AddRange(item.Peoples);
+                    }
+                    peopleList = peopleList.OrderBy(x => x.FullName).ToList();
                     int i = 0;
                 }
-                @foreach (ItBudgetReportItem item in Model)
+
+                @foreach (var peop in peopleList)
+                {
+                    i++;
+                    <tr class="it-bud-peaple-row">
+                        <td>@i</td>
+                        <td>@peop.FullName</td>
+                        <td>@peop.BudgetName</td>
+                        <td class="money-cell text-nowrap">@String.Format("{0:N0} р.", peop.Cost)</td>
+                        @{ onePeopleCost = peop.Cost;}
+                    </tr>
+                            }
+
+
+                @*@foreach (ItBudgetReportItem item in Model)
                 {
                 if (item.Peoples.Any())
                 {
@@ -118,26 +139,26 @@
                         i++;
                         <tr class="it-bud-peaple-row">
                             <td>@i</td>
-                            <td>@item.BudgetName</td>
                             <td>@peop.FullName</td>
+                            <td>@item.BudgetName</td>
                             <td class="money-cell text-nowrap">@String.Format("{0:N0} р.", peop.Cost)</td>
                             @{ onePeopleCost = peop.Cost;}
                         </tr>
                                         }
                                     }
-                                }
+                                }*@
             </table>
             <p style="height: 20px"></p>
             <table class="it-bud-list">
                 @{
                     var budList = Model.GroupBy(m => new { m.BudgetName, m.Level }).Select(m => new { BudgetName = m.Key.BudgetName, Level = m.Key.Level, PeopleCount = m.Sum(p => p.PeopleCount) });
                 }
-                @foreach (var dep in budList)
+                @foreach (var bud in budList)
                 {
-                    <tr class="level-@dep.Level"><td>@dep.BudgetName</td><td class="text-center">@dep.PeopleCount</td><td class="money-cell text-nowrap">@(String.Format("{0:N0} р.", dep.PeopleCount * onePeopleCost))</td></tr>
+                    <tr class="level-@bud.Level"><td>@bud.BudgetName</td><td class="text-center">@bud.PeopleCount</td><td class="money-cell text-nowrap">@(String.Format("{0:N0} р.", bud.PeopleCount * onePeopleCost))</td></tr>
                 }
                 @{
-                    int peopleCountTotal = budList.Select(m => m.PeopleCount).Sum();
+                    int peopleCountTotal = budList.Where(x=>x.Level==0).Select(m => m.PeopleCount).Sum();
                 }
                 <tr><th>ИТОГО</th><th class="text-center">@peopleCountTotal</th><th class="money-cell text-nowrap">@(String.Format("{0:N0} р.", peopleCountTotal * onePeopleCost))</th></tr>
             </table>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -90,14 +91,9 @@ namespace Stuff.Models
             Director = model.Director;
         }
 
-        public static IEnumerable<Organization> GetSelectionList()
+        public static SelectList GetSelectionList()
         {
-            Uri uri = new Uri(String.Format("{0}/Organization/GetList", OdataServiceUri));
-            string jsonString = GetJson(uri);
-
-            var model = JsonConvert.DeserializeObject<IEnumerable<Organization>>(jsonString);
-
-            return model;
+            return new SelectList(Organization.GetList(), "Id", "Name");
         }
 
         public static IEnumerable<Organization> GetList()
