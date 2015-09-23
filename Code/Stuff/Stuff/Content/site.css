@@ -272,3 +272,15 @@ table.list4link tr.db-error .act {
     font-size: 2em;
     text-align: center;
 }
+
+@media (max-width: 768px){
+    .text-center-sm{
+        text-align: center;
+    }
+}
+
+@media (min-width: 1200px){
+    .text-right-lg{
+        text-align: right;
+    }
+}

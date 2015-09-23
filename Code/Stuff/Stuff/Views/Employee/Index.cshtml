@@ -34,23 +34,56 @@
             <div class="emp-photo"><img id="photo" src="@DbModel.OdataServiceUri/Employee/GetPhoto?id=@Model.Id" /></div>
         </div>
         <div class="col-lg-9 col-sm-12">
-            <table class="table table-condensed">
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">дата рождения:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.BirthDate != null ? String.Format("{0:dd MMMM}", Model.BirthDate.Value) : String.Empty)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Стаж работы:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.DateCame.HasValue ? Model.ExpirenceString : String.Empty)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">почта:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm"><a href="mailto:@(Model.Email)">@Model.Email</a></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">мобильный:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.MobilNum)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">внутренний:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.WorkNum)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">город:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.City.Name)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">юр. лицо:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Organization.Name)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">подразделение:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Department.Name)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">должность:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Position.Name)</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">руководитель:</div>
+                <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Manager.DisplayName)</div>
+            </div>
+
+            @*<table class="table table-condensed">
                 <colgroup>
                     <col class="col-lg-1  col-sm-4" />
                     <col class="col-lg-4 col-sm-8" />
                 </colgroup>
-                @*<tr>
-                        <td class="text-right">пол:</td>
-                        <td>@Html.LabelFor(m => m, Model.Male != null ? Model.Male ? "мужской" : "женский" : "--не указан--")</td>
-                    </tr>*@
                 <tr>
                     <td class="text-right">дата рождения:</td>
                     <td>@Html.LabelFor(m => m, Model.BirthDate != null ? String.Format("{0:dd MMMM}", Model.BirthDate.Value) : String.Empty)</td>
                 </tr>
-                @*<tr>
-                        <td class="text-right">дата прихода:</td>
-                        <td>@Html.LabelFor(m => m, Model.DateCame != null ? Model.DateCame.Value.ToShortDateString() : String.Empty)</td>
-                    </tr>*@
                 <tr>
                     <td class="text-right">Стаж работы:</td>
                     <td>@Html.LabelFor(m => m, Model.DateCame.HasValue ? Model.ExpirenceString : String.Empty)</td>
@@ -88,7 +121,7 @@
                     <td class="text-right">руководитель: </td>
                     <td>@Html.LabelFor(m => m, Model.Manager.DisplayName)</td>
                 </tr>
-            </table>
+            </table>*@
         </div>
     </div>
 
