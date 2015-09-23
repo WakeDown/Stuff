@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-    width: 1400px;
+    /*width: 1400px;*/
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -140,7 +140,7 @@ ul.tree {
 }
 
 #photo {
-    width: 250px;
+    width: 100%;
     overflow: hidden;
 }
 
