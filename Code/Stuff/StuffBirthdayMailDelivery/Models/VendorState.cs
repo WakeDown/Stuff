@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Stuff.Objects;
 using StuffDelivery.Models;
@@ -63,14 +64,32 @@ namespace Stuff.Models
             return (list);
         }
 
-        public static List<VendorState> GetExpiredList()
+        public static List<VendorState> GetDeliverList(byte type)
         {
-            Uri uri = new Uri(String.Format("{0}/VendorState/GetExpiredList",OdataServiceUri));
+            Uri uri = new Uri(String.Format("{0}/VendorState/GetDeliverList?listType={1}",OdataServiceUri,type));
             string json = GetJson(uri);
             var list = JsonConvert.DeserializeObject<List<VendorState>>(json);
             return (list);
         }
 
+        public static List<KeyValuePair<VendorState, VendorState>> GetCurPrevPairs(List<VendorState> curList)
+        {
+            if (curList.Any())
+            {
+                var list = new List<KeyValuePair<VendorState, VendorState>>();
+                foreach (var cur in curList)
+                {
+                    var id = cur.Id;
+                    Uri uri = new Uri(String.Format("{0}/VendorState/GetPrevValue?id={1}", OdataServiceUri, id));
+                    string json = GetJson(uri);
+                    var prev = JsonConvert.DeserializeObject<VendorState>(json);
+                    list.Add(new KeyValuePair<VendorState, VendorState>(cur, prev));
+                }
+                return (list);
+            }
+            return null;
+
+        } 
         public static List<string> GetMailAddressList()
         {
             Uri uri = new Uri(String.Format("{0}/VendorState/GetMailAddressList", OdataServiceUri));
@@ -78,9 +97,9 @@ namespace Stuff.Models
             var list = JsonConvert.DeserializeObject<List<string>>(json);
             return (list);
         }
-        public static bool SetExpiredDeliverySent(out ResponseMessage responseMessage, params VendorState[] vendorStates)
+        public static bool SetDeliverySent(out ResponseMessage responseMessage, byte type, params VendorState[] vendorStates)
         {
-            Uri uri = new Uri(String.Format("{0}/VendorState/SetDeliverySent", OdataServiceUri));
+            Uri uri = new Uri(String.Format("{0}/VendorState/SetDeliverySent?deliveryType={1}", OdataServiceUri,type));
             string json = JsonConvert.SerializeObject(vendorStates);
             bool result = PostJson(uri, json, out responseMessage);
             return result;
