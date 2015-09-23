@@ -9,7 +9,7 @@ body {
 }
 
 .container {
-    width: 1400px;
+    /*width: 1400px;*/
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -140,7 +140,7 @@ ul.tree {
 }
 
 #photo {
-    width: 250px;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -271,4 +271,16 @@ table.list4link tr.db-error .act {
 .main-icon-label {
     font-size: 2em;
     text-align: center;
+}
+
+@media (max-width: 768px){
+    .text-center-sm{
+        text-align: center;
+    }
+}
+
+@media (min-width: 1200px){
+    .text-right-lg{
+        text-align: right;
+    }
 }
