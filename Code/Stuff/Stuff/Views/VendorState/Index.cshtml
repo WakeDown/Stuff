@@ -26,7 +26,7 @@
 @if (Model.Any())
 {
 
-    <table class="table DataTables_sort_wrapper" id="dTable">
+    <table class="table table-bordered">
         <thead>
             <tr class="bg-primary">
                 @if (userCanEdit)
@@ -34,13 +34,13 @@
                     <th></th>
                 }
                 <th>№</th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 0})>Вендор</a></th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 1})>Статус</a></th>
+                <th><a href=@Url.Action("index", "VendorState") class="text-white">Вендор</a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {field = 0}) class="text-white">Статус</a></th>
                 @*<th>Описание</th>*@
                 <th>Картинка</th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 2})>Дата окончания</a></th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 3})>Юр лицо Юнит</a></th>
-                <th><a href=@Url.Action("Index", "VendorState", new {field = 4})>Язык оригинала</a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {field = 1}) class="text-white">Дата окончания</a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {field = 2}) class="text-white">Юр лицо Юнит</a></th>
+                <th><a href=@Url.Action("Index", "VendorState", new {field = 3}) class="text-white">Язык оригинала</a></th>
                 @if (userCanEdit)
                 {
                     <th>История</th>
@@ -100,7 +100,6 @@
 
         function init_vnd_list() {
             $("[name='delete-vnd']").click(deleteVendorState);
-            $("#dTable").DataTable({"order": [[4, "desc"]]});
         }
         function deleteVendorState() {
             if (!confirm('Вы действительно хотите удалить статус?')) return;
