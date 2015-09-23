@@ -44,7 +44,12 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="endDate">Дата окончания</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(m => m.EndDate, "{0:dd.MM.yyyy}", new {@class = "form-control text-right required-mark", @id = "endDate", required = "required", data_error = "Заполните поле Дата окончания" })
+                @Html.TextBoxFor(m => m.EndDate, "{0:dd.MM.yyyy}", new {@class = "form-control text-right required-mark", @id = "endDate", required = "required", data_error = "Заполните поле Дата окончания"})
+                <span class="help-block with-errors"></span>
+            </div>
+            <label class="col-lg-2 control-label" for="endDate">Бессрочно</label>
+            <div class="col-lg-2">
+                @Html.CheckBox("endless");
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -90,8 +95,18 @@
                 todayBtn: "linked",
                 language: "ru"
             });
+            $('#endless').click(function () {
+                if (this.checked) {
+                    $("#endDate").hide();
+                    $("#endDate").val('@DateTime.Parse("3333-03-03")');
+                } else {
+                    $("#endDate").val(null);
+                    $("#endDate").show();
+
+                }
+            });
         });
-        
+
        /* function generateEmail() {
 
             var surname = $("#surname").val();
@@ -113,8 +128,8 @@
 
         }*/
 
-        
 
-        
+
+
     </script>
 }

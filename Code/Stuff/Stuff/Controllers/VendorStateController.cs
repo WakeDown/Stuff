@@ -12,15 +12,41 @@ namespace Stuff.Controllers
     public class VendorStateController : BaseController
     {
         // GET: VendorState
-        public ActionResult Index()
+        public enum Fields : byte
         {
-            //DisplayCurUser();
-
-            var vnd = VendorState.GetList();
-            return View(vnd);
-
+            VendorName,
+            StateName,
+            EndDate,
+            UnitOrganization,
+            Language
         }
-
+        [HttpGet]
+        public ActionResult Index(byte? field, VendorState vnd1s)
+        {
+            var vnds = VendorState.GetList();
+            if (field == null)
+                return View(vnds);
+            IEnumerable<VendorState> vnd = null;
+            switch ((Fields)field)
+            {
+                case  Fields.VendorName:
+                    vnd = vnds.OrderBy(v => v.VendorName);
+                    break;
+                case Fields.EndDate:
+                    vnd = vnds.OrderBy(v => v.EndDate);
+                    break;
+                case Fields.Language:
+                    vnd = vnds.OrderBy(v => v.LanguageName);
+                    break;
+                case Fields.StateName:
+                    vnd = vnds.OrderBy(v => v.StateName);
+                    break;
+                case Fields.UnitOrganization:
+                    vnd = vnds.OrderBy(v => v.UnitOrganizationName);
+                    break;
+            }
+            return View(vnd);
+        }
         public ActionResult History(int id)
         {
            if (!CurUser.HasAccess(AdGroup.VendorStateEditor))
