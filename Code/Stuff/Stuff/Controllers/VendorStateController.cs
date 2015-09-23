@@ -14,7 +14,6 @@ namespace Stuff.Controllers
         // GET: VendorState
         public enum Fields : byte
         {
-            VendorName,
             StateName,
             EndDate,
             UnitOrganization,
@@ -25,13 +24,10 @@ namespace Stuff.Controllers
         {
             var vnds = VendorState.GetList();
             if (field == null)
-                return View(vnds);
+                return View(vnds.OrderBy(v => v.VendorName));
             IEnumerable<VendorState> vnd = null;
             switch ((Fields)field)
             {
-                case  Fields.VendorName:
-                    vnd = vnds.OrderBy(v => v.VendorName);
-                    break;
                 case Fields.EndDate:
                     vnd = vnds.OrderBy(v => v.EndDate);
                     break;

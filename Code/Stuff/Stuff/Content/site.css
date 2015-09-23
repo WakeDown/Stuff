@@ -189,7 +189,9 @@ table .btn {
 .text-warning.light {
     color: #d58512;
 }
-
+.text-white {
+    color: white;
+}
 .cursor-pointer {
     cursor: pointer;
 }
