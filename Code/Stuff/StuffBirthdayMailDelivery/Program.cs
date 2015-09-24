@@ -33,10 +33,12 @@ namespace StuffDelivery
             if (args[0] != null && args[0] == "hldwrk") HolidayWorkDelivery();
             if (args[0] != null && args[0] == "hldwrklist") SendHolidayWorkConfirmList();
             if (args[0] != null && args[0] == "itbudget") SendItBudget();
-            if (args[0] != null && args[0] == "vendorexp") VendorStateDeliver(DeliveryType.Update);
+            if (args[0] != null && args[0] == "vendorexp") VendorStateDelivery(DeliveryType.Update);
+            if (args[0] != null && args[0] == "vendornewbie") VendorStateDelivery(DeliveryType.Newbie);
+            if (args[0] != null && args[0] == "vendorupd") VendorStateDelivery(DeliveryType.Update);
         }
         public enum DeliveryType : byte {Newbie, Update, EndDate}
-        public static void VendorStateDeliver(DeliveryType type)
+        public static void VendorStateDelivery(DeliveryType type)
         {
             string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
             var vendorStateList = VendorState.GetDeliverList((byte)type);
@@ -49,23 +51,22 @@ namespace StuffDelivery
                 switch (type)
                 {
                     case DeliveryType.Newbie:
-                        NewVendorStateDeliver(vendorStateList, stuffUri, body, mailList);
+                        NewVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
                         break;
                     case DeliveryType.Update:
-                        UpdVendorStateDeliver(vendorStateList, stuffUri, body, mailList);
+                        UpdVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
                         break;
                     case DeliveryType.EndDate:
-                        EndVendorStateDeliver(vendorStateList, stuffUri, body, mailList);
+                        EndVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
                         break;
                 }
                 
                 var responseMessage = new ResponseMessage();
                 var complete = VendorState.SetDeliverySent(out responseMessage, (byte)type, vendorStateList.ToArray());
             }
-            
         }
 
-        private static void NewVendorStateDeliver(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
+        private static void NewVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
         {
             foreach (var vendorState in vendorStateList)
             {
@@ -84,7 +85,7 @@ namespace StuffDelivery
                 SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null, true);
             }
         }
-        private static void UpdVendorStateDeliver(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
+        private static void UpdVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
         {
             var curPrevPairs = VendorState.GetCurPrevPairs(vendorStateList);
             foreach (var curPrevPair in curPrevPairs)
@@ -106,7 +107,7 @@ namespace StuffDelivery
                 SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null, true);
             }
         }
-        private static void EndVendorStateDeliver(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
+        private static void EndVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
         {
             foreach (var vendorState in vendorStateList)
             {
@@ -123,8 +124,6 @@ namespace StuffDelivery
                 SendMailSmtp(subject, body.ToString(), true, mailList, null, null, isTest: true);
             }
         }
-
-       
 
         public static void SendItBudget()
         {
