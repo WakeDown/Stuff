@@ -14,33 +14,50 @@ namespace Stuff.Controllers
         // GET: VendorState
         public enum Fields : byte
         {
+            VendorName,
             StateName,
             EndDate,
             UnitOrganization,
             Language
         }
         [HttpGet]
-        public ActionResult Index(byte? field, VendorState vnd1s)
+        public ActionResult Index(byte? field, bool? asc)
         {
+            field = field ?? 0;
+            asc = asc ?? true;
             var vnds = VendorState.GetList();
-            if (field == null)
-                return View(vnds.OrderBy(v => v.VendorName));
             IEnumerable<VendorState> vnd = null;
             switch ((Fields)field)
             {
-                case Fields.EndDate:
-                    vnd = vnds.OrderBy(v => v.EndDate);
-                    break;
-                case Fields.Language:
-                    vnd = vnds.OrderBy(v => v.LanguageName);
-                    break;
+                case Fields.VendorName:
+                    vnd = (bool)asc
+                        ? vnds.OrderBy(v => v.VendorName)
+                        : vnds.OrderByDescending(v => v.VendorName);
+                    break; 
                 case Fields.StateName:
-                    vnd = vnds.OrderBy(v => v.StateName);
+                    vnd = (bool)asc
+                        ? vnds.OrderBy(v => v.StateName)
+                        : vnds.OrderByDescending(v => v.StateName);
+                    break;
+                case Fields.EndDate:
+                    vnd = (bool)asc
+                        ? vnds.OrderBy(v => v.EndDate)
+                        : vnds.OrderByDescending(v => v.EndDate);
                     break;
                 case Fields.UnitOrganization:
-                    vnd = vnds.OrderBy(v => v.UnitOrganizationName);
+                    vnd = (bool)asc
+                        ? vnds.OrderBy(v => v.UnitOrganizationName)
+                        : vnds.OrderByDescending(v => v.UnitOrganizationName);
                     break;
+                case Fields.Language:
+                    vnd = (bool)asc
+                        ? vnds.OrderBy(v => v.LanguageName)
+                        : vnds.OrderByDescending(v => v.LanguageName);
+                    break;
+
             }
+            TempData["field"] = field;
+            TempData["asc"] = asc;
             return View(vnd);
         }
         public ActionResult History(int id)
