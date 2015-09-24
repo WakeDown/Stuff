@@ -10,6 +10,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     // bool userCanEdit = ViewBag.CurUser.UserCanEdit();
     bool userCanEdit = ViewBag.CurUser.HasAccess(AdGroup.VendorStateEditor);
+    byte field = (byte)TempData["field"];
+    bool asc = (bool) TempData["asc"];
 }
 
 @if (userCanEdit)
@@ -34,13 +36,33 @@
                     <th></th>
                 }
                 <th>№</th>
-                <th><a href=@Url.Action("index", "VendorState") class="text-white">Вендор</a></th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 0}) class="text-white">Статус</a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {asc = field!=0?true:!asc, field = 0}) class="text-white">Вендор
+                    @if (field != 0){<i class="fa fa-sort"></i>}
+                    else{if (asc){<i class="fa fa-sort-asc"></i>}
+                    else{<i class="fa fa-sort-desc"></i>}}
+                </a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {asc = field!=1?true:!asc, field = 1}) class="text-white">Статус
+                    @if (field != 1){<i class="fa fa-sort"></i>}
+                    else{if (asc){<i class="fa fa-sort-asc"></i>}
+                    else{<i class="fa fa-sort-desc"></i>}}
+                </a></th>
                 @*<th>Описание</th>*@
                 <th>Картинка</th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 1}) class="text-white">Дата окончания</a></th>
-                <th><a href=@Url.Action("index", "VendorState", new {field = 2}) class="text-white">Юр лицо Юнит</a></th>
-                <th><a href=@Url.Action("Index", "VendorState", new {field = 3}) class="text-white">Язык оригинала</a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {asc = field!=2?true:!asc, field = 2}) class="text-white">Дата окончания
+                    @if (field!=2){<i class="fa fa-sort"></i>}
+                    else{if(asc){<i class="fa fa-sort-asc"></i>}
+                    else{<i class="fa fa-sort-desc"></i>}}
+                </a></th>
+                <th><a href=@Url.Action("index", "VendorState", new {asc = field!=3?true:!asc, field = 3}) class="text-white">Юр лицо Юнит
+                    @if(field!=3){<i class="fa fa-sort"></i>}
+                    else{if(asc){<i class="fa fa-sort-asc"></i>}
+                    else{<i class="fa fa-sort-desc"></i>}}
+                </a></th>
+                <th><a href=@Url.Action("Index", "VendorState", new {asc = field!=4?true:!asc, field = 4}) class="text-white">Язык оригинала
+                    @if(field!=4){<i class="fa fa-sort"></i>}
+                    else{if(asc){<i class="fa fa-sort-asc"></i>}
+                    else{<i class="fa fa-sort-desc"></i>}}
+                </a></th>
                 @if (userCanEdit)
                 {
                     <th>История</th>
