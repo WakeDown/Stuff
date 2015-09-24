@@ -407,7 +407,7 @@
     <Content Include="Views\Budget\New.cshtml" />
     <Content Include="Views\Budget\Edit.cshtml" />
     <Content Include="Views\Vendor\Index.cshtml" />
-    <Content Include="Views\VendorState\Edit.cshtml" />
+    <Content Include="Views\Edit.cshtml" />
     <Content Include="Views\VendorState\Image.cshtml" />
     <Content Include="Views\VendorState\Index.cshtml" />
     <Content Include="Views\VendorState\New.cshtml" />
@@ -441,7 +441,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>55245</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

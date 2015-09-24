@@ -47,10 +47,8 @@
                 @Html.TextBoxFor(m => m.EndDate, "{0:dd.MM.yyyy}", new {@class = "form-control text-right required-mark", @id = "endDate", required = "required", data_error = "Заполните поле Дата окончания"})
                 <span class="help-block with-errors"></span>
             </div>
-            <label class="col-lg-2 control-label" for="endDate">Бессрочно</label>
             <div class="col-lg-2">
-                @Html.CheckBox("endless");
-                <span class="help-block with-errors"></span>
+                @Html.CheckBox("endless") бессрочно
             </div>
         </div>
 
@@ -97,11 +95,13 @@
             });
             $('#endless').click(function () {
                 if (this.checked) {
-                    $("#endDate").hide();
-                    $("#endDate").val('@DateTime.Parse("3333-03-03")');
+                    $("#endDate").prop('disabled', true);
+                    $("#endDate").prop('required', false);
+                    @*$("#endDate").val('@DateTime.Parse("3333-03-03").ToString("dd.MM.yyyy")');*@
                 } else {
                     $("#endDate").val(null);
-                    $("#endDate").show();
+                    $("#endDate").prop('required', true);
+                    $("#endDate").prop('disabled', false);
 
                 }
             });
