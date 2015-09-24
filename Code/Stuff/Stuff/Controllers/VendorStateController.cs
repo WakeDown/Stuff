@@ -12,15 +12,37 @@ namespace Stuff.Controllers
     public class VendorStateController : BaseController
     {
         // GET: VendorState
-        public ActionResult Index()
+        public enum Fields : byte
         {
-            //DisplayCurUser();
-
-            var vnd = VendorState.GetList();
-            return View(vnd);
-
+            StateName,
+            EndDate,
+            UnitOrganization,
+            Language
         }
-
+        [HttpGet]
+        public ActionResult Index(byte? field, VendorState vnd1s)
+        {
+            var vnds = VendorState.GetList();
+            if (field == null)
+                return View(vnds.OrderBy(v => v.VendorName));
+            IEnumerable<VendorState> vnd = null;
+            switch ((Fields)field)
+            {
+                case Fields.EndDate:
+                    vnd = vnds.OrderBy(v => v.EndDate);
+                    break;
+                case Fields.Language:
+                    vnd = vnds.OrderBy(v => v.LanguageName);
+                    break;
+                case Fields.StateName:
+                    vnd = vnds.OrderBy(v => v.StateName);
+                    break;
+                case Fields.UnitOrganization:
+                    vnd = vnds.OrderBy(v => v.UnitOrganizationName);
+                    break;
+            }
+            return View(vnd);
+        }
         public ActionResult History(int id)
         {
            if (!CurUser.HasAccess(AdGroup.VendorStateEditor))
@@ -121,7 +143,9 @@ namespace Stuff.Controllers
                 vnd.Picture = picture;
             }
             //var chkCreateAdUser = Request.Form["chkCreateAdUser"];
-            //bool createAdUser = chkCreateAdUser != "false";
+            //bool createAdUser = chkCreateAdUser != "false";.
+            if (vnd.EndDate.Equals(new DateTime()))
+                vnd.EndDate=new DateTime(3333,3,3);
             bool complete = vnd.Save(out responseMessage);
             return complete;
         }
