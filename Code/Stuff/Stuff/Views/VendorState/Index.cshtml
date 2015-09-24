@@ -66,11 +66,11 @@
                 @*<td>@vnd.StateDescription</td>*@
                 <td class="text-center">@if (vnd.Picture != null)
                                         {
-                                            <a class="btn btn-link" href="@Url.Action("Image", "VendorState", new {id = vnd.Id})" target="_blank" data-toggle="tooltip" title="Картинка"><img id="pic-min" src="@Url.Action("GetImage", "VendorState", new {id = @vnd.Id, curIm = @ViewBag.CurIm})" width="50"/></a>
+                                            <a class="btn btn-link" href="@Url.Action("GetImage", "VendorState", new {id = vnd.Id})" target="_blank" data-toggle="tooltip" title="Картинка"><img id="pic-min" src="@Url.Action("GetImage", "VendorState", new {id = @vnd.Id, curIm = @ViewBag.CurIm})" width="50"/></a>
                                         }
                 </td>
-                <td>
-                    @(vnd.EndDate.ToShortDateString().Equals("03.03.3333") ? "бессрочно":vnd.EndDate.ToString("dd.MM.yyyy"))
+                <td class="@(vnd.EndDate.Date<=DateTime.Now.Date? "bg-danger":String.Empty)">
+                    @(vnd.EndDate.ToShortDateString().Equals("03.03.3333") ? "бессрочно":  vnd.EndDate.ToString("dd.MM.yyyy"))
                 <td>@vnd.UnitOrganizationName</td>
                 <td>@vnd.LanguageName</td>
                 @if (userCanEdit)
