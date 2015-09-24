@@ -407,7 +407,7 @@
     <Content Include="Views\Budget\New.cshtml" />
     <Content Include="Views\Budget\Edit.cshtml" />
     <Content Include="Views\Vendor\Index.cshtml" />
-    <Content Include="Views\Edit.cshtml" />
+    <Content Include="Views\VendorState\Edit.cshtml" />
     <Content Include="Views\VendorState\Image.cshtml" />
     <Content Include="Views\VendorState\Index.cshtml" />
     <Content Include="Views\VendorState\New.cshtml" />
