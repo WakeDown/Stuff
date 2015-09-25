@@ -289,3 +289,7 @@ table.list4link tr.db-error .act {
         text-align: right;
     }
 }
+
+.valign-middle {
+    vertical-align: middle !important;
+}
