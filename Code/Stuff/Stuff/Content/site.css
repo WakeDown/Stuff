@@ -279,6 +279,9 @@ table.list4link tr.db-error .act {
     .text-center-sm{
         text-align: center;
     }
+    .pad-t-sm-sm {
+        padding-top: 10px !important;
+    }
 }
 
 @media (min-width: 1200px){
