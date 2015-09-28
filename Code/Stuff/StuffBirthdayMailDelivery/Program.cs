@@ -33,31 +33,31 @@ namespace StuffDelivery
             if (args[0] != null && args[0] == "hldwrk") HolidayWorkDelivery();
             if (args[0] != null && args[0] == "hldwrklist") SendHolidayWorkConfirmList();
             if (args[0] != null && args[0] == "itbudget") SendItBudget();
-            if (args[0] != null && args[0] == "vendorexp") VendorStateDelivery(DeliveryType.Update);
-            if (args[0] != null && args[0] == "vendornewbie") VendorStateDelivery(DeliveryType.Newbie);
-            if (args[0] != null && args[0] == "vendorupd") VendorStateDelivery(DeliveryType.Update);
+            if (args[0] != null && args[0] == "vendorexp") VendorStateDelivery(VendorStateDeliveryType.Expired);
+            if (args[0] != null && args[0] == "vendornewbie") VendorStateDelivery(VendorStateDeliveryType.Newbie);
+            if (args[0] != null && args[0] == "vendorupd") VendorStateDelivery(VendorStateDeliveryType.Update);
         }
-        public enum DeliveryType : byte {Newbie, Update, EndDate}
-        public static void VendorStateDelivery(DeliveryType type)
+        public enum VendorStateDeliveryType : byte {Newbie, Update, Expired}
+        public static void VendorStateDelivery(VendorStateDeliveryType type)
         {
             string stuffUri = ConfigurationManager.AppSettings["stuffUrl"];
             var vendorStateList = VendorState.GetDeliverList((byte)type);
-            var addressList = type == DeliveryType.EndDate?
-                VendorState.GetMailAddressList() : Employee.GetFullRecipientList();
+            var addressList = type == VendorStateDeliveryType.Expired ?
+                VendorState.GetExpiredMailAddressList() : Employee.GetFullRecipientList();
             var mailList = (from s in addressList where !String.IsNullOrEmpty(s) select new MailAddress(s)).ToArray();
             var body = new StringBuilder("Добрый день.<br/>");
             if (vendorStateList.Any())
             {
                 switch (type)
                 {
-                    case DeliveryType.Newbie:
+                    case VendorStateDeliveryType.Newbie:
                         NewVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
                         break;
-                    case DeliveryType.Update:
+                    case VendorStateDeliveryType.Update:
                         UpdVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
                         break;
-                    case DeliveryType.EndDate:
-                        EndVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
+                    case VendorStateDeliveryType.Expired:
+                        ExpiredVendorStateDelivery(vendorStateList, stuffUri, body, mailList);
                         break;
                 }
                 
@@ -70,11 +70,12 @@ namespace StuffDelivery
         {
             foreach (var vendorState in vendorStateList)
             {
-                var subject = string.Format("Новый статус {0} от {1}.", vendorState.StateName, vendorState.VendorName);
+                body = new StringBuilder("Добрый день.<br/>");
+                var subject = $"Новый статус {vendorState.StateName} от {vendorState.VendorName}.";
                 body.AppendFormat("У организации {0} появился новый статус {1} от {2}.<br/>", vendorState.UnitOrganizationName,
                     vendorState.StateName,
                     vendorState.VendorName);
-                if (vendorState.EndDate.ToShortDateString() == "03.03.3333") body.Append("Бессрочный статус");
+                if (vendorState.EndDate.ToShortDateString() == "03.03.3333") body.Append("Срок действия - Бессрочно.<br/>");
                 else
                 {
                     body.AppendFormat("Срок действия до {0}.<br/>", vendorState.EndDate.ToShortDateString());
@@ -82,7 +83,7 @@ namespace StuffDelivery
                 body.AppendFormat("{0}<br/>", vendorState.StateDescription);
                 body.AppendFormat("<p><a href='{0}/VendorState/Image/{1}'>{0}/VendorState/Image/{1}</a></p>", stuffUri,
                     vendorState.Id);
-                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null, true);
+                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null);
             }
         }
         private static void UpdVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
@@ -90,13 +91,14 @@ namespace StuffDelivery
             var curPrevPairs = VendorState.GetCurPrevPairs(vendorStateList);
             foreach (var curPrevPair in curPrevPairs)
             {
-                var subject = string.Format("Обновление статуса {0} от {1}.", curPrevPair.Value.StateName, curPrevPair.Value.VendorName);
+                body = new StringBuilder("Добрый день.<br/>");
+                var subject = $"Обновление статуса {curPrevPair.Value.StateName} от {curPrevPair.Value.VendorName}.";
                 body.AppendFormat("Обновился статус {0} от {1} для организации {2}.<br/><br/>", curPrevPair.Value.StateName, curPrevPair.Value.VendorName, curPrevPair.Value.UnitOrganizationName);
                 body.Append("Новая версия статуса:<br/>");
                 body.AppendFormat("{0}<br/>", curPrevPair.Key.UnitOrganizationName);
                 body.AppendFormat("{0}<br/>", curPrevPair.Key.VendorName);
                 body.AppendFormat("{0}<br/>", curPrevPair.Key.StateName);
-                if (curPrevPair.Key.EndDate.ToShortDateString() == "03.03.3333") body.Append("Бессрочный статус<br/>");
+                if (curPrevPair.Key.EndDate.ToShortDateString() == "03.03.3333") body.Append("Срок действия - Бессрочно.<br/>");
                 else
                 {
                     body.AppendFormat("Срок действия до {0}.<br/>", curPrevPair.Key.EndDate.ToShortDateString());
@@ -104,15 +106,16 @@ namespace StuffDelivery
                 body.AppendFormat("{0}<br/>", curPrevPair.Key.StateDescription);
                 body.AppendFormat("<p><a href='{0}/VendorState/Image/{1}'>{0}/VendorState/Image/{1}</a></p>", stuffUri,
                     curPrevPair.Key.Id);
-                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null, true);
+                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null);
             }
         }
-        private static void EndVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
+        private static void ExpiredVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
         {
             foreach (var vendorState in vendorStateList)
             {
-                var subject = string.Format("Срок действия статуса {0} от {1} истекает через 2 месяца",
-                    vendorState.StateName, vendorState.VendorName);
+                body = new StringBuilder("Добрый день.<br/>");
+                var subject =
+                    $"Срок действия статуса {vendorState.StateName} от {vendorState.VendorName} истекает через 2 месяца";
                 body.AppendFormat(
                     "У оргнизации {0} через 2 месяца истекает срок действия статуса {1} от {2}.<br/>",
                     vendorState.UnitOrganizationName, vendorState.StateName, vendorState.VendorName);
@@ -121,7 +124,7 @@ namespace StuffDelivery
                     vendorState.Id);
                 //MemoryStream stream = new MemoryStream(vendorState.Picture.ToArray());
                 //var file = new AttachmentFile() { Data = stream.ToArray(), FileName = "state.jpeg", DataMimeType = MediaTypeNames.Image.Jpeg };
-                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, isTest: true);
+                SendMailSmtp(subject, body.ToString(), true, mailList, null, null);
             }
         }
 

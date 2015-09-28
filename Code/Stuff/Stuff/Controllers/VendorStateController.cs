@@ -143,7 +143,6 @@ namespace Stuff.Controllers
     
         public bool SaveVendorState(VendorState vnd, out ResponseMessage responseMessage)
         {
-
             if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
             {
                 var file = Request.Files[0];
