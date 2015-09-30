@@ -83,7 +83,7 @@ namespace StuffDelivery
                 body.AppendFormat("{0}<br/>", vendorState.StateDescription);
                 body.AppendFormat("<p><a href='{0}/VendorState/Image/{1}'>{0}/VendorState/Image/{1}</a></p>", stuffUri,
                     vendorState.Id);
-                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null);
+                SendMailSmtp(subject, body.ToString(), true,  null, mailList, null, null);
             }
         }
         private static void UpdVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
@@ -106,7 +106,7 @@ namespace StuffDelivery
                 body.AppendFormat("{0}<br/>", curPrevPair.Key.StateDescription);
                 body.AppendFormat("<p><a href='{0}/VendorState/Image/{1}'>{0}/VendorState/Image/{1}</a></p>", stuffUri,
                     curPrevPair.Key.Id);
-                SendMailSmtp(subject, body.ToString(), true, mailList, null, null, null);
+                SendMailSmtp(subject, body.ToString(), true,  null, mailList, null, null);
             }
         }
         private static void ExpiredVendorStateDelivery(List<VendorState> vendorStateList, string stuffUri, StringBuilder body, MailAddress[] mailList)
@@ -319,7 +319,6 @@ namespace StuffDelivery
 
         public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, AttachmentFile file = null, bool isTest = false)
         {
-
             if ((mailTo == null || !mailTo.Any()) && (hiddenMailTo == null || !hiddenMailTo.Any())) throw new Exception("Не указаны получатели письма!");
 
             if (mailFrom == null || String.IsNullOrEmpty(mailFrom.Address)) mailFrom = defaultMailFrom;

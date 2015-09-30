@@ -18,7 +18,14 @@
 
     @using (Html.BeginForm("New", "VendorState", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data",  role = "form" }))
     {
-        <div class="alert-danger">@TempData["ServerError"]</div>
+        if (@TempData["ServerError"] != null)
+         {
+             <div class="form-group">
+                 <div class="col-lg-5 col-lg-push-2">
+                     <blockquote class="alert-danger">@TempData["ServerError"]</blockquote>
+                 </div>
+             </div>
+         }
         <div class="form-group">
            <label class="col-lg-2 control-label" for="Name">Вендор</label>
             <div class="col-lg-5">
@@ -37,7 +44,7 @@
             <label class="col-lg-2 control-label" for="picture">Картинка</label>
             <div class="col-lg-5">
                 <input type="file" name="file"/>
-                <small>только jpeg</small>
+                <small>только jpeg размером не более 5 Мб</small>
             </div>
         </div>
 
