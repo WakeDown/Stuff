@@ -120,7 +120,7 @@ namespace StuffDelivery
                     "У оргнизации {0} через 2 месяца истекает срок действия статуса {1} от {2}.<br/>",
                     vendorState.UnitOrganizationName, vendorState.StateName, vendorState.VendorName);
                 body.AppendFormat("{0}<br/>", vendorState.StateDescription);
-                body.AppendFormat("<p><a href='{0}/VendorState/GetImage/{1}'>{0}/VendorState/GetImage/{1}</a></p>", stuffUri,
+                body.AppendFormat("<p><a href='{0}/VendorState/Edit/{1}'>{0}/VendorState/Edit/{1}</a></p>", stuffUri,
                     vendorState.Id);
                 //MemoryStream stream = new MemoryStream(vendorState.Picture.ToArray());
                 //var file = new AttachmentFile() { Data = stream.ToArray(), FileName = "state.jpeg", DataMimeType = MediaTypeNames.Image.Jpeg };
