@@ -143,10 +143,15 @@ namespace Stuff.Controllers
     
         public bool SaveVendorState(VendorState vnd, out ResponseMessage responseMessage)
         {
-
             if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
             {
                 var file = Request.Files[0];
+                if (file.ContentLength > 5242880)
+                {
+                    responseMessage = new ResponseMessage();
+                    responseMessage.ErrorMessage = "Нельзя загрузить файл размером более 5 мегабайт. Файл не был загружен.";
+                    return false;
+                }
 
                 string ext = Path.GetExtension(file.FileName).ToLower();
 
@@ -160,7 +165,9 @@ namespace Stuff.Controllers
                 vnd.Picture = picture;
             }
             //var chkCreateAdUser = Request.Form["chkCreateAdUser"];
-            //bool createAdUser = chkCreateAdUser != "false";
+            //bool createAdUser = chkCreateAdUser != "false";.
+            if (vnd.EndDate.Equals(new DateTime()))
+                vnd.EndDate=new DateTime(3333,3,3);
             bool complete = vnd.Save(out responseMessage);
             return complete;
         }

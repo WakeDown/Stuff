@@ -53,12 +53,12 @@
                                 <li><a href='@Url.Action("NewbieList", "Employee")'>Новобранцы</a></li>
                             }
                             <li><a href='@Url.Action("List", "Employee")'>Сотрудники</a></li>
-                            <li><a href='@Url.Action("Index", "VendorState")'>Статусы вендоров</a></li>
                             @if (userCanEdit)
                             {
                                 <li><a href='@Url.Action("DecreeList", "Employee")'>В декрете</a></li>
                                 <li><a href='@Url.Action("FiredList", "Employee")'>Уволенные</a></li>
                             }
+                            <li><a href='@Url.Action("Index", "VendorState")'>Статусы вендоров</a></li>
                         </ul>
                     </li>
                     @if (userCanEdit || userIsVendorManager)

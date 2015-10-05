@@ -18,7 +18,14 @@
 
     @using (Html.BeginForm("New", "VendorState", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data",  role = "form" }))
     {
-        <div class="alert-danger">@TempData["ServerError"]</div>
+        if (@TempData["ServerError"] != null)
+         {
+             <div class="form-group">
+                 <div class="col-lg-5 col-lg-push-2">
+                     <blockquote class="alert-danger">@TempData["ServerError"]</blockquote>
+                 </div>
+             </div>
+         }
         <div class="form-group">
            <label class="col-lg-2 control-label" for="Name">Вендор</label>
             <div class="col-lg-5">
@@ -37,7 +44,7 @@
             <label class="col-lg-2 control-label" for="picture">Картинка</label>
             <div class="col-lg-5">
                 <input type="file" name="file"/>
-                <small>только jpeg</small>
+                <small>только jpeg размером не более 5 Мб</small>
             </div>
         </div>
 
@@ -47,10 +54,8 @@
                 @Html.TextBoxFor(m => m.EndDate, "{0:dd.MM.yyyy}", new {@class = "form-control text-right required-mark", @id = "endDate", required = "required", data_error = "Заполните поле Дата окончания"})
                 <span class="help-block with-errors"></span>
             </div>
-            <label class="col-lg-2 control-label" for="endDate">Бессрочно</label>
             <div class="col-lg-2">
-                @Html.CheckBox("endless");
-                <span class="help-block with-errors"></span>
+                @Html.CheckBox("endless") бессрочно
             </div>
         </div>
 
@@ -97,11 +102,13 @@
             });
             $('#endless').click(function () {
                 if (this.checked) {
-                    $("#endDate").hide();
-                    $("#endDate").val('@DateTime.Parse("3333-03-03")');
+                    $("#endDate").prop('disabled', true);
+                    $("#endDate").prop('required', false);
+                    @*$("#endDate").val('@DateTime.Parse("3333-03-03").ToString("dd.MM.yyyy")');*@
                 } else {
                     $("#endDate").val(null);
-                    $("#endDate").show();
+                    $("#endDate").prop('required', true);
+                    $("#endDate").prop('disabled', false);
 
                 }
             });

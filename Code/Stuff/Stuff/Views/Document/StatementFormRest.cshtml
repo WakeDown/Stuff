@@ -8,7 +8,7 @@
 }
 @section PanelBody
 {
-    @using (Html.BeginForm("StatementFormRest", "Document", FormMethod.Post, new { @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+    @using (Html.BeginForm("StatementFormRest", "Document", FormMethod.Post, new { @class = "form-horizontal",  role = "form" }))
     {
         @Html.HiddenFor(m => m.SidEmployee, new { id = "sid" })
         <div class="form-group">

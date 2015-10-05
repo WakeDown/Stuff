@@ -90,9 +90,9 @@ namespace Stuff.Models
             return null;
 
         } 
-        public static List<string> GetMailAddressList()
+        public static List<string> GetExpiredMailAddressList()
         {
-            Uri uri = new Uri(String.Format("{0}/VendorState/GetMailAddressList", OdataServiceUri));
+            Uri uri = new Uri(String.Format("{0}/VendorState/GetExpiredMailAddressList", OdataServiceUri));
             string json = GetJson(uri);
             var list = JsonConvert.DeserializeObject<List<string>>(json);
             return (list);

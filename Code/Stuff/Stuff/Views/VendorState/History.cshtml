@@ -42,11 +42,11 @@
                 <td>
                     @if (vnd.Picture != null)
                     {
-                    <a lass="btn btn-link" href="@Url.Action("Image", "VendorState", new {id = vnd.Id, curIm = true})" target="_blank" data-toggle="tooltip" title="Картинка"><img id="pic-min" src="@Url.Action("GetImage", "VendorState", new {id = @vnd.Id})" width="50" /></a>
+                    <a lass="btn btn-link" href="@Url.Action("GetImage", "VendorState", new {id = vnd.Id, curIm = true})" target="_blank" data-toggle="tooltip" title="Картинка"><img id="pic-min" src="@Url.Action("GetImage", "VendorState", new {id = @vnd.Id})" width="50" /></a>
                 }
 
             </td>
-            <td>@vnd.EndDate.ToShortDateString()</td>
+            <td>@(vnd.EndDate.ToShortDateString().Equals("03.03.3333") ? "бессрочно" : vnd.EndDate.ToString("dd.MM.yyyy"))</td>
             <td>@vnd.UnitOrganizationName</td>
             <td>@vnd.LanguageName</td>
             <td>@vnd.Author</td>

@@ -15,7 +15,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="modalStatementRestFewHoursLabel">Заявление на отгул (1 или несколько дней)</h4>
             </div>*@
-            @using (Html.BeginForm("StatementRestFewDays", "Document", FormMethod.Post, new { @class = "form-horizontal", data_toggle = "validator", role = "form" }))
+            @using (Html.BeginForm("StatementRestFewDays", "Document", FormMethod.Post, new { @class = "form-horizontal",  role = "form" }))
             {
                 @Html.HiddenFor(m=>m.SidEmployee, new {id="sid"})
                 @*<div class="modal-body">*@
