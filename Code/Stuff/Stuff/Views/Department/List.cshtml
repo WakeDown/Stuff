@@ -47,7 +47,7 @@
                 <td>@dep.Name</td>
                 <td>@dep.ParentDepartment.Name</td>
                 <td>@dep.Chief.DisplayName</td>
-@if (ViewBag.CurUser.UserCanEdit())
+@if (userCanEdit)
 {
     <td>
         <button class="btn btn-link" name="delele-dep" depid="@dep.Id" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></button>
