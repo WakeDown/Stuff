@@ -31,11 +31,11 @@ namespace Stuff.Controllers
             TempData["userCanAdd"] = years[(int)year]>0 && year >= DateTime.Now.Year;
             return View(restHolidays);
         }
-        public ActionResult DeleteRestHoliday(int year, string id)
+        public string DeleteRestHoliday(int year, string id)
         {
             ResponseMessage responseMessage;
-            var success = RestHoliday.Delete(int.Parse(id), out responseMessage);
-            return RedirectToAction("Index", new {year, success, message = responseMessage?.ErrorMessage ?? "Отпуск удален."});
+            RestHoliday.Delete(int.Parse(id), out responseMessage);
+            return responseMessage?.ErrorMessage ?? "";
         }
         public string SaveRestHoliday(string startDate, string duration)
         {
