@@ -1,0 +1,210 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Web.UI.WebControls
+@using Stuff.Helpers
+@using Stuff.Models
+@using Stuff.Objects
+@using Newtonsoft.Json
+@model List<RestHoliday>
+
+@{
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    var startDate = (string)TempData["startDate"];
+    var endDate = (string)TempData["endDate"];
+    var curYear = (int)TempData["curYear"];
+    var years = (Dictionary<int, int>)TempData["years"];
+    string duration = years[curYear].ToString();
+    var str = "";
+    var userCanAdd = (bool)TempData["userCanAdd"];
+}
+@section PanelHead
+{
+    Отпуска
+
+}
+
+@section PanelBody
+{
+    <div id="newVacationForm" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Добавление отпуска</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="col-lg-6 control-label" for="startDate">Дата начала отпуска</label>
+                            <div class="col-lg-3">
+                                @Html.TextBoxFor(sd => startDate, new { @class = "form-control required-mark", @id = "startDate", required = "required", change = "catch" })
+                                <span class="help-block with-errors"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-6 control-label" for="duration">Продолжительность отпуска в днях</label>
+                            <div class="col-lg-2">
+                                @Html.TextBoxFor(d => duration, new { @class = "form-control required-mark", @id = "duration", required = "required", change = "catch" })
+                                <span class="help-block with-errors"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-6 control-label" for="duration">Дата окончания отпуска</label>
+                            <div class="col-lg-3">
+                                <input type="text" id="endDate" readonly class="form-control" value="@endDate" />
+                            </div>
+
+                        </div>
+                        <span id="errorMessage" class="alert-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-lg-1">
+                        <button type="button" id="addbtn" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;добавить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs" id="yearTabs">
+            @foreach (var year in years)
+            {
+                <li class="@(year.Key == curYear ? "active" : "")"><a href="@Url.Action("Index", "RestHoliday", new {year = year.Key})">@year.Key осталось @year.Value дней</a></li>
+            }
+        </ul>
+        <div class="tab-content">
+
+            <div id="year@(curYear)" class="tab-pane active">
+                <p>
+                    @if (userCanAdd)
+                    {
+                        <div>
+                            <div>
+                                <button class="btn btn-primary" name="showNewVacationForm"><i class="fa fa-plus"></i>&nbsp;новый</button>
+                            </div>
+                            <div class="col-lg-6">
+                                @{ var color = (bool)TempData["success"] ? "alert-success" : "alert-danger";}
+                                <span class="@color">@TempData["Message"]</span>
+                            </div>
+                        </div>
+                                    }
+
+                    @if (Model.Any())
+                    {
+                        using (Html.BeginForm("SetCanEditForYearFalse", "RestHoliday", new { year = curYear }, FormMethod.Post, new { @id = "perForm", @class = "form-horizontal", role = "form" }))
+                        {
+                            <p>
+                                <table class="table table-bordered">
+                                    <tr class="bg-primary">
+                                        <th class="min-width">№</th>
+                                        <th href="#startDate">Начало отпуска</th>
+                                        <th>Продолжительность в днях</th>
+                                        <th>Дата окончания отпуска</th>
+                                        <th class="min-width"></th>
+                                    </tr>
+                                    @{ int i = 0;}
+                                    @foreach (var restHoliday in Model)
+                                    {
+                                        i++;
+                                        <tr>
+                                            <td>@i</td>
+                                            <td>@restHoliday.StartDate.ToShortDateString()</td>
+                                            <td>@restHoliday.Duration</td>
+                                            <td>@restHoliday.EndDate.AddDays(1).ToShortDateString()</td>
+                                            <td>
+                                                @if (restHoliday.CanEdit)
+                                                {
+                                                    str += restHoliday.Id + ",";
+
+                                                    <a href='@Url.Action("DeleteRestHoliday", "RestHoliday", new {year = curYear, id = restHoliday.Id})' class="btn btn-link" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></a>
+
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger" data-toggle="tooltip" title="утверждено"><i class="fa fa-lock"></i></span>}
+                                            </td>
+
+                                        </tr>
+
+                                    }
+                                </table>
+                                </p>
+                                    if (!string.IsNullOrEmpty(str))
+                                    {
+                                        @Html.HiddenFor(s => str)
+                                        ;
+                                        <button type="submit" class="btn btn-warning">утвердить</button>
+                                            }
+                                        }
+                                    }
+                </p>
+            </div>
+
+
+        </div>
+    </div>
+
+}
+
+
+@section scripts
+        {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var startDate = "@startDate";
+            var endDate = "@endDate";
+            $("#startDate").datepicker({
+                startDate: startDate,
+                setDate: startDate,
+                endDate: endDate,
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+
+            $('[change="catch"]').on("change", function () {
+                var date = $("#startDate").datepicker("getDate"),
+                    days = parseInt($("#duration").val())-1;
+                if (!isNaN(date.getTime()) && !isNaN(days)) {
+                    days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
+                    days = days < 0 ? 0 : days;
+                    date.setDate(date.getDate() + days);
+                    $("#duration").val(days + 1);
+                    $("#endDate").val(date.toLocaleDateString().split(',')[0]);
+                }
+                if (isNaN(days) || isNaN(date.getTime())) {
+                    $("#addbtn").hide();
+                    $("#errorMessage").text("Проверьте правильность данных");
+                } else {
+                    $("#addbtn").show();
+                    $("#errorMessage").text("");
+                }
+
+            });
+
+            $('[name=showNewVacationForm]').click(function () {
+                $("#newVacationForm").modal("show");
+            });
+
+            $("#addbtn").click(function() {
+                var startDate = $("#startDate").val();
+                var duration = $("#duration").val();
+                var url = "@Url.Action("SaveRestHoliday","RestHoliday")";
+                $.get(url, {startDate: startDate, duration: duration}, function (data) {
+                    $("#errorMessage").text(data);
+                    $("#addbtn").hide();
+                    if (data === "Отпуск добавлен") {
+                        $("#errorMessage").attr('class', 'alert-success');
+                        window.location.href = "@Url.Action("Index","RestHoliday",new {year = curYear})";
+                    }
+                });
+            });
+
+        })
+
+
+    </script>
+}
