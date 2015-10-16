@@ -77,19 +77,17 @@
 
             <div id="year@(curYear)" class="tab-pane active">
                 <p>
-                    @if (userCanAdd)
-                    {
-                        <div>
+                    <div>
                             <div>
-                                <button class="btn btn-primary" name="showNewVacationForm"><i class="fa fa-plus"></i>&nbsp;новый</button>
+                                <button class="btn btn-primary" id="showNewVacationForm"><i class="fa fa-plus"></i>&nbsp;новый</button>
                             </div>
                             <div class="col-lg-6">
-                                @{ var color = (bool)TempData["success"] ? "alert-success" : "alert-danger";}
-                                <span class="@color">@TempData["Message"]</span>
+                                @if (!(bool)TempData["success"])
+                                {
+                                    <span class="alert-danger">@TempData["Message"]</span>
+                                }
                             </div>
                         </div>
-                                    }
-
                     @if (Model.Any())
                     {
                         using (Html.BeginForm("SetCanEditForYearFalse", "RestHoliday", new { year = curYear }, FormMethod.Post, new { @id = "perForm", @class = "form-horizontal", role = "form" }))
@@ -117,7 +115,7 @@
                                                 {
                                                     str += restHoliday.Id + ",";
 
-                                                    <a href='@Url.Action("DeleteRestHoliday", "RestHoliday", new {year = curYear, id = restHoliday.Id})' class="btn btn-link" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></a>
+                                                    <span name="del" rhId="@restHoliday.Id" class="btn btn-link" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></span>
 
                                                 }
                                                 else
@@ -130,12 +128,9 @@
                                     }
                                 </table>
                                 </p>
-                                    if (!string.IsNullOrEmpty(str))
-                                    {
-                                        @Html.HiddenFor(s => str)
-                                        ;
-                                        <button type="submit" class="btn btn-warning">утвердить</button>
-                                            }
+                                    @Html.HiddenFor(s => str);
+                                        <button type="submit" id="confbtn" class="btn btn-warning">утвердить</button>
+                                            
                                         }
                                     }
                 </p>
@@ -152,7 +147,7 @@
         {
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             var startDate = "@startDate";
             var endDate = "@endDate";
             $("#startDate").datepicker({
@@ -165,37 +160,40 @@
                 language: "ru"
             });
 
-            $('[change="catch"]').on("change", function () {
-                var date = $("#startDate").datepicker("getDate"),
-                    days = parseInt($("#duration").val())-1;
-                if (!isNaN(date.getTime()) && !isNaN(days)) {
-                    days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
-                    days = days < 0 ? 0 : days;
-                    date.setDate(date.getDate() + days);
-                    $("#duration").val(days + 1);
-                    $("#endDate").val(date.toLocaleDateString().split(',')[0]);
-                }
-                if (isNaN(days) || isNaN(date.getTime())) {
-                    $("#addbtn").hide();
-                    $("#errorMessage").text("Проверьте правильность данных");
-                } else {
-                    $("#addbtn").show();
-                    $("#errorMessage").text("");
-                }
+            if ("@string.IsNullOrEmpty(str)" === "True") {
+                $("#confbtn").attr("disabled", "disabled")
+            };
+            if ("@userCanAdd" === "False") {
+                $("#showNewVacationForm").attr("disabled", "disabled")
+            };
 
+            $('[change="catch"]').on("keypress", function() {
+                setTimeout(setDateEnd, 100);
             });
 
-            $('[name=showNewVacationForm]').click(function () {
+            $("#showNewVacationForm").click(function() {
                 $("#newVacationForm").modal("show");
+                setDateEnd();
+            });
+
+            $('[name="del"]').click(function() {
+
+                if (confirm("Вы действетельно хотите удалить отпуск")) {
+                    var id = $(this).attr("rhId");
+                    var url = "@Url.Action("DeleteRestHoliday","RestHoliday")";
+                    $.get(url, { year: @curYear, id: id }, function(data) {
+                        window.location.href = "@Url.Action("Index","RestHoliday")?year=@curYear&message=" + data;
+                    });
+                }
             });
 
             $("#addbtn").click(function() {
                 var startDate = $("#startDate").val();
                 var duration = $("#duration").val();
                 var url = "@Url.Action("SaveRestHoliday","RestHoliday")";
-                $.get(url, {startDate: startDate, duration: duration}, function (data) {
+                $.get(url, { startDate: startDate, duration: duration }, function(data) {
                     $("#errorMessage").text(data);
-                    $("#addbtn").hide();
+                    $("#addbtn").attr("disabled", "disabled");
                     if (data === "Отпуск добавлен") {
                         $("#errorMessage").attr('class', 'alert-success');
                         window.location.href = "@Url.Action("Index","RestHoliday",new {year = curYear})";
@@ -203,8 +201,25 @@
                 });
             });
 
-        })
+        });
 
-
+        function setDateEnd () {
+            var date = $("#startDate").datepicker("getDate"),
+                days = parseInt($("#duration").val())-1;
+            if (!isNaN(date.getTime()) && !isNaN(days)) {
+                days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
+                days = days < 0 ? 0 : days;
+                date.setDate(date.getDate() + days);
+                $("#duration").val(days + 1);
+                $("#endDate").val(date.toLocaleDateString().split(',')[0]);
+            }
+            if (isNaN(days) || isNaN(date.getTime())) {
+                $("#addbtn").attr("disabled", "disabled");
+                $("#errorMessage").text("Проверьте правильность данных");
+            } else {
+                $("#addbtn").removeAttr("disabled");
+                $("#errorMessage").text("");
+            }
+        }
     </script>
 }
