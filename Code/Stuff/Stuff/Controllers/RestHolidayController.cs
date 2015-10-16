@@ -16,8 +16,10 @@ namespace Stuff.Controllers
     {
         public ActionResult Index(int? year, bool?success, string message)
         {
-            var sid = CurUser.Sid;
+            
+ var sid = CurUser.Sid;
             year = year ?? DateTime.Now.Year;
+            if (year <= 2015) year = 2016;
             var restHolidays = RestHoliday.GetRestHolidaysForYear(sid, (int)year);
             TempData["success"] = success ?? false;
             TempData["message"] = message ?? "";

@@ -7,6 +7,7 @@
 @model List<RestHoliday>
 
 @{
+    ViewBag.Title = "График отпусков";
     Layout = "~/Views/Shared/_Editor.cshtml";
     var startDate = (string)TempData["startDate"];
     var endDate = (string)TempData["endDate"];
