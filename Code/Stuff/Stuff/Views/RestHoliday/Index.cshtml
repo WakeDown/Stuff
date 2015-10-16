@@ -7,6 +7,7 @@
 @model List<RestHoliday>
 
 @{
+    ViewBag.Title = "График отпусков";
     Layout = "~/Views/Shared/_Editor.cshtml";
     var startDate = (string)TempData["startDate"];
     var endDate = (string)TempData["endDate"];
@@ -147,7 +148,7 @@
         {
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             var startDate = "@startDate";
             var endDate = "@endDate";
             $("#startDate").datepicker({
@@ -160,40 +161,29 @@
                 language: "ru"
             });
 
-            if ("@string.IsNullOrEmpty(str)"==="True") {$("#confbtn").attr("disabled", "disabled")};
-            if ("@userCanAdd"==="False") {$("#showNewVacationForm").attr("disabled",  "disabled")};
+            if ("@string.IsNullOrEmpty(str)" === "True") {
+                $("#confbtn").attr("disabled", "disabled");
+            };
+            if ("@userCanAdd" === "False") {
+                $("#showNewVacationForm").attr("disabled", "disabled");
+            };
 
-            $('[change="catch"]').on("change", function () {
-                var date = $("#startDate").datepicker("getDate"),
-                    days = parseInt($("#duration").val())-1;
-                if (!isNaN(date.getTime()) && !isNaN(days)) {
-                    days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
-                    days = days < 0 ? 0 : days;
-                    date.setDate(date.getDate() + days);
-                    $("#duration").val(days + 1);
-                    $("#endDate").val(date.toLocaleDateString().split(',')[0]);
-                }
-                if (isNaN(days) || isNaN(date.getTime())) {
-                    $("#addbtn").attr("disabled", "disabled");
-                    $("#errorMessage").text("Проверьте правильность данных");
-                } else {
-                    $("#addbtn").removeAttr("disabled");
-                    $("#errorMessage").text("");
-                }
-
+            $('[change="catch"]').on("keypress", function() {
+                setTimeout(setDateEnd, 100);
             });
 
-            $("#showNewVacationForm").click(function () {
+            $("#showNewVacationForm").click(function() {
                 $("#newVacationForm").modal("show");
+                setDateEnd();
             });
 
             $('[name="del"]').click(function() {
-                
-                if (confirm("Вы действетельно хотите удалить отпуск")){
+
+                if (confirm("Вы действетельно хотите удалить отпуск")) {
                     var id = $(this).attr("rhId");
                     var url = "@Url.Action("DeleteRestHoliday","RestHoliday")";
                     $.get(url, { year: @curYear, id: id }, function(data) {
-                        window.location.href = "@Url.Action("Index","RestHoliday")?year=@curYear&message="+data;
+                        window.location.href = "@Url.Action("Index","RestHoliday")?year=@curYear&message=" + data;
                     });
                 }
             });
@@ -202,7 +192,7 @@
                 var startDate = $("#startDate").val();
                 var duration = $("#duration").val();
                 var url = "@Url.Action("SaveRestHoliday","RestHoliday")";
-                $.get(url, {startDate: startDate, duration: duration}, function (data) {
+                $.get(url, { startDate: startDate, duration: duration }, function(data) {
                     $("#errorMessage").text(data);
                     $("#addbtn").attr("disabled", "disabled");
                     if (data === "Отпуск добавлен") {
@@ -212,8 +202,25 @@
                 });
             });
 
-        })
+        });
 
-
+        function setDateEnd () {
+            var date = $("#startDate").datepicker("getDate"),
+                days = parseInt($("#duration").val())-1;
+            if (!isNaN(date.getTime()) && !isNaN(days)) {
+                days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
+                days = days < 0 ? 0 : days;
+                date.setDate(date.getDate() + days);
+                $("#duration").val(days + 1);
+                $("#endDate").val(date.toLocaleDateString().split(',')[0]);
+            }
+            if (isNaN(days) || isNaN(date.getTime())) {
+                $("#addbtn").attr("disabled", "disabled");
+                $("#errorMessage").text("Проверьте правильность данных");
+            } else {
+                $("#addbtn").removeAttr("disabled");
+                $("#errorMessage").text("");
+            }
+        }
     </script>
 }
