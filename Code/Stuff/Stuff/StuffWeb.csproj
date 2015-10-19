@@ -200,6 +200,7 @@
     <Compile Include="Models\ItBudgetReportItemPeople.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\OrgStateImage.cs" />
+    <Compile Include="Models\EmployeeRestHoliday.cs" />
     <Compile Include="Models\Report.cs" />
     <Compile Include="Models\RestHoliday.cs" />
     <Compile Include="Models\Statement.cs" />
@@ -414,6 +415,7 @@
     <Content Include="Views\VendorState\New.cshtml" />
     <Content Include="Views\VendorState\History.cshtml" />
     <Content Include="Views\RestHoliday\Index.cshtml" />
+    <Content Include="Views\RestHoliday\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

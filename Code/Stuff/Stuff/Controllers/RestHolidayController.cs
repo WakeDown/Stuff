@@ -16,8 +16,7 @@ namespace Stuff.Controllers
     {
         public ActionResult Index(int? year, bool?success, string message)
         {
-            
- var sid = CurUser.Sid;
+            var sid = CurUser.Sid;
             year = year ?? DateTime.Now.Year;
             if (year <= 2015) year = 2016;
             var restHolidays = RestHoliday.GetRestHolidaysForYear(sid, (int)year);
@@ -39,6 +38,16 @@ namespace Stuff.Controllers
             RestHoliday.Delete(int.Parse(id), out responseMessage);
             return responseMessage?.ErrorMessage ?? "";
         }
+
+        public ActionResult List(int? year, string message)
+        {
+            TempData["message"] = message ?? "";
+            year = year ?? DateTime.Now.Year;
+            if (year <= 2015) year = 2016;
+            ViewBag.Years = RestHoliday.GetYears4Sid(null).Select(y =>y.Key).ToArray();
+            ViewBag.CurYear = year;
+            return View(EmployeeRestHoliday.GetEmployeeList(year.Value));
+        }
         public string SaveRestHoliday(string startDate, string duration)
         {
             try
@@ -56,7 +65,13 @@ namespace Stuff.Controllers
                 return ex.Message;
             }
         }
-
+        public ActionResult SetCanEditForYearTrue(int year, string sid)
+        {
+            ResponseMessage responseMessage;
+            EmployeeRestHoliday.CanEdit(sid, year, true, out responseMessage);
+            var message = responseMessage?.ErrorMessage;
+            return RedirectToAction("List", "RestHoliday", new {year, message});
+        }
         public ActionResult SetCanEditForYearFalse(int year, string str)
         {
             var idArray = Array.ConvertAll(str.Trim(',').Split(','), s => int.Parse(s)) ;

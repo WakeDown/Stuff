@@ -1,0 +1,73 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Web.UI.WebControls
+@using Stuff.Helpers
+@using Stuff.Models
+@using Stuff.Objects
+@using Newtonsoft.Json
+@model List<EmployeeRestHoliday>
+@{
+    ViewBag.Title = "График отпусков";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    var years = (int[]) ViewBag.Years;
+    var curYear = (int) ViewBag.CurYear;
+}
+@section PanelHead{
+    Отпуска
+}
+
+@section PanelBody{
+<div>
+        <ul class="nav nav-tabs" id="yearTabs">
+            @foreach (var year in years)
+            {
+                <li class="@(year == curYear ? "active" : "")"><a href="@Url.Action("List", "RestHoliday", new {year})">@year</a></li>
+            }
+        </ul>
+        <div class="tab-content">
+            <span class="alert-danger">@TempData["message"]</span>
+            <div id="year@(curYear)" class="tab-pane active">
+                <p>
+                    @if (Model.Any())
+                    {
+                        <table class="table table-bordered">
+                            <tr class="bg-primary">
+                                <th class="min-width">№</th>
+                                <th href="#startDate">Имя</th>
+                                <th>Потрачено дней</th>
+                                <th>Осталось дней</th>
+                                <th class="min-width"></th>
+                            </tr>
+                            @{ int i = 0;}
+                            @foreach (var erh in Model)
+                            {
+                                i++;
+                                <tr>
+                                    <td>@i</td>
+                                    <td>@erh.EmployeeName</td>
+                                    <td>@erh.DurationSum</td>
+                                    <td>@erh.Residue</td>
+                                    @{var url = Url.Action("SetCanEditForYearTrue", "RestHoliday", new {year = curYear, sid = erh.EmployeeSid});}
+                                    <td>
+                                        <a href="@url">
+                                            <span name="del" class="btn btn-link" data-toggle="tooltip" title="Разбокировать редактирование"><i class="fa fa-unlock"></i></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                }
+                </p>
+            </div>
+
+
+        </div>
+    </div>
+
+}
+
+
+@section scripts{
+<script type="text/javascript">
+    
+</script>
+}

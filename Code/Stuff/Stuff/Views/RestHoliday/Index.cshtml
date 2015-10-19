@@ -168,8 +168,9 @@
                 $("#showNewVacationForm").attr("disabled", "disabled");
             };
 
-            $('[change="catch"]').on("keypress", function() {
+            $('[change="catch"]').on("keypress change", function() {
                 setTimeout(setDateEnd, 100);
+
             });
 
             $("#showNewVacationForm").click(function() {
