@@ -14,6 +14,8 @@ namespace Stuff.Models
         public string EmployeeSid { get; set; }
         public int DurationSum { get; set; }
         public int Residue { get; set; }
+        public int PeriodCount { get; set; }
+        public bool HasBlockedPeriods { get; set; }
 
         EmployeeRestHoliday()
         {

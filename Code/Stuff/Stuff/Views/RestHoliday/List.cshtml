@@ -32,9 +32,10 @@
                         <table class="table table-bordered">
                             <tr class="bg-primary">
                                 <th class="min-width">№</th>
-                                <th href="#startDate">Имя</th>
-                                <th>Потрачено дней</th>
-                                <th>Осталось дней</th>
+                                <th>Сотрудник</th>
+                                <th>Количество периодов</th>
+                                <th>Выбрано дней отпуска</th>
+                                <th class="min-width">Осталось дней</th>
                                 <th class="min-width"></th>
                             </tr>
                             @{ int i = 0;}
@@ -42,15 +43,19 @@
                             {
                                 i++;
                                 <tr>
-                                    <td>@i</td>
+                                    <th>@i</th>
                                     <td>@erh.EmployeeName</td>
+                                    <td>@erh.PeriodCount</td>
                                     <td>@erh.DurationSum</td>
                                     <td>@erh.Residue</td>
-                                    @{var url = Url.Action("SetCanEditForYearTrue", "RestHoliday", new {year = curYear, sid = erh.EmployeeSid});}
+                                    @{ var url = Url.Action("SetCanEditForYearTrue", "RestHoliday", new {year = curYear, sid = erh.EmployeeSid}); }
                                     <td>
+                                        @if (erh.HasBlockedPeriods)
+                                        {
                                         <a href="@url">
-                                            <span name="del" class="btn btn-link" data-toggle="tooltip" title="Разблокировать"><i class="fa fa-unlock"></i></span>
+                                                <span name="unlockBtn" class="btn btn-link" data-toggle="tooltip" title="Разбокировать редактирование"><i class="fa fa-unlock"></i></span>
                                         </a>
+                                        }
                                     </td>
                                 </tr>
                             }
