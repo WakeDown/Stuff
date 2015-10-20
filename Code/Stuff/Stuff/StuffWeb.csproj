@@ -419,9 +419,12 @@
     <Content Include="Views\RestHoliday\List.cshtml" />
     <Content Include="Views\Department\EmployeesRestHolidays.cshtml" />
     <Content Include="Views\Department\EmployeesRestHolidaysTable.cshtml" />
+    <Content Include="Views\Department\EmployeesTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
