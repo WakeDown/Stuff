@@ -27,8 +27,23 @@ namespace Stuff.Controllers
 
             return View(list);
         }
-        
 
+        public ActionResult EmployeesRestHolidays(int? year)
+        {
+            DisplayCurUser();
+            var curYear = (year ?? DateTime.Now.Year) <= 2015 ? 2016 : year ?? DateTime.Now.Year;
+            ViewBag.CurYear = curYear;
+            ViewBag.Years = RestHoliday.GetYears4Sid(null).Select(y => y.Key).ToArray();
+            var list = Department.GetList().ToArray();
+            return View(list);
+        }
+
+        public ActionResult EmployeesRestHolidaysTable(int departmentId, int curYear)
+        {
+            var employeeList = Employee.GetList(idDepartment : departmentId);
+            ViewBag.CurYear = curYear;
+            return PartialView(employeeList);
+        }
         public ActionResult Index()
         {
             DisplayCurUser();

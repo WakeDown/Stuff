@@ -46,6 +46,7 @@ namespace Stuff.Controllers
             if (year <= 2015) year = 2016;
             ViewBag.Years = RestHoliday.GetYears4Sid(null).Select(y =>y.Key).ToArray();
             ViewBag.CurYear = year;
+            ViewBag.CurUser = GetCurUser();
             return View(EmployeeRestHoliday.GetEmployeeList(year.Value));
         }
         public string SaveRestHoliday(string startDate, string duration)

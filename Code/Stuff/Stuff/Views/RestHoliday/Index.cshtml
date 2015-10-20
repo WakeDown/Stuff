@@ -98,8 +98,8 @@
                                     <tr class="bg-primary">
                                         <th class="min-width">№</th>
                                         <th href="#startDate">Начало отпуска</th>
-                                        <th>Продолжительность в днях</th>
                                         <th>Дата окончания отпуска</th>
+                                        <th>Продолжительность в днях</th>
                                         <th class="min-width"></th>
                                     </tr>
                                     @{ int i = 0;}
@@ -109,8 +109,8 @@
                                         <tr>
                                             <td>@i</td>
                                             <td>@restHoliday.StartDate.ToShortDateString()</td>
-                                            <td>@restHoliday.Duration</td>
                                             <td>@restHoliday.EndDate.AddDays(1).ToShortDateString()</td>
+                                            <td>@restHoliday.Duration</td>
                                             <td>
                                                 @if (restHoliday.CanEdit)
                                                 {
@@ -130,7 +130,7 @@
                                 </table>
                                 </p>
                                     @Html.HiddenFor(s => str);
-                                        <button type="submit" id="confbtn" class="btn btn-warning">утвердить</button>
+                                        <button type="submit" id="confbtn" class="btn btn-warning">отправить</button>
                                             
                                         }
                                     }

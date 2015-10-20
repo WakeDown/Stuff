@@ -30,11 +30,32 @@ namespace Stuff.Models
         }
         public static List<RestHoliday> GetRestHolidaysForYear(string employeeSid, int year)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHoliday/GetList?employeeSid={employeeSid}&year={year}");
-            var jsonList = GetJson(uri);
-            return JsonConvert.DeserializeObject<List<RestHoliday>>(jsonList);
+            try
+            {
+                Uri uri = new Uri($"{OdataServiceUri}/RestHoliday/GetList?employeeSid={employeeSid}&year={year}");
+                var jsonList = GetJson(uri);
+                return JsonConvert.DeserializeObject<List<RestHoliday>>(jsonList);
+            }
+            catch (Exception ex)
+            {
+                return new List<RestHoliday>();
+            }
         }
-
+        public static List<RestHoliday> GetRestHolidaysForYear(string employeeSid, int year, out string message)
+        {
+            try
+            {
+                Uri uri = new Uri($"{OdataServiceUri}/RestHoliday/GetList?employeeSid={employeeSid}&year={year}");
+                var jsonList = GetJson(uri);
+                message = string.Empty;
+                return JsonConvert.DeserializeObject<List<RestHoliday>>(jsonList);
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return new List<RestHoliday>();
+            }
+        }
         public static bool Delete(int id, out ResponseMessage responseMessage)
         {
             Uri uri = new Uri($"{OdataServiceUri}/RestHoliday/Close?id={id}");

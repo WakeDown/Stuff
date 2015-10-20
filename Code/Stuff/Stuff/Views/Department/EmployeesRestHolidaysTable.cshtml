@@ -1,0 +1,57 @@
+﻿@using Stuff.Models
+@model IEnumerable<Employee>
+@{
+    ViewBag.Title = "RehPart";
+    var curYear = (int) ViewBag.CurYear;
+    string message;
+}
+    @{
+        if (Model.Any())
+        {
+                <table class="table table-bordered table-stuff">
+                    @foreach (Employee emp in Model)
+                    {
+                        <tr>
+                            <td class="width-20p">
+                                @emp.DisplayName
+                            </td>
+                            <td>@(@emp.Position != null ? emp.Position.Name : "--отсутствует--")</td>
+                        </tr>
+                        var restHolidaysList = RestHoliday.GetRestHolidaysForYear(emp.AdSid, curYear, out message);
+                        if (restHolidaysList.Any() && !string.IsNullOrEmpty(emp.AdSid))
+                        {
+                            <tr><td colspan="2">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="bg-primary">
+                                                <th>Дата начала</th>
+                                                <th>Дата окончания</th>
+                                                <th class="min-width">Продолжительность</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var restHoliday in restHolidaysList)
+
+                                            {
+                                                <tr>
+                                                    <td>@restHoliday.StartDate.ToShortDateString()</td>
+                                                    <td>@restHoliday.EndDate.AddDays(1).ToShortDateString()</td>
+                                                    <td>@restHoliday.Duration</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                                
+                            </tr>
+                        }
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            <tr><td colspan="2" class="alert-danger">@message</td></tr>
+                        }
+                    }
+                </table>
+        }
+    }
+
+

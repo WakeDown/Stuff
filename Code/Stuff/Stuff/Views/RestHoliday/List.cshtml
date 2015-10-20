@@ -32,30 +32,65 @@
                         <table class="table table-bordered">
                             <tr class="bg-primary">
                                 <th class="min-width">№</th>
-                                <th href="#startDate">Имя</th>
-                                <th>Потрачено дней</th>
-                                <th>Осталось дней</th>
+                                <th>Имя</th>
+                                <th>Отпуска</th>
+                                <th class="min-width">Осталось дней</th>
                                 <th class="min-width"></th>
                             </tr>
                             @{ int i = 0;}
                             @foreach (var erh in Model)
                             {
                                 i++;
+                                var hasSent = false;
                                 <tr>
                                     <td>@i</td>
                                     <td>@erh.EmployeeName</td>
-                                    <td>@erh.DurationSum</td>
-                                    <td>@erh.Residue</td>
-                                    @{var url = Url.Action("SetCanEditForYearTrue", "RestHoliday", new {year = curYear, sid = erh.EmployeeSid});}
                                     <td>
-                                        <a href="@url">
-                                            <span name="del" class="btn btn-link" data-toggle="tooltip" title="Разбокировать редактирование"><i class="fa fa-unlock"></i></span>
-                                        </a>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>Дата начала</th>
+                                                <th>Дата окончания</th>
+                                                <th class="min-width">Продолжительность</th>
+                                                <th class="min-width"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach (var restHoliday in RestHoliday.GetRestHolidaysForYear(erh.EmployeeSid, curYear))
+
+                                            {
+                                                if (!restHoliday.CanEdit) {hasSent = true;}
+                                                    var clr = restHoliday.CanEdit
+                                                        ? "alert-danger" : "alert-success";
+                                                    var pic = restHoliday.CanEdit
+                                                        ? "fa fa-unlock" : "fa fa-lock";
+                                                     <tr class=@clr>
+                                                         <td>@restHoliday.StartDate.ToShortDateString()</td>
+                                                         <td>@restHoliday.EndDate.AddDays(1).ToShortDateString()</td>
+                                                         <td>@restHoliday.Duration</td>
+                                                         <td><i class="@pic"></i></td>
+                                                     </tr>
+                                                 }
+                                            </tbody>
+                                            
+                                        </table>
+                                    </td>
+                                <td>@erh.Residue</td>
+                                @{ var url = Url.Action("SetCanEditForYearTrue", "RestHoliday", new { year = curYear, sid = erh.EmployeeSid }); }
+                                    <td>
+                                        @if (hasSent)
+                                        {
+                                            <a href="@url">
+                                                <span name="del" class="btn btn-link" data-toggle="tooltip" title="Разбокировать редактирование"><i class="fa fa-unlock"></i></span>
+                                            </a>
+                                        }
+                                        
                                     </td>
                                 </tr>
-                            }
+
+                                    }
                         </table>
-                }
+                                    }
                 </p>
             </div>
 

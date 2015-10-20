@@ -416,6 +416,8 @@
     <Content Include="Views\VendorState\History.cshtml" />
     <Content Include="Views\RestHoliday\Index.cshtml" />
     <Content Include="Views\RestHoliday\List.cshtml" />
+    <Content Include="Views\Department\EmployeesRestHolidays.cshtml" />
+    <Content Include="Views\Department\EmployeesRestHolidaysTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
