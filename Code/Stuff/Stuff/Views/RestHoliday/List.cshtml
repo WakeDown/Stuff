@@ -34,11 +34,11 @@
                                 <th class="min-width">№</th>
                                 <th>Сотрудник</th>
                                 <th>Количество периодов</th>
-                                <th>Выбрано дней отпуска</th>
-                                <th class="min-width">Осталось дней</th>
+                                <th>Выбрано дней</th>
+                                <th>Осталось дней</th>
                                 <th class="min-width"></th>
                             </tr>
-                            @{ int i = 0;}
+                            @{ int i = 0; }
                             @foreach (var erh in Model)
                             {
                                 i++;
@@ -52,15 +52,19 @@
                                     <td>
                                         @if (erh.HasBlockedPeriods)
                                         {
-                                        <a href="@url">
+                                            <a href="@url">
                                                 <span name="unlockBtn" class="btn btn-link" data-toggle="tooltip" title="Разбокировать редактирование"><i class="fa fa-unlock"></i></span>
-                                        </a>
+                                            </a>
                                         }
                                     </td>
                                 </tr>
                             }
                         </table>
-                }
+                    }
+                    else
+                    {
+                        @:пусто
+                    }
                 </p>
             </div>
 
