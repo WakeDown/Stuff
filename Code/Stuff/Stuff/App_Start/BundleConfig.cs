@@ -12,7 +12,8 @@ namespace Stuff
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery-ui.js",
                         "~/Scripts/jquery.unobtrusive-ajax.js",
-                        "~/Scripts/jquery.mask.min.js"
+                        "~/Scripts/jquery.mask.min.js",
+                        "~/Scripts/jquery.dateFormat-{version}.js"
                         ));
             
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,

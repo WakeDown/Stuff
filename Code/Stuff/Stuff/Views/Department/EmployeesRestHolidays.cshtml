@@ -3,36 +3,47 @@
 @model Stuff.Models.Department[]
 
 @{
-    ViewBag.Title = "Подразделения и сотрудники";
+    ViewBag.Title = "Подразделения и сотрудники (отпуска)";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var curYear = ViewBag.CurYear;
+    var years = (int[]) ViewBag.Years;
 }
+<ul class="nav nav-tabs" id="yearTabs">
+    @foreach (var year in years)
+            {
+        <li class="@(year == curYear ? "active" : "")"><a href="@Url.Action("EmployeesRestHolidays", "Department", new {year})">@year</a></li>
+    }
+</ul>
+<div class="tab-content">
+    <div id="year@(curYear)" class="tab-pane active">
+        <p>
+            <span class="text-danger">@ViewData["ServerError"]</span>
+        </p>
+        @if (Model.Any())
+        {
+            <table id="depList" class="table table-bordered no-padding">
+                <tr class="bg-primary">
+                    <th class="min-width">№</th>
+                    <th class="width-20p">Подразделение</th>
+                    <th>Руководитель</th>
+                    <th>Сотрудники</th>
+                </tr>
+                @{int i = 0;}
+                @foreach (Department dep in Model)
+                {
+                    i++;
+                    <tr>
+                        <th>@i</th>
+                        <td>@dep.Name</td>
+                        <td nowrap>@dep.Chief.DisplayName</td>
+                        <td department="@dep.Id" name="depTable"></td>
+                    </tr>
+                }
+            </table>
+                    }  
+    </div>
+</div>
 
-<p>
-    <span class="text-danger">@ViewData["ServerError"]</span>
-</p>
-@if (Model.Any())
-{
-    <table id="depList" class="table table-bordered no-padding">
-        <tr class="bg-primary">
-            <th class="min-width">№</th>
-            <th class="width-20p">Подразделение</th>
-            <th>Руководитель</th>
-            <th>Сотрудники</th>
-        </tr>
-        @{int i = 0;}
-        @foreach (Department dep in Model)
-{
-    i++;
-    <tr >
-        <th>@i</th>
-        <td>@dep.Name</td>
-        <td>@dep.Chief.DisplayName</td>
-        <td department="@dep.Id" name="depTable"></td>
-    </tr>
-}
-    </table>
-}
 
 @section scripts
 {
@@ -46,13 +57,16 @@
         function init() {
             $('[name="depTable"]').map(function () {
                 var elem = $(this);
-                elem.text("Loading...");
+                elem.text("Загрузка...");
                 var url = "@Url.Action("EmployeesRestHolidaysTable","Department")?departmentId=" + $(this).attr("department") + "&curYear=@curYear";
                 $.ajax({
                     url: url,
                     dataType: 'html',
                     success: function (data) {
                         elem.html(data);
+                    },
+                    error: function(errorData) {
+                        elem.html("<span class='alert-danger'>" + errorData.statusText + "</span>");
                     }
                 });
             });

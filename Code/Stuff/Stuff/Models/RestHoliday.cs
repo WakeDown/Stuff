@@ -83,7 +83,7 @@ namespace Stuff.Models
             return PostJson(uri, json, out responseMessage);
         }
 
-        public static Dictionary<int, int>GetYears4Sid(string sid)
+        public static Dictionary<int, int>GetYears4Sid(string sid, bool full = false)
         {
             var uri = new Uri($"{OdataServiceUri}/RestHoliday/GetYears4Employee?sid={sid}");
             var jsonList = GetJson(uri);

@@ -340,6 +340,7 @@
     <Content Include="Scripts\fuelux.min.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery.dateFormat-1.0.js" />
     <Content Include="Scripts\jquery.mask.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />

@@ -44,7 +44,7 @@ namespace Stuff.Controllers
             TempData["message"] = message ?? "";
             year = year ?? DateTime.Now.Year;
             if (year <= 2015) year = 2016;
-            ViewBag.Years = RestHoliday.GetYears4Sid(null).Select(y =>y.Key).ToArray();
+            ViewBag.Years = RestHoliday.GetYears4Sid(null,true ).Select(y =>y.Key).ToArray();
             ViewBag.CurYear = year;
             ViewBag.CurUser = GetCurUser();
             return View(EmployeeRestHoliday.GetEmployeeList(year.Value));
