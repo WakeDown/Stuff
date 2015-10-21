@@ -68,7 +68,7 @@ namespace Stuff.Models
             var depDir = new Employee().GetDepartmentDirector(empSid);
             if (depDir != null)
             {
-                if (Employee.Manager.Id != depDir.Id) Matchers.Add(depDir);
+                if (Employee.Manager.Id != depDir.Id && Employee.Id != depDir.Id) Matchers.Add(depDir);
             }
             else
             {
