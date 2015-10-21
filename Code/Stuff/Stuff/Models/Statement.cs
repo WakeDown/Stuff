@@ -20,6 +20,7 @@ namespace Stuff.Models
         public string Cause { get; set; }
         
         public List<Employee> Matchers { get; set; }
+        public bool ShowMatcherSecretaryRow { get; set; }
 
         private const string DefaultCause = "по семейным обстоятельствам";
 

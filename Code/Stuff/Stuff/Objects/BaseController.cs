@@ -110,10 +110,10 @@ namespace Stuff.Objects
                     {
                         var domain = new PrincipalContext(ContextType.Domain);
                         string sid = wi.User.Value;
-                        sid = "S-1-5-21-1970802976-3466419101-4042325969-1585";
+                        //sid = "S-1-5-21-1970802976-3466419101-4042325969-1585";
                         user.Sid = sid;
                         var login =  wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
-                        login = "vyacheslav.sabancev";
+                        //login = "vyacheslav.sabancev";
                         user.Login = login;
                         var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
                         if (userPrincipal != null)
