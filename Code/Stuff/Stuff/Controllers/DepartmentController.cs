@@ -27,6 +27,12 @@ namespace Stuff.Controllers
 
             return View(list);
         }
+        public ActionResult EmployeesTable(int departmentId, bool userCanEdit)
+        {
+            var employeeList = Employee.GetList(idDepartment: departmentId);
+            ViewBag.UserCanEdit = userCanEdit;
+            return PartialView(employeeList);
+        }
 
         public ActionResult EmployeesRestHolidays(int? year)
         {
