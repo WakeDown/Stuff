@@ -58,7 +58,7 @@ namespace Stuff.Models
                 Organization = new Organization(organizationSysName);
             }
             //Organization.Name = Organization.Name.Replace("«", "\"").Replace("»", "\"");
-            Organization.Director = new Employee(Organization.Director.Id);
+            Organization.Director = new Employee(Organization.Director.Id, true);
             Organization.Director.Position = new Position(Organization.Director.Position.Id);
             Organization.Director.PositionOrg = new Position(Organization.Director.PositionOrg.Id);
         }

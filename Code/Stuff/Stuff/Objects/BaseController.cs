@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
@@ -110,10 +111,22 @@ namespace Stuff.Objects
                     {
                         var domain = new PrincipalContext(ContextType.Domain);
                         string sid = wi.User.Value;
-                        //sid = "S-1-5-21-1970802976-3466419101-4042325969-1585";
+
+                        //Для прокси пользователя
+                        if (ConfigurationManager.AppSettings["UserProxy"] == "True")
+                        {
+                            sid = ConfigurationManager.AppSettings["UserProxySid"];
+                        }
+                        
                         user.Sid = sid;
                         var login =  wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
-                        //login = "vyacheslav.sabancev";
+
+                        //Для прокси пользователя
+                        if (ConfigurationManager.AppSettings["UserProxy"] == "True")
+                        {
+                            login = ConfigurationManager.AppSettings["UserProxyLogin"];
+                        }
+
                         user.Login = login;
                         var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
                         if (userPrincipal != null)
