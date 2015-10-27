@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
-
+using System.Web.Http;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -90,6 +90,13 @@ namespace Stuff.Models
             var list = JsonConvert.DeserializeObject<List<KeyValuePair<int, int>>>(jsonList);
             return list.ToDictionary(e => e.Key, e => e.Value);
         }
-
+        
+        public static DateTime GetEndDate(DateTime dateStart, int duration)
+        {
+            var uri = new Uri($"{OdataServiceUri}/RestHoliday/GetEndDate?dateStart={dateStart}&duration={duration}");
+            var jsonList = GetJson(uri);
+            var model = JsonConvert.DeserializeObject<DateTime>(jsonList);
+            return model;
+        }
     }
 }
