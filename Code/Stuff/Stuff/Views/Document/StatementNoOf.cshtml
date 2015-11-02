@@ -104,6 +104,7 @@
         </tr>
     </table>
 </div>
+    @{ ViewBag.ShowMatcherSecretaryRow = Model.ShowMatcherSecretaryRow; }
     @Html.Partial("StatementMatchers", Model.Matchers)
 </body>
 </html>

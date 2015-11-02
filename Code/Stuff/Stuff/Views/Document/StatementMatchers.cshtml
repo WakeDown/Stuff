@@ -21,6 +21,16 @@
                             Подпись____________________/@mact.DisplayName/_____________ @DateTime.Now.Year г.
                         </td>
                     </tr>
+                }
+
+            @if (ViewBag.ShowMatcherSecretaryRow != null && ViewBag.ShowMatcherSecretaryRow)
+            {
+                <tr><td colspan="2" style="height: 100px;"></td></tr>
+                <tr>
+                    <td>
+                        ознакомлен: секретарь      ____________________/________________
+                    </td>
+                </tr>
             }
         </table>
     </div>

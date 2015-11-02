@@ -55,18 +55,23 @@ namespace Stuff.Models
             DateCame = DateTime.Now;
         }
 
-        public Employee(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="showHidden">Показать скрытых пользователей принудительно</param>
+        public Employee(int id, bool showHidden = false)
         {
-            Uri uri = new Uri(String.Format("{0}/Employee/Get?id={1}", OdataServiceUri, id));
+            Uri uri = new Uri($"{OdataServiceUri}/Employee/Get?id={id}&showHidden={showHidden}");
             string jsonString = GetJson(uri);
 
             Employee emp = JsonConvert.DeserializeObject<Employee>(jsonString);
             FillSelf(emp);
         }
 
-        public Employee(string sid)
+        public Employee(string sid, bool showHidden = false)
         {
-            Uri uri = new Uri(String.Format("{0}/Employee/Get?adSid={1}", OdataServiceUri, sid));
+            Uri uri = new Uri($"{OdataServiceUri}/Employee/Get?adSid={sid}&showHidden={showHidden}");
             string jsonString = GetJson(uri);
 
             Employee emp = JsonConvert.DeserializeObject<Employee>(jsonString);

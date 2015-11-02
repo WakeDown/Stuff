@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-lg-6 control-label" for="duration">Дата окончания отпуска</label>
+                            <label class="col-lg-6 control-label" for="endDate">Дата окончания отпуска</label>
                             <div class="col-lg-3">
                                 <input type="text" id="endDate" readonly class="form-control" value="@endDate" />
                             </div>
@@ -109,7 +109,7 @@
                                         <tr>
                                             <td>@i</td>
                                             <td>@restHoliday.StartDate.ToShortDateString()</td>
-                                            <td>@restHoliday.EndDate.AddDays(1).ToShortDateString()</td>
+                                            <td>@restHoliday.EndDate.ToShortDateString()</td>
                                             <td>@restHoliday.Duration</td>
                                             <td>
                                                 @if (restHoliday.CanEdit)
@@ -130,7 +130,7 @@
                                 </table>
                                 </p>
                                     @Html.HiddenFor(s => str);
-                                        <button type="submit" id="confbtn" class="btn btn-warning">отправить</button>
+                                        <button type="submit" id="confbtn" class="btn btn-warning">на утверждение</button>
                                             
                                         }
                                     }
@@ -145,7 +145,7 @@
 
 
 @section scripts
-        {
+{
     <script type="text/javascript">
 
         $(document).ready(function() {
@@ -168,9 +168,15 @@
                 $("#showNewVacationForm").attr("disabled", "disabled");
             };
 
+            //$('#startDate').change(function() {
+            //    setTimeout(setDateEnd, 100);
+            //});
+            //$('#duration').change(function() {
+            //    setTimeout(setDateEnd, 100);
+            //});
+
             $('[change="catch"]').on("keypress change", function() {
                 setTimeout(setDateEnd, 100);
-
             });
 
             $("#showNewVacationForm").click(function() {
@@ -182,9 +188,9 @@
 
                 if (confirm("Вы действетельно хотите удалить отпуск")) {
                     var id = $(this).attr("rhId");
-                    var url = "@Url.Action("DeleteRestHoliday","RestHoliday")";
+                    var url = "@Url.Action("DeleteRestHoliday", "RestHoliday")";
                     $.get(url, { year: @curYear, id: id }, function(data) {
-                        window.location.href = "@Url.Action("Index","RestHoliday")?year=@curYear&message=" + data;
+                        window.location.href = "@Url.Action("Index", "RestHoliday")?year=@curYear&message=" + data;
                     });
                 }
             });
@@ -192,36 +198,50 @@
             $("#addbtn").click(function() {
                 var startDate = $("#startDate").val();
                 var duration = $("#duration").val();
-                var url = "@Url.Action("SaveRestHoliday","RestHoliday")";
+                var url = "@Url.Action("SaveRestHoliday", "RestHoliday")";
                 $.get(url, { startDate: startDate, duration: duration }, function(data) {
                     $("#errorMessage").text(data);
                     $("#addbtn").attr("disabled", "disabled");
                     if (data === "Отпуск добавлен") {
                         $("#errorMessage").attr('class', 'alert-success');
-                        window.location.href = "@Url.Action("Index","RestHoliday",new {year = curYear})";
+                        window.location.href = "@Url.Action("Index", "RestHoliday", new {year = curYear})";
                     }
                 });
             });
 
         });
 
-        function setDateEnd () {
+        function setDateEnd() {
             var date = $("#startDate").datepicker("getDate"),
-                days = parseInt($("#duration").val())-1;
-            if (!isNaN(date.getTime()) && !isNaN(days)) {
-                days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
-                days = days < 0 ? 0 : days;
-                date.setDate(date.getDate() + days);
-                $("#duration").val(days + 1);
-                var a = $.format.date(date,"dd.MM.yyyy");
-                $("#endDate").val(a);
-            }
+                days = parseInt($("#duration").val());
             if (isNaN(days) || isNaN(date.getTime())) {
                 $("#addbtn").attr("disabled", "disabled");
                 $("#errorMessage").text("Проверьте правильность данных");
             } else {
                 $("#addbtn").removeAttr("disabled");
                 $("#errorMessage").text("");
+            }
+            if (!isNaN(date.getTime()) && !isNaN(days)) {
+                @*alert('@Url.Action("GetRestHolidayEndDate")?dateStart='+$.format.date(date, "yyyy-MM-dd") + '&duration='+days);*@
+                $.ajax(
+                {
+                    url: '@Url.Action("GetRestHolidayEndDate")',
+                    method:'POST',
+                    data : {dateStart: $.format.date(date, "yyyy-MM-dd"), duration:days},
+                    success: function(data) {
+                        if (data.dateEnd) {
+                            //alert(data.dateEnd);
+                            $("#endDate").val(data.dateEnd);
+                        } else {
+                            days = days + 1 > @years[curYear] ? @years[curYear] - 1 : days;
+                            days = days < 0 ? 0 : days;
+                            date.setDate(date.getDate() + days);
+                            $("#duration").val(days + 1);
+                            var de = $.format.date(date, "dd.MM.yyyy");
+                            $("#endDate").val(de);
+                        }
+                    }
+                });
             }
         }
     </script>
