@@ -34,11 +34,11 @@
                                 <th class="min-width">№</th>
                                 <th>Сотрудник</th>
                                 <th>Количество периодов</th>
-                                <th>Выбрано дней отпуска</th>
-                                <th class="min-width">Осталось дней</th>
+                                <th>Выбрано дней</th>
+                                <th>Осталось дней</th>
                                 <th class="min-width"></th>
                             </tr>
-                            @{ int i = 0;}
+                            @{ int i = 0; }
                             @foreach (var erh in Model)
                             {
                                 i++;
@@ -58,9 +58,13 @@
                                         }
                                     </td>
                                 </tr>
-                                        }
+                            }
                         </table>
-                                    }
+                    }
+                    else
+                    {
+                        @:пусто
+                    }
                 </p>
             </div>
 

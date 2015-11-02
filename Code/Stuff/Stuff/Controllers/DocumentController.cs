@@ -218,13 +218,14 @@ namespace Stuff.Controllers
             data.HoursCount = hoursCount.Value;
             data.Cause = cause;
             data.Configure();
-
+            data.ShowMatcherSecretaryRow = true;
             return View("StatementNoOf", data);
         }
 
         [HttpGet]
         public ActionResult StatementRestFewDays()
         {
+
             return View("StatementFewDays", new StatementRestFewDays(CurUser.Sid));
         }
 
@@ -261,6 +262,7 @@ namespace Stuff.Controllers
             data.DaysCount = daysCount.Value;
             data.Cause = cause;
             data.Configure();
+            data.ShowMatcherSecretaryRow = true;
 
             return View("Statement", data);
         }
@@ -341,6 +343,7 @@ namespace Stuff.Controllers
             data.DateEnd = dateEnd.Value;
             data.DaysCount = daysCount.Value;
             data.Configure();
+            data.ShowMatcherSecretaryRow = true;
 
             return View("StatementRest", data);
         }

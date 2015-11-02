@@ -59,8 +59,7 @@
                                 <li><a href='@Url.Action("FiredList", "Employee")'>Уволенные</a></li>
                             }
                             <li><a href='@Url.Action("Index", "VendorState")'>Статусы вендоров</a></li>
-                            <li><a href='@Url.Action("Index", "RestHoliday")'>Мои отпуска</a></li>
-                            <li><a href='@Url.Action("EmployeesRestHolidays","Department")'>Отпуска всех сотрудников</a></li>
+                            <li><a href='@Url.Action("EmployeesRestHolidays","Department")'>Отпуска сотрудников</a></li>
                         </ul>
                     </li>
                     @if (userCanEdit || userIsVendorManager)
@@ -166,8 +165,8 @@
                         @String.Format("- {0}", DateTime.Now.Year);
                     }
                     &copy; UN1T
-                    <br />
-                    <small>v&nbsp;1.0</small>
+                    @*<br />
+                    <small>v&nbsp;1.0</small>*@
                 </h5>
             </div>
             <div class="pull-right">

@@ -75,10 +75,17 @@ namespace Stuff.Controllers
         }
         public ActionResult SetCanEditForYearFalse(int year, string str)
         {
-            var idArray = Array.ConvertAll(str.Trim(',').Split(','), s => int.Parse(s)) ;
+            var idArray = Array.ConvertAll(str.Trim(',').Split(','), s => int.Parse(s));
             ResponseMessage responseMessage;
             var success = RestHoliday.SetCanEdit(idArray, false, out responseMessage);
             return RedirectToAction("Index", new {year, success, message = responseMessage?.ErrorMessage ?? "Отпуска сохранены." });
         }
+        [HttpPost]
+        public JsonResult GetRestHolidayEndDate(DateTime dateStart, int duration)
+        {
+            DateTime dateEnd = RestHoliday.GetEndDate(dateStart, duration);
+            return Json(new { dateEnd = dateEnd.ToString("dd.MM.yyyy")});
+        }
+        
     }
 }
