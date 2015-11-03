@@ -93,7 +93,7 @@ namespace Stuff.Models
         
         public static DateTime GetEndDate(DateTime dateStart, int duration)
         {
-            var uri = new Uri($"{OdataServiceUri}/RestHoliday/GetEndDate?dateStart={dateStart}&duration={duration}");
+            var uri = new Uri($"{OdataServiceUri}/RestHoliday/GetEndDate?dateStart={dateStart:yyyy-MM-dd}&duration={duration}");
             var jsonList = GetJson(uri);
             var model = JsonConvert.DeserializeObject<DateTime>(jsonList);
             return model;
