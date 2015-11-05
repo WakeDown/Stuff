@@ -1,13 +1,30 @@
 ﻿@using Microsoft.Ajax.Utilities
 @using Stuff.Models
+@using Stuff.Objects
 @model Stuff.Models.Department[]
 
 @{
     ViewBag.Title = "Подразделения и сотрудники (отпуска)";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var curYear = ViewBag.CurYear;
+    var allDepartments = (bool) ViewBag.AllDepartments;
     var years = (int[]) ViewBag.Years;
+    var user = (AdUser) ViewBag.User;
 }
+<div>
+    <div class="radio-inline">
+        <label>
+            <input type="radio" name="allDepartments" value="true" checked="@allDepartments">
+            Все подразделения
+        </label>
+    </div>
+    <div class="radio-inline">
+        <label>
+            <input type="radio" name="allDepartments" value="false" checked="@(!allDepartments)">
+            Моё подразделение
+        </label>
+    </div>
+</div>
 <ul class="nav nav-tabs" id="yearTabs">
     @foreach (var year in years)
             {
@@ -35,7 +52,16 @@
                     <tr>
                         <th>@i</th>
                         <td>@dep.Name</td>
-                        <td nowrap>@dep.Chief.DisplayName</td>
+                        <td nowrap>
+                            @dep.Chief.DisplayName
+                            @if (allDepartments==false && dep.Chief.AdSid==user.Sid)
+                            {
+                                <br/>
+                                <button id="submitRestHolidays" type="button" class="btn btn-success" departmentId ="@dep.Id" style="display: none">
+                                    <i class="fa fa-check">&nbsp;Утвердить</i>
+                                </button>
+                            }
+                        </td>
                         <td department="@dep.Id" name="depTable"></td>
                     </tr>
                 }
@@ -55,23 +81,69 @@
         });
 
         function init() {
+            $("[name='allDepartments']").change(function() {
+                var url = "@Url.Action("EmployeesRestHolidays", new {year = curYear})&allDepartments=" + $(this).val();
+                window.location.href = url;
+            });
             $('[name="depTable"]').map(function () {
+                var dep = $(this).attr("department");
                 var elem = $(this);
                 elem.text("Загрузка...");
-                var url = "@Url.Action("EmployeesRestHolidaysTable","Department")?departmentId=" + $(this).attr("department") + "&curYear=@curYear";
+                var url = "@Url.Action("EmployeesRestHolidaysTable","Department")?departmentId=" + dep + "&curYear=@curYear";
                 var loadCount = 0;
-                loadDepartment(loadCount, elem, url);
+                loadDepartment(loadCount, elem, url, dep);
             });
 
-
+            $("[id='submitRestHolidays']").click(function() {
+                var dep = $(this).attr("departmentId");
+                var idArray = [];
+                $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).each(function() {
+                   idArray.push($(this).attr("restHolidayId"));
+                });
+                $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).addClass("bg-danger");
+                if (confirm("Are You Sure?")) {
+                    var btn = this;
+                    $(btn).hide();
+                    $.ajax({
+                        url: "@Url.Action("SubmitEmployeesRestHolidays")",
+                        method: "POST",
+                        dataType: "json",
+                        data: JSON.stringify(idArray),
+                        contentType: 'application/json; charset = utf-8 ',
+                        success: function(data) {
+                            if (data.Success) {
+                                $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).removeClass("bg-danger bg-success");
+                                $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).addClass("bg-warning");
+                            } else {
+                                $(btn).show();
+                                alert(data.Message);
+                                $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).removeClass("bg-danger");
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.statusText);
+                            $(btn).show();
+                        }
+                    });
+                } else {
+                    $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).removeClass("bg-danger");
+                }
+            });
         }
 
-        function loadDepartment(loadCount,elem,url) {
+        function loadDepartment(loadCount,elem,url, dep) {
             $.ajax({
                 url: url,
                 dataType: 'html',
                 success: function (data) {
                     elem.html(data);
+                    var restHolidaysRows = [];
+                    $("[rowtype='restHolidayRow'].bg-success", elem).each(function () {
+                        restHolidaysRows.push($(this).attr("restHolidayId"));
+                    });
+                    if (restHolidaysRows.length>0) {
+                        $("[departmentId='" + dep + "']").show();
+                    }
                 },
                 error: function (errorData) {
                     if (loadCount < 3) {
