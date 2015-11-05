@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -325,13 +326,12 @@ namespace StuffDelivery
 
             MailMessage mail = new MailMessage();
 
-            SmtpClient client = new SmtpClient();
-            client.Port = 25;
+            SmtpClient client = new SmtpClient("smtp.office365.com", 587);
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential("delivery@unitgroup.ru", "pRgvD7TL");
 
-            mail.From = mailFrom;
-
-            client.EnableSsl = false;
+            mail.From = new MailAddress("delivery@unitgroup.ru");
 
             if (mailTo != null)
             {
@@ -366,7 +366,6 @@ namespace StuffDelivery
             mail.Subject = subject;
             mail.Body = body;
             mail.IsBodyHtml = isBodyHtml;
-            client.Host = "ums-1";
 
             if (file != null && file.Data.Length > 0)
             {
@@ -394,10 +393,36 @@ namespace StuffDelivery
             }
             //else
             //{
-                client.Send(mail);
+            client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
+            client.SendAsync(mail, mail);
             //}
 
 
+        }
+
+        private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
+        {
+            // Get the message we sent
+            MailMessage msg = (MailMessage)e.UserState;
+
+            if (e.Cancelled)
+            {
+                // prompt user with "send cancelled" message 
+            }
+            if (e.Error != null)
+            {
+                // prompt user with error message 
+            }
+            else
+            {
+                // prompt user with message sent!
+                // as we have the message object we can also display who the message
+                // was sent to etc 
+            }
+
+            // finally dispose of the message
+            if (msg != null)
+                msg.Dispose();
         }
     }
 }
