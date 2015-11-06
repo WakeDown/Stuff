@@ -195,7 +195,9 @@ namespace StuffDelivery
             mailBody.AppendLine("</div>");
             var recipients = GetMailAddressesFromList(emails);
             var holidayWorkMailFrom = new MailAddress("holiday-work@unitgroup.ru");
-            SendMailSmtp("Работа в выходные", mailBody.ToString(), true, null, recipients, holidayWorkMailFrom);
+            string login = "holiday-work@unitgroup.ru";
+            string pass = "1qazXSW@";
+            SendMailSmtp("Работа в выходные", mailBody.ToString(), true, null, recipients, holidayWorkMailFrom, login:login, pass:pass);
         }
 
         public static MailAddress[] GetMailAddressesFromList(IEnumerable<string> emails)
@@ -318,7 +320,7 @@ namespace StuffDelivery
             }
         }
 
-        public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, AttachmentFile file = null, bool isTest = false)
+        public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, AttachmentFile file = null,string login = null, string pass = null, bool isTest = false)
         {
             if ((mailTo == null || !mailTo.Any()) && (hiddenMailTo == null || !hiddenMailTo.Any())) throw new Exception("Не указаны получатели письма!");
 
@@ -329,9 +331,15 @@ namespace StuffDelivery
             SmtpClient client = new SmtpClient("smtp.office365.com", 587);
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.EnableSsl = true;
-            client.Credentials = new NetworkCredential("delivery@unitgroup.ru", "pRgvD7TL");
+            if (String.IsNullOrEmpty(login))
+            {
+                login = "delivery@unitgroup.ru";
+                pass = "pRgvD7TL";
+            }
 
-            mail.From = new MailAddress("delivery@unitgroup.ru");
+            client.Credentials = new NetworkCredential(login, pass);
+
+            mail.From = new MailAddress(login);
 
             if (mailTo != null)
             {
@@ -394,7 +402,8 @@ namespace StuffDelivery
             //else
             //{
             client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-            client.SendAsync(mail, mail);
+            //client.SendAsync(mail, mail);
+            client.Send(mail);
             //}
 
 

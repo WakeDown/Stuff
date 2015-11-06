@@ -45,7 +45,7 @@
             $('[name="depTable"]').map(function () {
                 var elem = $(this);
                 elem.text("Загрузка...");
-                var url = "@Url.Action("EmployeesTable","Department")?departmentId=" + $(this).attr("department")+"&userCanEdit=@userCanEdit";
+                var url = "@Url.Action("EmployeesTable", "Department")?departmentId=" + $(this).attr("department")+"&userCanEdit=@userCanEdit";
                 var loadCount = 0;
                 loadDepartment(loadCount, elem, url);
             });
