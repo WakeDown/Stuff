@@ -38,7 +38,8 @@
                                     {
                                         if (restHoliday.CanEdit == false)
                                         {
-                                            <tr>
+                                            var bg = restHoliday.Confirmed ? "bg-warning" : "bg-success";
+                                            <tr rowtype="restHolidayRow" class="@bg" restHolidayId="@restHoliday.Id">
                                                 <td>@restHoliday.StartDate.ToShortDateString()</td>
                                                 <td>@restHoliday.EndDate.ToShortDateString()</td>
                                                 <td>@restHoliday.Duration</td>

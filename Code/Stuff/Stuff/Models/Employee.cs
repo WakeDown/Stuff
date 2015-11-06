@@ -238,5 +238,12 @@ namespace Stuff.Models
             Uri uri = new Uri(String.Format("{0}/Employee/GetCurrentUserName", OdataServiceUri));
             return GetJson(uri);
         }
+
+        public static IEnumerable<Department> GetWorkingDepartmentList(string sid)
+        {
+            var url = new Uri($"{OdataServiceUri}/Employee/GetWorkingDepartmentList?sid={sid}");
+            var json = GetJson(url);
+            return JsonConvert.DeserializeObject<IEnumerable<Department>>(json);
+        }
     }
 }

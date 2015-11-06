@@ -46,19 +46,27 @@
                 var elem = $(this);
                 elem.text("Загрузка...");
                 var url = "@Url.Action("EmployeesTable","Department")?departmentId=" + $(this).attr("department")+"&userCanEdit=@userCanEdit";
-                $.ajax({
-                    url: url,
-                    dataType: 'html',
-                    success: function (data) {
-                        elem.html(data);
-                    },
-                    error: function(errorData) {
-                        elem.html("<span class='alert-danger'>" + errorData.statusText + "</span>");
-                    }
-                });
+                var loadCount = 0;
+                loadDepartment(loadCount, elem, url);
             });
         }
-
+        function loadDepartment(loadCount, elem, url) {
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                success: function (data) {
+                    elem.html(data);
+                },
+                error: function (errorData) {
+                    if (loadCount < 3) {
+                        loadCount++;
+                        setTimeout(loadDepartment(loadCount, elem, url), 1000);
+                    } else {
+                        elem.html("<span class='alert-danger'>" + errorData.statusText + "</span>");
+                    }
+                }
+            });
+        }
         function deleteEmployee() {
             if (!confirm('Вы действительно хотите удалить сотрудника?')) return;
 

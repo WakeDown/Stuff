@@ -185,6 +185,7 @@
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RestHolidayController.cs" />
+    <Compile Include="Controllers\RestHolidayTransferDaysController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Controllers\VendorStateController.cs" />
     <Compile Include="Helpers\AdHelper.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Models\StatementRest.cs" />
     <Compile Include="Models\StatementRestFewDays.cs" />
     <Compile Include="Models\StatementRestFewHours.cs" />
+    <Compile Include="Models\RestHolidayTransferDays.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Models\VendorState.cs" />
     <Compile Include="Objects\AdGroup.cs" />
@@ -275,10 +277,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\FontAwesome.otf" />
     <Content Include="Content\birthday.scss" />
-    <None Include="Properties\PublishProfiles\1. Dev.pubxml" />
-    <None Include="Properties\PublishProfiles\2. Test.pubxml" />
-    <None Include="Properties\PublishProfiles\3. Production.pubxml" />
-    <None Include="Properties\PublishProfiles\UWP.pubxml" />
+    <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.ru.js" />
@@ -339,6 +338,8 @@
     <Content Include="Scripts\BootstrapValidator\validator\zipCode.js" />
     <Content Include="Scripts\fuelux.min.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
+    <Content Include="Scripts\jquery-barcode.js" />
+    <Content Include="Scripts\jquery-barcode.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.dateFormat-1.0.js" />
     <Content Include="Scripts\jquery.mask.min.js" />
@@ -420,6 +421,7 @@
     <Content Include="Views\Department\EmployeesRestHolidays.cshtml" />
     <Content Include="Views\Department\EmployeesRestHolidaysTable.cshtml" />
     <Content Include="Views\Department\EmployeesTable.cshtml" />
+    <Content Include="Views\RestHolidayTransferDays\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

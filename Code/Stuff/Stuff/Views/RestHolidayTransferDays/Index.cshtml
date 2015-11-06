@@ -1,0 +1,159 @@
+﻿@using System.Web.UI.WebControls
+@using Stuff.Helpers
+@using Stuff.Models
+@using Stuff.Objects
+@model List<RestHolidayTransferDays>
+
+@{
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    var years = (int[]) ViewBag.Years;
+    var curYear = (int) ViewBag.CurYear;
+    string newDayDate =DateTime.Now.ToShortDateString();
+    string newDayComment = "";
+}
+@section PanelHead
+{
+    Праздничные дни
+}
+
+@section PanelBody
+{
+    <div>
+        <ul class="nav nav-tabs">
+            @foreach (var year in years)
+            {
+                <li class="@(year == curYear ? "active" : "")"><a href="@Url.Action("Index", "RestHolidayTransferDays", new {year})">@year</a></li>
+            }
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <p>
+                    <div>
+                        <div>
+                            <button class="btn btn-primary" id="showNewHolidayForm">
+                                <i class="fa fa-plus"></i>&nbsp;Добавить день
+                            </button>
+                        </div>
+                    </div>
+                    @if (Model.Any())
+                    {
+                        <p>
+                            <table class="table table-bordered">
+                                <tr class="bg-primary">
+                                    <th class="min-width">№</th>
+                                    <th href="#startDate">Праздничная дата</th>
+                                    <th>Описание</th>
+                                    <th class="min-width"></th>
+                                </tr>
+                                @{ int i = 0;}
+                                @foreach (var holiday in Model)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@holiday.Date.ToShortDateString()</td>
+                                        <td>@holiday.Descr</td>
+                                        <td><button type="button" holiday="@holiday.Id" class="btn btn-link" title="Удалить"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                }
+                            </table>
+                        </p>
+                    }
+                </p>
+                <button type="button" id="cloneYear" class="btn btn-warning">
+                    <i class="fa fa-files-o"></i>&nbsp;Скопировать дни предыдущего года
+                </button>
+            </div>
+        </div>
+    </div>
+<div id="newHolidayForm" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Добавление праздничного дня</h4>
+            </div>
+        @using (Html.BeginForm("Index", "RestHolidayTransferDays", FormMethod.Post))
+        {
+            <div class="modal-body">
+                
+                
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-lg-4 control-label" for="newDayDate">Дата праздничного дня</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(ndd => newDayDate, new { @class = "form-control required-mark", @id = "newDayDate", required = "required", change = "catch" })
+                            <span class="help-block with-errors"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-lg-4 control-label" for="newDayComment">Описание праздничного дня</label>
+                        <div class="col-lg-8">
+                            @Html.TextAreaFor(ndc => newDayComment, new { rows="2", @class = "form-control required-mark", @id = "newDayComment", required = "required", change = "catch" })
+                            <span class="help-block with-errors"></span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button type="submit" id="addbtn" class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;добавить</button>
+                </div>
+            </div>
+        }
+        </div> 
+    </div>
+</div>
+
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(init);
+
+        function init() {
+            $("#showNewHolidayForm").click(function() {
+                $("#newHolidayForm").modal("show");
+            });
+
+            $("#newDayDate").datepicker({
+                format: "dd.mm.yyyy",
+                startDate: "01.01.@curYear",
+                endDate: "31.12.@curYear",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+
+            $("[title='Удалить']").click(function() {
+                if (confirm("Вы уверены, что хотите удалить день?")) {
+                    var data = $(this).attr("holiday");
+                    $.ajax({
+                        url: "@Url.Action("Delete", "RestHolidayTransferDays")",
+                        method: "POST",
+                        data: { id: data },
+                        success: function(data) {
+                            if (data)
+                                location.reload();
+                            else alert("Error!");
+                        }
+                    });
+                }
+            });
+
+            $("#cloneYear").click(function() {
+                $.ajax({
+                    url: "@Url.Action("CloneYear", new {year= curYear})",
+                    method: "GET",
+                    success: function(data) {
+                        if (data)
+                            location.reload();
+                        else alert("Error!");
+                    }
+                });
+            });
+        }
+    </script>
+}

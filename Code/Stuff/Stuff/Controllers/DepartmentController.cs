@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Management;
 using System.Web.Mvc;
 using Stuff.Helpers;
 using Stuff.Models;
@@ -34,16 +35,27 @@ namespace Stuff.Controllers
             return PartialView(employeeList);
         }
 
-        public ActionResult EmployeesRestHolidays(int? year)
+        public ActionResult EmployeesRestHolidays(int? year, bool? allDepartments)
         {
-            DisplayCurUser();
+            ViewBag.AllDepartments = allDepartments ?? false;
+            var user = GetCurUser();
+            ViewBag.User = user;
             var curYear = (year ?? DateTime.Now.Year) <= 2015 ? 2016 : year ?? DateTime.Now.Year;
             ViewBag.CurYear = curYear;
             ViewBag.Years = RestHoliday.GetYears4Sid(null).Select(y => y.Key).ToArray();
-            var list = Department.GetList().ToArray();
+            var list = (allDepartments ?? false)
+                ? Department.GetList().ToArray()
+                : Employee.GetWorkingDepartmentList(user.Sid).ToArray();
             return View(list);
         }
 
+        public JsonResult SubmitEmployeesRestHolidays(int[] idArray)
+        {
+            ResponseMessage responseMessage;
+            var success = RestHoliday.Confirm(idArray, out responseMessage);
+            return Json(new { Success = success, Message = responseMessage });
+            //return Json(new { Success = false, Message = "Test" });
+        }
         public ActionResult EmployeesRestHolidaysTable(int departmentId, int curYear)
         {
             var employeeList = Employee.GetList(idDepartment : departmentId);
