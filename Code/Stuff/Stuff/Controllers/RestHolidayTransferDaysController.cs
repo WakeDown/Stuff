@@ -13,11 +13,12 @@ namespace Stuff.Controllers
         public ActionResult Index(int? year)
         {
             //RestHolidayTransferDays.InitList();
-            var curYear = year ?? DateTime.Now.Year;;
+            var curYear = year ?? DateTime.Now.Year;
+            curYear = curYear == 2015 ? 2016 : curYear;
             var years = RestHolidayTransferDays.GetYearsList();
             ViewBag.Years = years;
             ViewBag.CurYear = curYear;
-            return View(RestHolidayTransferDays.GetLists(curYear).OrderBy(h => h.Date).ToList());
+            return View(RestHolidayTransferDays.GetLists(curYear).ToList());
         }
         [HttpPost]
         public ActionResult Index(string newDayDate, string newDayComment)
