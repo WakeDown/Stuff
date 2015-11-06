@@ -401,37 +401,10 @@ namespace StuffDelivery
             }
             //else
             //{
-            client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-            //client.SendAsync(mail, mail);
-            client.Send(mail);
+                client.Send(mail);
             //}
 
 
-        }
-
-        private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
-        {
-            // Get the message we sent
-            MailMessage msg = (MailMessage)e.UserState;
-
-            if (e.Cancelled)
-            {
-                // prompt user with "send cancelled" message 
-            }
-            if (e.Error != null)
-            {
-                // prompt user with error message 
-            }
-            else
-            {
-                // prompt user with message sent!
-                // as we have the message object we can also display who the message
-                // was sent to etc 
-            }
-
-            // finally dispose of the message
-            if (msg != null)
-                msg.Dispose();
         }
     }
 }
