@@ -120,6 +120,8 @@
 
             $("#newDayDate").datepicker({
                 format: "dd.mm.yyyy",
+                startDate: "01.01.@curYear",
+                endDate: "31.12.@curYear",
                 autoclose: true,
                 todayBtn: "linked",
                 language: "ru"
