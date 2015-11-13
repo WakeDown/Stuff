@@ -21,6 +21,8 @@ namespace StuffDelivery
 {
     class Program
     {
+        private static bool IsTest = false;
+
         private static MailAddress defaultMailFrom = new MailAddress("UN1T@un1t.group");
         private static readonly string stuffUrl = ConfigurationManager.AppSettings["stuffUrl"];
 
@@ -322,6 +324,8 @@ namespace StuffDelivery
 
         public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, AttachmentFile file = null,string login = null, string pass = null, bool isTest = false)
         {
+            if (IsTest) isTest = true;
+
             if ((mailTo == null || !mailTo.Any()) && (hiddenMailTo == null || !hiddenMailTo.Any())) throw new Exception("Не указаны получатели письма!");
 
             if (mailFrom == null || String.IsNullOrEmpty(mailFrom.Address)) mailFrom = defaultMailFrom;
