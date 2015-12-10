@@ -60,7 +60,7 @@
                             }
                             <li><a href='@Url.Action("Index", "VendorState")'>Статусы вендоров</a></li>
                             <li><a href='@Url.Action("EmployeesRestHolidays", "Department")'>Отпуска сотрудников</a></li>
-                            <li><a href='@Url.Action("Index","RestHolidayTransferDays")'>Праздничный дни</a></li>
+                            
                         </ul>
                     </li>
                     @if (userCanEdit || userIsVendorManager)
@@ -75,6 +75,7 @@
                                     <li><a href='@Url.Action("Index", "Organization")'>Юр. лица</a></li>
                                     <li><a href='@Url.Action("Index", "Position")'>Должности</a></li>
                                     <li><a href='@Url.Action("Index", "Budget")'>Бюджеты</a></li>
+                                    <li><a href='@Url.Action("Index","RestHolidayTransferDays")'>Праздничный дни</a></li>
                                 }
                                 @if (userIsVendorManager)
                                 {

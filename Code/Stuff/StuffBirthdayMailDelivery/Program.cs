@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace StuffDelivery
 {
     class Program
     {
+        private static bool IsTest = false;
+
         private static MailAddress defaultMailFrom = new MailAddress("UN1T@un1t.group");
         private static readonly string stuffUrl = ConfigurationManager.AppSettings["stuffUrl"];
 
@@ -194,7 +197,9 @@ namespace StuffDelivery
             mailBody.AppendLine("</div>");
             var recipients = GetMailAddressesFromList(emails);
             var holidayWorkMailFrom = new MailAddress("holiday-work@unitgroup.ru");
-            SendMailSmtp("Работа в выходные", mailBody.ToString(), true, null, recipients, holidayWorkMailFrom);
+            string login = "holiday-work@unitgroup.ru";
+            string pass = "1qazXSW@";
+            SendMailSmtp("Работа в выходные", mailBody.ToString(), true, null, recipients, holidayWorkMailFrom, login:login, pass:pass);
         }
 
         public static MailAddress[] GetMailAddressesFromList(IEnumerable<string> emails)
@@ -317,21 +322,28 @@ namespace StuffDelivery
             }
         }
 
-        public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, AttachmentFile file = null, bool isTest = false)
+        public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, AttachmentFile file = null,string login = null, string pass = null, bool isTest = false)
         {
+            if (IsTest) isTest = true;
+
             if ((mailTo == null || !mailTo.Any()) && (hiddenMailTo == null || !hiddenMailTo.Any())) throw new Exception("Не указаны получатели письма!");
 
             if (mailFrom == null || String.IsNullOrEmpty(mailFrom.Address)) mailFrom = defaultMailFrom;
 
             MailMessage mail = new MailMessage();
 
-            SmtpClient client = new SmtpClient();
-            client.Port = 25;
+            SmtpClient client = new SmtpClient("smtp.office365.com", 587);
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.EnableSsl = true;
+            if (String.IsNullOrEmpty(login))
+            {
+                login = "delivery@unitgroup.ru";
+                pass = "pRgvD7TL";
+            }
 
-            mail.From = mailFrom;
+            client.Credentials = new NetworkCredential(login, pass);
 
-            client.EnableSsl = false;
+            mail.From = new MailAddress(login);
 
             if (mailTo != null)
             {
@@ -366,7 +378,6 @@ namespace StuffDelivery
             mail.Subject = subject;
             mail.Body = body;
             mail.IsBodyHtml = isBodyHtml;
-            client.Host = "ums-1";
 
             if (file != null && file.Data.Length > 0)
             {
