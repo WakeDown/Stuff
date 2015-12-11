@@ -74,7 +74,7 @@ namespace StuffDelivery
             foreach (var vendorState in vendorStateList)
             {
                 body = new StringBuilder("Добрый день.<br/>");
-                var subject = $"Новый статус {vendorState.StateName} от {vendorState.VendorName}.";
+                var subject = string.Format("Новый статус {0} от {1}.",vendorState.StateName,vendorState.VendorName);
                 body.AppendFormat("У организации {0} появился новый статус {1} от {2}.<br/>", vendorState.UnitOrganizationName,
                     vendorState.StateName,
                     vendorState.VendorName);
@@ -95,7 +95,7 @@ namespace StuffDelivery
             foreach (var curPrevPair in curPrevPairs)
             {
                 body = new StringBuilder("Добрый день.<br/>");
-                var subject = $"Обновление статуса {curPrevPair.Value.StateName} от {curPrevPair.Value.VendorName}.";
+                var subject = string.Format("Обновление статуса {0} от {1}.",curPrevPair.Value.StateName,curPrevPair.Value.VendorName);
                 body.AppendFormat("Обновился статус {0} от {1} для организации {2}.<br/><br/>", curPrevPair.Value.StateName, curPrevPair.Value.VendorName, curPrevPair.Value.UnitOrganizationName);
                 body.Append("Новая версия статуса:<br/>");
                 body.AppendFormat("{0}<br/>", curPrevPair.Key.UnitOrganizationName);
@@ -118,7 +118,7 @@ namespace StuffDelivery
             {
                 body = new StringBuilder("Добрый день.<br/>");
                 var subject =
-                    $"Срок действия статуса {vendorState.StateName} от {vendorState.VendorName} истекает через 2 месяца";
+                    string.Format("Срок действия статуса {0} от {1} истекает через 2 месяца",vendorState.StateName,vendorState.VendorName);
                 body.AppendFormat(
                     "У оргнизации {0} через 2 месяца истекает срок действия статуса {1} от {2}.<br/>",
                     vendorState.UnitOrganizationName, vendorState.StateName, vendorState.VendorName);
@@ -164,7 +164,7 @@ namespace StuffDelivery
             {
                 i++;
                 mailBody.AppendLine(
-                    $"<tr style='border: 1px solid black;'><td style='border: 1px solid black;padding: 5px;'>{i}</td><td style='border: 1px solid black;padding: 5px;'>{s}</td></tr>");
+                    string.Format("<tr style='border: 1px solid black;'><td style='border: 1px solid black;padding: 5px;'>{0}</td><td style='border: 1px solid black;padding: 5px;'>{1}</td></tr>", i, s));
             }
             mailBody.AppendLine("</table>");
             mailBody.AppendLine("</div>");

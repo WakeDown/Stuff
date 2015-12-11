@@ -7,7 +7,7 @@ using Stuff.Models;
 
 namespace Stuff.Models
 {
-    enum StatementType
+    enum StatementTypes
     {
         FewHours,//несколько часов
         FewDays//несколько дней

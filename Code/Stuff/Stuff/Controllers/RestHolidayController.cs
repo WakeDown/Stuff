@@ -36,7 +36,8 @@ namespace Stuff.Controllers
         {
             ResponseMessage responseMessage;
             RestHoliday.Delete(int.Parse(id), out responseMessage);
-            return responseMessage?.ErrorMessage ?? "";
+            var result = responseMessage ?? new ResponseMessage();
+            return responseMessage.ErrorMessage ?? "";
         }
 
         public ActionResult List(int? year, string message)
@@ -70,7 +71,8 @@ namespace Stuff.Controllers
         {
             ResponseMessage responseMessage;
             EmployeeRestHoliday.CanEdit(sid, year, true, out responseMessage);
-            var message = responseMessage?.ErrorMessage;
+            responseMessage = responseMessage ?? new ResponseMessage();
+            var message = responseMessage.ErrorMessage;
             return RedirectToAction("List", "RestHoliday", new {year, message});
         }
         public ActionResult SetCanEditForYearFalse(int year, string str)
@@ -78,7 +80,8 @@ namespace Stuff.Controllers
             var idArray = Array.ConvertAll(str.Trim(',').Split(','), s => int.Parse(s));
             ResponseMessage responseMessage;
             var success = RestHoliday.SetCanEdit(idArray, false, out responseMessage);
-            return RedirectToAction("Index", new {year, success, message = responseMessage?.ErrorMessage ?? "Отпуска сохранены." });
+            responseMessage = responseMessage ?? new ResponseMessage();
+            return RedirectToAction("Index", new {year, success, message = responseMessage.ErrorMessage ?? "Отпуска сохранены." });
         }
         [HttpPost]
         public JsonResult GetRestHolidayEndDate(DateTime dateStart, int duration)

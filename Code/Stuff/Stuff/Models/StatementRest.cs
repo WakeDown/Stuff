@@ -35,7 +35,7 @@ namespace Stuff.Models
             DateEnd = DateStart.AddDays(DaysCount - 1);
 
             Name = "З А Я В Л Е Н И Е";
-            Text = $"Прошу предоставить мне очередной ежегодный отпуск в количестве {DaysCount} календарных дней с {DateStart:dd.MM.yyyy} г. по {DateEnd:dd.MM.yyyy} г. включительно.";
+            Text = string.Format("Прошу предоставить мне очередной ежегодный отпуск в количестве {0} календарных дней с {1:dd.MM.yyyy} г. по {2:dd.MM.yyyy} г. включительно.", DaysCount, DateStart, DateEnd);
         }
     }
 }
