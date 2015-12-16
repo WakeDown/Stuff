@@ -42,6 +42,12 @@ namespace Stuff.Models
             return result;
         }
 
-
+        public static bool SetConfirmed(int id, out ResponseMessage responseMessage)
+        {
+            Uri uri = new Uri(String.Format("{0}/Statement/SetConfirmed?id={1}", OdataServiceUri,id));
+            string json = String.Empty;
+            bool result = PostJson(uri, json, out responseMessage);
+            return result;
+        }
     }
 }

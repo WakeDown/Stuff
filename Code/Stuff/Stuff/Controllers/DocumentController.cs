@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Xml;
 using SelectPdf;
 //using SelectPdf;
@@ -80,7 +82,26 @@ namespace Stuff.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult StatementPrintList()
+        {
+            if (!CurUser.UserIsPersonalManager())
+                return new HttpStatusCodeResult(403);
+            var spl = StatementPrint.GetList();
+            return View(spl);
+        }
+
         [HttpPost]
+        public ActionResult StatementPrintList(int id)
+        {
+            if (!CurUser.UserIsPersonalManager())
+                return new HttpStatusCodeResult(403);
+            var responseMessage = new ResponseMessage();
+            StatementPrint.SetConfirmed(id, out responseMessage);
+            ViewData["message"] = responseMessage;
+            var spl = StatementPrint.GetList();
+            return View(spl);
+        }
         public JsonResult SaveDocMeetLink(int? idDocument, int? idDepartment, int? idPosition, int? idEmployee)
         {
             var user = DisplayCurUser();
@@ -119,7 +140,6 @@ namespace Stuff.Controllers
                     ResponseMessage responseMessage;
                     bool complete = DocMeetLink.Delete(idDocument.Value, idDepartment, idPosition, idEmployee, out responseMessage);
                     if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
                 }
                 catch (Exception ex)
                 {
