@@ -104,13 +104,12 @@
             </td>
         </tr>
     </table>
-    <div id="barcode" style="margin-left:20cm; margin-top:14cm"></div>  
+    <div id="barcode" style="margin-left:20cm; margin-top:13cm"></div>  
 </div>
     @{ ViewBag.ShowMatcherSecretaryRow = Model.ShowMatcherSecretaryRow; }
     @Html.Partial("StatementMatchers", Model.Matchers)
 </body>
 </html>
 <script type="text/javascript">
-    $("#barcode").barcode('@Model.Id.ToString("D70000026" +
-                                              "")', 'code39');
+    $("#barcode").barcode('@Model.Id.ToString("D7")', 'code39', { barWidth: 2, barHeight: 100 });
 </script>
