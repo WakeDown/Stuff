@@ -13,7 +13,10 @@ namespace Stuff
                         "~/Scripts/jquery-ui.js",
                         "~/Scripts/jquery.unobtrusive-ajax.js",
                         "~/Scripts/jquery.mask.min.js",
-                        "~/Scripts/jquery.dateFormat-{version}.js"
+                        "~/Scripts/jquery.dateFormat-{version}.js",
+                        "~/Scripts/jquery-barcode.js",
+                        "~/Scripts/jquery.scannerdetection.js",
+                        "~/Scripts/jquery.dataTables.min.js"
                         ));
             
             // Используйте версию Modernizr для разработчиков, чтобы учиться работать. Когда вы будете готовы перейти к работе,
@@ -44,6 +47,7 @@ namespace Stuff
                       "~/Content/font-awesome.css",
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/bootstrap-timepicker.min.css",
+                      "~/Content/jquery.dataTables.min.css",
                       //"~/Content/bootstrapValidator.css",
                       //"~/Content/fuelux.min.css",
                       "~/Content/site.css"));

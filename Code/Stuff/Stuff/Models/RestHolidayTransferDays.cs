@@ -54,7 +54,7 @@ namespace Stuff.Models
         //Получение списка дней по году
         public static List<RestHolidayTransferDays> GetLists(int year)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHolidayTransferDay/GetList?year={year}");
+            Uri uri = new Uri(string.Format("{0}/RestHolidayTransferDay/GetList?year={1}",OdataServiceUri,year));
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<List<RestHolidayTransferDays>>(jsonString);
             return model;
@@ -62,14 +62,14 @@ namespace Stuff.Models
         //Получения списка лет
         public static int[] GetYearsList()
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHolidayTransferDay/GetYearsList");
+            Uri uri = new Uri(string.Format("{0}/RestHolidayTransferDay/GetYearsList",OdataServiceUri));
             string jsonString = GetJson(uri);
             var model = JsonConvert.DeserializeObject<int[]>(jsonString);
             return model;
         }
         public static bool Close(int id, out ResponseMessage responseMessage)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHolidayTransferDay/Close?id={id}");
+            Uri uri = new Uri(string.Format("{0}/RestHolidayTransferDay/Close?id={1}",OdataServiceUri));
             string json = string.Empty;
             bool result = PostJson(uri, json, out responseMessage);
             return result;
@@ -77,7 +77,7 @@ namespace Stuff.Models
         //Добавить день
         public bool Save(out ResponseMessage responseMessage)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHolidayTransferDay/Save");
+            Uri uri = new Uri(string.Format("{}/RestHolidayTransferDay/Save",OdataServiceUri));
             string json = JsonConvert.SerializeObject(this);
             bool result = PostJson(uri, json, out responseMessage);
             return result;
@@ -85,7 +85,7 @@ namespace Stuff.Models
         //Копировать дни предыдущего года в текущий(year)
         public static bool CloneYear(int year, out ResponseMessage responseMessage)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHolidayTransferDay/Clone?yearTo={year}");
+            Uri uri = new Uri(string.Format("{0}/RestHolidayTransferDay/Clone?yearTo={1}",OdataServiceUri,year));
 
             string json = string.Empty;
             bool result = PostJson(uri, json, out responseMessage);

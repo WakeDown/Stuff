@@ -27,7 +27,7 @@ namespace Stuff.Models
             SetMatchersOficial(SidEmployee);
 
             Name = "З А Я В Л Е Н И Е";
-            Text =$"Прошу уволить меня по собственному желанию  {DateFired:dd.MM.yyyy} г.";
+            Text =string.Format("Прошу уволить меня по собственному желанию  {0:dd.MM.yyyy} г.",DateFired);
         }
     }
 }

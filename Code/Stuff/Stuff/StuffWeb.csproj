@@ -197,6 +197,7 @@
     <Compile Include="Models\DocMeetLinkList.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\DocumentLink.cs" />
+    <Compile Include="Models\EmployeeSm.cs" />
     <Compile Include="Models\ItBudgetReportItem.cs" />
     <Compile Include="Models\ItBudgetReportItemPeople.cs" />
     <Compile Include="Models\Language.cs" />
@@ -211,6 +212,8 @@
     <Compile Include="Models\StatementRestFewDays.cs" />
     <Compile Include="Models\StatementRestFewHours.cs" />
     <Compile Include="Models\RestHolidayTransferDays.cs" />
+    <Compile Include="Models\StatementPrint.cs" />
+    <Compile Include="Models\StatementType.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Models\VendorState.cs" />
     <Compile Include="Objects\AdGroup.cs" />
@@ -267,6 +270,7 @@
     <Content Include="Content\images\photo_icon.png" />
     <Content Include="Content\images\statement_icon.png" />
     <Content Include="Content\images\sto_gazprom_9001.png" />
+    <Content Include="Content\jquery.dataTables.min.css" />
     <Content Include="Content\sattement.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -341,8 +345,10 @@
     <Content Include="Scripts\jquery-barcode.js" />
     <Content Include="Scripts\jquery-barcode.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.dateFormat-1.0.js" />
     <Content Include="Scripts\jquery.mask.min.js" />
+    <Content Include="Scripts\jquery.scannerdetection.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\npm.js" />
@@ -422,6 +428,7 @@
     <Content Include="Views\Department\EmployeesRestHolidaysTable.cshtml" />
     <Content Include="Views\Department\EmployeesTable.cshtml" />
     <Content Include="Views\RestHolidayTransferDays\Index.cshtml" />
+    <Content Include="Views\Document\StatementPrintList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

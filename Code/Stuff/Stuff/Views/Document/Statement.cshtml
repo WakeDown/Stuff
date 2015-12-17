@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заявление</title>
     @Styles.Render("~/Content/statement")
+    @Scripts.Render("~/bundles/jquery")
 </head>
 <body>
 <div class="print sheet">
@@ -71,8 +72,12 @@
             </td>
         </tr>
     </table>
+    <div id="barcode" style="margin-left:20cm; margin-top:14cm"></div>
 </div>
     @{ ViewBag.ShowMatcherSecretaryRow = Model.ShowMatcherSecretaryRow; }
     @Html.Partial("StatementMatchers", Model.Matchers)
 </body>
 </html>
+<script type="text/javascript">
+    $("#barcode").barcode('@Model.Id.ToString("D7")', 'code39',{barWidth:2,barHeight:100});
+</script>

@@ -24,14 +24,14 @@ namespace Stuff.Models
 
         public static List<EmployeeRestHoliday> GetEmployeeList(int year)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHoliday/GetEmployeeList?year={year}");
+            Uri uri = new Uri(string.Format("{0}/RestHoliday/GetEmployeeList?year={1}",OdataServiceUri,year));
             var jsonList = GetJson(uri);
             return JsonConvert.DeserializeObject<List<EmployeeRestHoliday>>(jsonList);
         }
 
         public static bool CanEdit (string employeeSid, int year, bool canEdit, out ResponseMessage responseMessage)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/RestHoliday/CanEdit?employeeSid={employeeSid}&year={year}&canEdit={canEdit}");
+            Uri uri = new Uri(string.Format("{0}/RestHoliday/CanEdit?employeeSid={employeeSid}&year={1}&canEdit={2}", OdataServiceUri, year, canEdit));
             return PostJson(uri, String.Empty, out responseMessage);
         }
     }

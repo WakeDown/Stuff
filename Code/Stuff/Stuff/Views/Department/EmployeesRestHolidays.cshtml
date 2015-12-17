@@ -57,7 +57,7 @@
                             @if (allDepartments==false && dep.Chief.AdSid==user.Sid)
                             {
                                 <br/>
-                                <button id="submitRestHolidays" type="button" class="btn btn-success" departmentId ="@dep.Id" style="display: none">
+                                <button id="submitRestHolidays" type="button" class="btn btn-success" departmentId ="@dep.Id" disabled="disabled">
                                     <i class="fa fa-check">&nbsp;Утвердить</i>
                                 </button>
                             }
@@ -103,7 +103,7 @@
                 $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).addClass("bg-danger");
                 if (confirm("Are You Sure?")) {
                     var btn = this;
-                    $(btn).hide();
+                    $(btn).attr("disabled","disabled");
                     $.ajax({
                         url: "@Url.Action("SubmitEmployeesRestHolidays")",
                         method: "POST",
@@ -115,14 +115,15 @@
                                 $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).removeClass("bg-danger bg-success");
                                 $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).addClass("bg-warning");
                             } else {
-                                $(btn).show();
+                                $(btn).removeAttr("disabled");
                                 alert(data.Message);
                                 $("[rowtype='restHolidayRow']", $("[department='" + dep + "']")).removeClass("bg-danger");
                             }
                         },
                         error: function (data) {
                             alert(data.statusText);
-                            $(btn).show();
+                            $(btn).removeAttr("disabled");
+                            $("body").html(data.responseText)
                         }
                     });
                 } else {
@@ -142,7 +143,7 @@
                         restHolidaysRows.push($(this).attr("restHolidayId"));
                     });
                     if (restHolidaysRows.length>0) {
-                        $("[departmentId='" + dep + "']").show();
+                        $("[departmentId='" + dep + "']").removeAttr("disabled");
                     }
                 },
                 error: function (errorData) {
