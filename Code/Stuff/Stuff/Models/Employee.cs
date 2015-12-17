@@ -62,7 +62,7 @@ namespace Stuff.Models
         /// <param name="showHidden">Показать скрытых пользователей принудительно</param>
         public Employee(int id, bool showHidden = false)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/Employee/Get?id={id}&showHidden={showHidden}");
+            Uri uri = new Uri(string.Format("{0}/Employee/Get?id={1}&showHidden={2}",OdataServiceUri,id,showHidden));
             string jsonString = GetJson(uri);
 
             Employee emp = JsonConvert.DeserializeObject<Employee>(jsonString);
@@ -71,7 +71,7 @@ namespace Stuff.Models
 
         public Employee(string sid, bool showHidden = false)
         {
-            Uri uri = new Uri($"{OdataServiceUri}/Employee/Get?adSid={sid}&showHidden={showHidden}");
+            Uri uri = new Uri(string.Format("{0}/Employee/Get?adSid={1}&showHidden={2}",OdataServiceUri,sid,showHidden));
             string jsonString = GetJson(uri);
 
             Employee emp = JsonConvert.DeserializeObject<Employee>(jsonString);
@@ -241,7 +241,7 @@ namespace Stuff.Models
 
         public static IEnumerable<Department> GetWorkingDepartmentList(string sid)
         {
-            var url = new Uri($"{OdataServiceUri}/Employee/GetWorkingDepartmentList?sid={sid}");
+            var url = new Uri(string.Format("{0}/Employee/GetWorkingDepartmentList?sid={1}", OdataServiceUri, sid));
             var json = GetJson(url);
             return JsonConvert.DeserializeObject<IEnumerable<Department>>(json);
         }
