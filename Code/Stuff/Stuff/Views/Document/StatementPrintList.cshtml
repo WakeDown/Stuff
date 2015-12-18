@@ -18,7 +18,7 @@
         <thead class="bg-primary">
         <tr>
             <th>
-                Номер служебки
+                №
             </th>
             <th class="search">
                 Сотрудник
@@ -90,7 +90,7 @@
             language: "ru"
         });
         // DataTable
-        var table = $('#statementPrints').DataTable({"dom": '<"top"><"bottom">' });
+        var table = $('#statementPrints').DataTable({"dom": '<"top"><"bottom">', "bJQueryUI": true });
  
         // Apply the search
         table.columns().eq( 0 ).each( function ( colIdx ) {
@@ -99,9 +99,12 @@
                     .column( colIdx )
                     .search( this.value )
                     .draw();
-            } );
-        } );
-        } );
+            });
+            $('input', table.column(colIdx).header()).on('click', function (e) {
+                e.stopPropagation();
+            });
+        });
+        });
         $("body").scannerDetection(function(data) {
             $("#idInput").val(data);
             $("#bcForm").submit();
