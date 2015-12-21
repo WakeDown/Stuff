@@ -100,8 +100,8 @@ namespace Stuff.Controllers
             var responseMessage = new ResponseMessage();
             StatementPrint.SetConfirmed(id.Value, out responseMessage);
             ViewData["message"] = responseMessage;
-            var spl = StatementPrint.GetList();
-            return View(spl);
+            //var spl = StatementPrint.GetList();
+            return RedirectToAction("StatementPrintList");
         }
         public JsonResult SaveDocMeetLink(int? idDocument, int? idDepartment, int? idPosition, int? idEmployee)
         {
