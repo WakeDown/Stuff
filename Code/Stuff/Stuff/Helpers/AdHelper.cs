@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web;
 using Stuff.Objects;
 
@@ -54,6 +55,38 @@ namespace Stuff.Helpers
             }
         }
 
+        public static void SetUserAdGroups(IIdentity identity, ref AdUser user)
+        {
+
+
+            //using (WindowsImpersonationContextFacade impersonationContext
+            //    = new WindowsImpersonationContextFacade(
+            //        nc))
+            //{
+            var wi = (WindowsIdentity)identity;
+            var context = new PrincipalContext(ContextType.Domain);
+
+
+            if (identity != null && wi.User != null && user != null)
+            {
+
+                user.AdGroups = new List<AdGroup>();
+
+                var wp = new WindowsPrincipal(wi);
+                var gr = wi.Groups;
+
+                foreach (AdUserGroup grp in AdUserGroup.GetList())
+                {
+                    var grpSid = new SecurityIdentifier(grp.Sid);
+                    if (wp.IsInRole(grpSid))
+                    {
+                        user.AdGroups.Add(grp.Group);
+                    }
+                }
+            }
+            //}
+
+        }
 
         public static AdUser GetUserBySid(string sid)
         {

@@ -92,12 +92,13 @@ namespace Stuff.Controllers
         }
 
         [HttpPost]
-        public ActionResult StatementPrintList(int id)
+        public ActionResult StatementPrintList(int? id)
         {
+            if (!id.HasValue) return RedirectToAction("StatementPrintList");
             if (!CurUser.UserIsPersonalManager())
                 return new HttpStatusCodeResult(403);
             var responseMessage = new ResponseMessage();
-            StatementPrint.SetConfirmed(id, out responseMessage);
+            StatementPrint.SetConfirmed(id.Value, out responseMessage);
             ViewData["message"] = responseMessage;
             var spl = StatementPrint.GetList();
             return View(spl);
@@ -285,7 +286,7 @@ namespace Stuff.Controllers
                 IdStatementType = 2,
                 EmployeeSid = data.SidEmployee,
                 DateBegin = data.DateStart,
-                DateEnd = data.DateStart.AddDays(data.DaysCount),
+                DateEnd = data.DateStart.AddDays(data.DaysCount - 1),
                 DurationDays = data.DaysCount,
                 Cause = data.Cause,
                 IdDepartment = data.Employee.Department.Id,

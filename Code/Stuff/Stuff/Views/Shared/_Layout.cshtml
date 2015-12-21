@@ -60,7 +60,10 @@
                             }
                             <li><a href='@Url.Action("Index", "VendorState")'>Статусы вендоров</a></li>
                             <li><a href='@Url.Action("EmployeesRestHolidays", "Department")'>Отпуска сотрудников</a></li>
-                            
+@if (userCanEdit)
+{
+    <li><a href="@Url.Action("StatementPrintList", "Document")">Отметка служебок</a></li>
+}
                         </ul>
                     </li>
                     @if (userCanEdit || userIsVendorManager)
@@ -76,7 +79,6 @@
                                     <li><a href='@Url.Action("Index", "Position")'>Должности</a></li>
                                     <li><a href='@Url.Action("Index", "Budget")'>Бюджеты</a></li>
                                     <li><a href='@Url.Action("Index", "RestHolidayTransferDays")'>Праздничный дни</a></li>
-                                    <li><a href="@Url.Action("StatementPrintList", "Document")">Список служебок</a></li>
                                 }
                                 @if (userIsVendorManager)
                                 {

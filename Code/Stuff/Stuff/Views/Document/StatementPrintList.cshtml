@@ -18,7 +18,7 @@
         <thead class="bg-primary">
         <tr>
             <th>
-                Номер служебки
+                №
             </th>
             <th class="search">
                 Сотрудник
@@ -27,10 +27,10 @@
                 Тип службки
             </th>
             <th>
-                Причина отсутсвия
+                Причина отсутствия
             </th>
             <th class="search" id="datepicker">
-                Начало отсутсвия
+                Начало отсутствия
             </th>
             <th>
                 Выход на работу
@@ -55,12 +55,12 @@
         </td>
         <td>
             @(statementPrint.IdStatementType == 1
-            ? statementPrint.DateBegin.ToString()
+            ? statementPrint.DateBegin.Value.ToString("dd.MM.yyyy HH:mm")
             : statementPrint.DateBegin.Value.ToShortDateString())
         </td>
         <td>
             @(statementPrint.IdStatementType==1 
-            ? statementPrint.DateEnd.ToString()
+            ? statementPrint.DateEnd.Value.ToString("dd.MM.yyyy HH:mm")
             : statementPrint.DateEnd.Value.ToShortDateString())
         </td>
     </tr>
@@ -77,34 +77,37 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function () {
-        $('#statementPrints thead .search').each( function () {
-            var cls = $(this)[0].id;
-            var title = $(this)[0].innerText;
-            $(this).html( '<input type="text" style="color:black"  placeholder="'+title+'" class="'+cls+'">');
-        } );
-        $(".datepicker").datepicker({
-            format: "dd.mm.yyyy",
-            autoclose: true,
-            todayBtn: "linked",
-            language: "ru"
+        $(document).ready(function() {
+            $('#statementPrints thead .search').each(function() {
+                var cls = $(this)[0].id;
+                var title = $(this)[0].innerText;
+                $(this).html('<input type="text" style="color:black"  placeholder="' + title + '" class="' + cls + '">');
+            });
+            $(".datepicker").datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+            // DataTable
+            var table = $('#statementPrints').DataTable({ "dom": '<"top"><"bottom">', "bJQueryUI": true,paging: false });
+
+            // Apply the search
+            table.columns().eq(0).each(function(colIdx) {
+                $('input', table.column(colIdx).header()).on('keyup change', function() {
+                    table
+                        .column(colIdx)
+                        .search(this.value)
+                        .draw();
+                });
+                $('input', table.column(colIdx).header()).on('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
         });
-        // DataTable
-        var table = $('#statementPrints').DataTable({"dom": '<"top"><"bottom">' });
- 
-        // Apply the search
-        table.columns().eq( 0 ).each( function ( colIdx ) {
-            $( 'input', table.column( colIdx ).header() ).on( 'keyup change', function () {
-                table
-                    .column( colIdx )
-                    .search( this.value )
-                    .draw();
-            } );
-        } );
-        } );
         $("body").scannerDetection(function(data) {
-            $("#idInput").val(data);
-            $("#bcForm").submit();
+                $("#idInput").val(data);
+                $("#bcForm").submit();
         });
     </script>
 }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
+using Stuff.Helpers;
 using Stuff.Models;
 
 namespace Stuff.Objects
@@ -99,7 +100,13 @@ namespace Stuff.Objects
         [NonAction]
         public AdUser GetCurUser()
         {
+            if (Session["CurUser"] != null)
+            {
+                return (AdUser)Session["CurUser"];
+            }
+
             AdUser user = new AdUser();
+            //user.User = base.User;
             try
             {
                 using (WindowsImpersonationContextFacade impersonationContext
@@ -145,6 +152,7 @@ namespace Stuff.Objects
                             //        user.AdGroups.Add(role.Group);
                             //    }
                             //}
+                            AdHelper.SetUserAdGroups(wi, ref user);
                         }
                     }
                 }
@@ -153,6 +161,8 @@ namespace Stuff.Objects
             {
                 throw;
             }
+
+            Session["CurUser"] = user;
 
             return user;
         }
