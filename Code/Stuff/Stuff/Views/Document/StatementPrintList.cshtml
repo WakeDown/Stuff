@@ -23,18 +23,20 @@
             <th class="search">
                 Сотрудник
             </th>
-            <th>
+            @*<th>
                 Тип службки
             </th>
             <th>
                 Причина отсутствия
-            </th>
+            </th>*@
             <th class="search" id="datepicker">
                 Начало отсутствия
             </th>
             <th>
                 Выход на работу
             </th>
+            <th>Дней отсутствия</th>
+            <th>Часов отсутствия</th>
         </tr>
         </thead>
         <tbody>
@@ -47,21 +49,27 @@
         <td>
             @statementPrint.Employee.DisplayName
         </td>
-        <td>
+        @*<td>
             @StatementType.GetList().First(t => t.Id == statementPrint.IdStatementType).Name
         </td>
         <td>
             @statementPrint.Cause
-        </td>
+        </td>*@
         <td>
             @(statementPrint.IdStatementType == 1
             ? statementPrint.DateBegin.Value.ToString("dd.MM.yyyy HH:mm")
             : statementPrint.DateBegin.Value.ToShortDateString())
         </td>
         <td>
-            @(statementPrint.IdStatementType==1 
-            ? statementPrint.DateEnd.Value.ToString("dd.MM.yyyy HH:mm")
-            : statementPrint.DateEnd.Value.ToShortDateString())
+            @(statementPrint.IdStatementType == 1
+                  ? statementPrint.DateEnd.Value.ToString("dd.MM.yyyy HH:mm")
+                  : statementPrint.DateEnd.Value.ToShortDateString())
+        </td>
+        <td>
+            @statementPrint.DurationDays
+        </td>
+        <td>
+            @statementPrint.DurationHours
         </td>
     </tr>
 }

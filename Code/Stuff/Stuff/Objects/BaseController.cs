@@ -15,7 +15,7 @@ using Stuff.Models;
 
 namespace Stuff.Objects
 {
-    public class BaseController:Controller
+    public class BaseController : Controller
     {
         //protected ActionResult ViewPdf(string viewName, object model)
         //{

@@ -149,6 +149,9 @@ namespace Stuff.Controllers
             emp.Creator = new Employee(){AdSid = GetCurUser().Sid};
             //var chkCreateAdUser = Request.Form["chkCreateAdUser"];
             //bool createAdUser = chkCreateAdUser != "false";
+            if (String.IsNullOrEmpty(emp.MobilNum)) emp.MobilNum = "-999";
+            if (String.IsNullOrEmpty(emp.WorkNum)) emp.WorkNum = "-999";
+            if (String.IsNullOrEmpty(emp.Email)) emp.Email = "-999";
             bool complete = emp.Save(out responseMessage);
             return complete;
         }

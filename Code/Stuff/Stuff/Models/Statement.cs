@@ -13,7 +13,7 @@ namespace Stuff.Models
         FewDays//несколько дней
     }
 
-    public class Statement:Document
+    public class Statement: Document
     {
         public Employee Employee { get; set; }
         public string Text { get; set; }
