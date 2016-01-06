@@ -200,7 +200,7 @@ namespace Stuff.Models
 
         public static SelectList GetEmployeeListSid()
         {
-            return new SelectList(Employee.GetSelectionList(), "AdSid", "DisplayName");
+            return new SelectList(Employee.GetList(), "AdSid", "DisplayName");
         }
 
         public Employee GetDirector()
@@ -244,6 +244,30 @@ namespace Stuff.Models
             var url = new Uri(string.Format("{0}/Employee/GetWorkingDepartmentList?sid={1}", OdataServiceUri, sid));
             var json = GetJson(url);
             return JsonConvert.DeserializeObject<IEnumerable<Department>>(json);
+        }
+
+        public static string ShortName(string fullName)
+        {
+            string result = String.Empty;
+            string[] nameArr = fullName.Split(' ');
+            for (int i = 0; i < nameArr.Count(); i++)
+            {
+                //if (i > 2) break;
+                string name = nameArr[i];
+                if (String.IsNullOrEmpty(name)) continue;
+                if (i > 0) name = name[0] + ".";
+                if (i == 1) name = " " + name;
+                result += name;
+            }
+            return result;
+        }
+
+        public static IEnumerable<string> GetFullRecipientList(string citySysName = null)
+        {
+            Uri uri = new Uri(String.Format("{0}/Employee/GetFullRecipientList?citySysName={1}", OdataServiceUri, citySysName));
+            string jsonString = GetJson(uri);
+            var email = JsonConvert.DeserializeObject<IEnumerable<string>>(jsonString);
+            return email;
         }
     }
 }

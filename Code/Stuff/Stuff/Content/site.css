@@ -53,7 +53,7 @@ body {
     padding-left: 25px;
 }
 
-input.required-mark, select.required-mark, span.required-mark, textarea.required-mark {
+input.required-mark, select.required-mark,div.required-mark, span.required-mark, textarea.required-mark {
     background-color: #fcf8e3;
 }
 

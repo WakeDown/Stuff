@@ -296,6 +296,9 @@ namespace Stuff.Controllers
             ResponseMessage rm;
             if (statementPrint.Save(out rm))
                 statementPrint.Id = rm.Id;
+
+            //return RedirectToAction("StatementRestDays", new { sid = data.SidEmployee, dateStart = data.DateStart, daysCount = data.DaysCount, cause = data.Cause, id = statementPrint.Id });
+
             string url = Url.Action("StatementRestDays", new{sid=data.SidEmployee, dateStart=data.DateStart, daysCount=data.DaysCount, cause=data.Cause, id=statementPrint.Id});
             var leftPartUrl = String.Format("{0}://{1}:{2}", Request.RequestContext.HttpContext.Request.Url.Scheme, Request.RequestContext.HttpContext.Request.Url.Host, Request.RequestContext.HttpContext.Request.Url.Port);
             url = String.Format("{1}{0}", url, leftPartUrl);

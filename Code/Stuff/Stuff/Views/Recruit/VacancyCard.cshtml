@@ -1,0 +1,39 @@
+﻿@model Stuff.Models.RecruitVacancy
+
+@{
+    ViewBag.Title = "Вакансия №" + Model.Id;
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Вакансия №@Model.Id
+    <button id="delete" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i> удалить</button>
+}
+
+@section PanelBody
+{
+
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+    $(function() {
+        $('#delete').click(function(
+        ) {
+            $.ajax({
+                url: '@Url.Action("VacancyDelete")',
+                method: 'POST',
+                data: { id: @Model.Id },
+                success: function() {
+                    window.location = '@Url.Action("Index")';
+                },
+                error: function() {
+                    alert('Ошибка при удалении, Удаление не выполнено!');
+                }
+            });
+        } );
+    })
+</script>
+}

@@ -1,0 +1,75 @@
+﻿@using Stuff.Models
+@model IEnumerable<RecruitVacancy>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Вакансии";
+}
+
+<p>
+    <a class="btn btn-primary" href="@Url.Action("VacancyNew")"><i class="fa fa-plus-circle"></i> новая вакансия</a>
+    <a class="btn btn-primary" href="@Url.Action("CandidateNew")"><i class="fa fa-plus-circle"></i> новое резюме</a>
+</p>
+
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr class="bg-primary">
+            <th class="min-width">ID</th>
+            <th>Вакансия</th>
+            @*<th>Дата открытия</th>*@
+            <th>Кол-во кандидатов</th>
+            <th>Дата закрытия План</th>
+            <th>Менеджер</th>
+            <th>Добавлено</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (RecruitVacancy rv in Model)
+             {
+                 <tr id="vac-@rv.Id" vacid="@rv.Id" class="cursor-pointer ">
+                     <th>@rv.Id</th>
+                     <td>
+                         <div>@rv.PositionName</div>
+                         <div><small>@rv.DepartmentName</small>
+                         </div>
+                     </td>
+                     @*<td>@rv.DateCreate.ToString("dd.MM.yyyy")</td>*@
+                     <td>@rv.CandidateCount</td>
+                     <td>@rv.DeadlineDate.ToString("dd.MM.yyyy")</td>
+                     <td>@rv.PersonalManagerName</td>
+                     <td>@rv.DateCreate.ToString("dd.MM.yyyy")
+                         <div><small>@rv.CreatorName</small></div>
+                     </td>
+                     @*<td>
+                         <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
+                     </td>*@
+                 </tr>
+             }
+        }
+        else
+        {
+            <tr>
+                <td>пусто</td>
+            </tr>
+            
+}
+        </tbody>
+    </table>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $('tr[vacid]').click(function () {
+                var id = $(this).attr('vacid');
+                window.location = '@Url.Action("VacancyCard")?id=' + id;
+            });
+            $('tr[vacid]').on('contextmenu', function () {
+                var id = $(this).attr('vacid');
+                window.open('@Url.Action("VacancyCard")?id=' + id);
+            });
+        })
+    </script>
+}

@@ -12,6 +12,10 @@ namespace Stuff.Objects
         PersonalManager,
         SystemUser,
         VendorStateDelivery,
-        VendorStateEditor
+        VendorStateEditor,
+        EngeneerStateView,
+        EngeneerStateEdit,
+        EngeneerStateExpiresDelivery,
+        ServiceEngeneer
     }
 }

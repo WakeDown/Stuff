@@ -103,8 +103,14 @@
                 _____________ @DateTime.Now.Year г.
             </td>
         </tr>
+        <tr><td colspan="2" style="height: 100px;"></td></tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="barcode" style="float:right"></div>
+            </td>
+        </tr>
     </table>
-    <div id="barcode" style="margin-left:20cm; margin-top:13cm"></div>  
 </div>
     @{ ViewBag.ShowMatcherSecretaryRow = Model.ShowMatcherSecretaryRow; }
     @Html.Partial("StatementMatchers", Model.Matchers)

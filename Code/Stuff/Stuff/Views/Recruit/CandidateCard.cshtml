@@ -1,0 +1,58 @@
+﻿@model Stuff.Models.RecruitCandidate
+
+@{
+    ViewBag.Title = "Резюме №" + Model.Id;
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Резюме №@Model.Id
+    <button id="delete" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i> удалить</button>
+}
+
+@section PanelBody
+{
+    <div class="row pad-t-sm-sm">
+        <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">ФИО:</div>
+        <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Surname) @Html.LabelFor(m => m, Model.Name) @Html.LabelFor(m => m, Model.Patronymic)</div>
+    </div>
+    <div class="row pad-t-sm-sm">
+        <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Ресурс:</div>
+        <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CameResourceName)</div>
+    </div>
+    <div class="row pad-t-sm-sm">
+        <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Дата рождения:</div>
+        <div class="col-lg-10 col-sm-12 text-center-sm bold">@(Model.BirthDate.HasValue ? String.Format("{0}", Model.BirthDate.Value.ToString("dd.MM.yyyy"), Model.Age) : "не указана")</div>
+    </div>
+    <div class="row pad-t-sm-sm">
+        <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Телефон:</div>
+        <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Phone)</div>
+    </div>
+<div class="row pad-t-sm-sm">
+    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">E-mail:</div>
+    <div class="col-lg-10 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.Email)</div>
+</div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+    $(function() {
+        $('#delete').click(function(
+        ) {
+            $.ajax({
+                url: '@Url.Action("CandidateDelete")',
+                method: 'POST',
+                data: { id: @Model.Id },
+                success: function() {
+                    window.location = '@Url.Action("Candidates")';
+                },
+                error: function() {
+                    alert('Ошибка при удалении, Удаление не выполнено!');
+                }
+            });
+        } );
+    })
+    </script>
+}

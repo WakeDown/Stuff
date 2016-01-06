@@ -1,0 +1,109 @@
+﻿@using Stuff.Helpers
+@using Stuff.Models
+@using Stuff.Objects
+@model Stuff.Models.RecruitVacancy
+
+@{
+    ViewBag.Title = "Новая вакансия";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    var empList =Employee.GetEmployeeListSid();
+}
+
+@section PanelHead
+{
+    Новая вакансия
+}
+
+@section PanelBody
+{
+    @using (Html.BeginForm("VacancyNew", "Recruit", FormMethod.Post, new { @id = "posForm", @class = "form-horizontal", role = "form" }))
+    {
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="cause">Причина возникновения</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @foreach (RecruitVacancyCause cause in RecruitVacancyCause.GetList())
+                    {
+                        @Html.RadioButtonFor(m => m.IdCause, cause.Id, new { required = "required" })
+                        @:&nbsp;@cause.Name
+                }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="author">Автор заявки</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.AuthorSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "author", required = "required", data_error = "Заполните поле Автор"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+    <div class="form-group">
+    <label class="col-lg-2 control-label" for="department">Подразделение</label>
+    <div class="col-lg-5">
+        @Html.DropDownListFor(m => m.IdDepartment, Department.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "department", required = "required", data_error = "Заполните поле Подразделение" })
+        <span class="help-block with-errors"></span>
+    </div>
+</div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="position">Должность</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.IdPosition, Position.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "position", required = "required", data_error = "Заполните поле Должность" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="chief">Руководитель</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.ChiefSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "chief", required = "required", data_error = "Заполните поле Руководитель" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="matcher">Руководитель принимающий решение</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.MatcherSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "matcher", required = "required", data_error = "Заполните поле Руководитель принимающий решение"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="personalManager">Менеджер по персоналу</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.PersonalManagerSid, new SelectList(AdHelper.GetUserListByAdGroup(AdGroup.PersonalManager), "Key", "Value"), "--выберите--", new {@class = "form-control required-mark", @id = "personalManager", required = "required", data_error = "Заполните поле Менеджер по персоналу"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="deadlineDate">Дата окончания План</label>
+            <div class="col-lg-2">
+                @Html.TextBoxFor(m => m.DeadlineDate, new { @class = "form-control text-right required-mark", @id = "deadlineDate", data_mask = "00.00.0000" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-5">
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</button>
+                <a href="@Url.Action("Index")" class="btn btn-default"><i class="fa fa-mail-reply"></i> назад</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-push-2 col-lg-6">
+                <span class="text-danger">@TempData["error"]</span>
+            </div>
+        </div>
+    }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $("#deadlineDate").datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+        })
+    </script>
+}

@@ -1,0 +1,149 @@
+﻿@using Stuff.Helpers
+@using Stuff.Models
+@using Stuff.Objects
+@model Stuff.Models.EngeneerState
+
+@{
+    ViewBag.Title = "Новый статус инженера";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Новый статус инженера
+}
+
+@section PanelBody
+{
+
+    @using (Html.BeginForm("New", "EngeneerState", FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", role = "form" }))
+    {
+        if (@TempData["ServerError"] != null)
+        {
+            <div class="form-group">
+                <div class="col-lg-5 col-lg-push-2">
+                    <blockquote class="alert-danger">@TempData["ServerError"]</blockquote>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="Name">Инженер</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.EngeneerSid, new SelectList(AdHelper.GetUserListByAdGroup(AdGroup.ServiceEngeneer), "Key", "Value"), "--выберите--", new { @class = "form-control required-mark", @id = "Name", required = "required", data_error = "Выберите инженера" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="Name">Вендор</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.VendorId, Vendor.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "Name", required = "required", data_error = "Выберите вендор" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="StateDescription">Название статуса</label>
+            <div class="col-lg-3">
+                @Html.TextBoxFor(m => m.StateName, new { @class = "form-control required-mark", @id = "stateName", required = "required", data_error = "Заполните поле название статуса" })
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="picture">Картинка</label>
+            <div class="col-lg-5">
+                <input type="file" name="file" />
+                <small>только jpeg размером не более 5 Мб</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="endDate">Дата окончания</label>
+            <div class="col-lg-2">
+                @Html.TextBoxFor(m => m.EndDate, "{0:dd.MM.yyyy}", new { @class = "form-control text-right required-mark", @id = "endDate", required = "required", data_error = "Заполните поле Дата окончания" })
+                <span class="help-block with-errors"></span>
+            </div>
+            <div class="col-lg-2">
+                @Html.CheckBox("endless") бессрочно
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="organization">Юр. лицо</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.UnitOrganizationId, Organization.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "organization", required = "required", data_error = "Выберите Юр. лицо" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="language">Язык оригинала</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.LanguageId, Language.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "language", required = "required", data_error = "Выберите Язык оригинала" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="StateDescription">Описание</label>
+            <div class="col-lg-5">
+                @Html.TextAreaFor(m => m.StateDescription, new { @class = "form-control", @id = "stateDescription", data_error = "Заполните поле Описание статуса" })
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-5">
+                @*<a type="submit" class="btn btn-primary btn-sm" href="#"><i class="fa fa-save"></i>&nbsp;добавить</a>*@
+                <button id="btnCreate" type="submit" class="btn btn-success" name="action" value="Create"><i class="fa fa-save"></i>&nbsp;добавить</button>
+            </div>
+        </div>
+    }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+           // $("#btnGenEmail").click(generateEmail);
+            $("#endDate").datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+            $('#endless').click(function () {
+                if (this.checked) {
+                    $("#endDate").prop('disabled', true);
+                    $("#endDate").prop('required', false);
+                    @*$("#endDate").val('@DateTime.Parse("3333-03-03").ToString("dd.MM.yyyy")');*@
+                } else {
+                    $("#endDate").val(null);
+                    $("#endDate").prop('required', true);
+                    $("#endDate").prop('disabled', false);
+
+                }
+            });
+        });
+
+       /* function generateEmail() {
+
+            var surname = $("#surname").val();
+            var name = $("#name").val();
+            if (surname == '' || name == '') {
+                alert('Заполните Имя и Фамилию!');
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/Employee/GenEmailAddressByVendor?surname=' + surname + '&name=' + name,
+                success:
+                    function (json) {
+                        $("#email").val(json.address);
+                        return;
+                    }
+            });
+
+        }*/
+
+
+
+
+    </script>
+}
