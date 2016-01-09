@@ -39,6 +39,7 @@ public string Name { get; set; }
             }
         }
 
+        public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
 
         public RecruitCandidate()
         {
@@ -104,14 +105,24 @@ public string Name { get; set; }
             }
         }
 
-        public static IEnumerable<RecruitCandidate> GetList(out int totalCount, int? topRows = null, int? pageNum = null)
+        public static IEnumerable<RecruitCandidate> GetList(out int totalCount, int? topRows = null, int? pageNum = null, string idStr = null, string fio = null, string age = null, string phone = null, string email = null, string added = null, bool? sex=null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
 
+            int id;
+            int.TryParse(idStr, out id);
+
             SqlParameter ptopRows = new SqlParameter() { ParameterName = "top_rows", SqlValue = topRows, SqlDbType = SqlDbType.Int };
             SqlParameter ppageNum = new SqlParameter() { ParameterName = "page_num", SqlValue = pageNum, SqlDbType = SqlDbType.Int };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_list", ptopRows, ppageNum);
+            SqlParameter pid = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
+            SqlParameter pfio = new SqlParameter() { ParameterName = "fio", SqlValue = fio, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter page = new SqlParameter() { ParameterName = "age", SqlValue = age, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pPhone = new SqlParameter() { ParameterName = "phone", SqlValue = phone, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = email, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter padded = new SqlParameter() { ParameterName = "added", SqlValue = added, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter psex = new SqlParameter() { ParameterName = "sex", SqlValue = sex, SqlDbType = SqlDbType.Bit };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_list", ptopRows, ppageNum, pid, pfio, page, pPhone, pEmail, padded, psex);
 
             totalCount = 0;
             var lst = new List<RecruitCandidate>();

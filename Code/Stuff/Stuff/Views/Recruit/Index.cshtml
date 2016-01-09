@@ -92,7 +92,7 @@
                 <input id="dtcr" class="form-control input-xs" placeholder="Добавлена" value="@Request.QueryString["dtcr"]"/>
             </th>
             <th class="min-width">
-                <a href="@Url.Action("Index")" class="btn btn-default btn-sm" title="очистить фильтр"><i class="fa fa-refresh"></i></a>
+                <a href="@Url.Action("Index")" class="btn btn-default btn-xs" title="очистить фильтр"><i class="fa fa-refresh"></i></a>
             </th>
         </tr>
         </thead>
@@ -150,7 +150,7 @@
                 search();
             });
 
-            loadStateFilterList();
+            //loadStateFilterList();
         });
 
         function loadStateFilterList() {
@@ -165,7 +165,7 @@
                     if (data.length > 0) {
                         var requestStates = getParameterByName('state');
                         var stArr = requestStates.split(',');
-                        alert(requestStates);
+                        //alert(requestStates);
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
                             var elem = '<li><a name="stateFilterItem" class="btn state-filter-item' + (stArr.indexOf(item.Id) > -1 ? ' selected' : '') + '" stid="' + item.Id + '">' + item.Name + ' <span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.Count + '</span></a></li>';
@@ -187,7 +187,7 @@
         }
 
         function search() {
-            var curUrl = '@Request.RawUrl';
+            var curUrl = '@Request.RawUrl.Replace("&amp;", "&")';
             var url = curUrl;
             var vid = $('#vid').val();
             url = updateQueryStringParameter(url, 'vid', vid);
@@ -202,16 +202,17 @@
             var stt = $('#stt').val();
             url = updateQueryStringParameter(url, 'stt', stt);
 
-            var $grpStateElem = $('[name="stateFilterItem"].selected');
-            var state = '';
-            if ($grpStateElem.length > 0) {
-                for (var i = 0; i < $grpStateElem.length; i++) {
-                    var val = $($grpStateElem[i]).attr('stid');
-                    if (state > 0) state = state + ',';
-                    state = state + val;
-                }
-            }
-            url = updateQueryStringParameter(url, 'state', state);
+            //var $grpStateElem = $('[name="stateFilterItem"].selected');
+            //var state = '';
+            //if ($grpStateElem.length > 0) {
+            //    for (var i = 0; i < $grpStateElem.length; i++) {
+            //        var val = $($grpStateElem[i]).attr('stid');
+            //        if (state > 0) state = state + ',';
+            //        state = state + val;
+            //    }
+            //}
+            
+            //url = updateQueryStringParameter(url, 'state', state);
 
             window.location = url;
         }

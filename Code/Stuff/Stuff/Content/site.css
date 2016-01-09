@@ -377,3 +377,7 @@ th.sorter-false div:before {
     overflow: hidden;
     float: left;
 }
+
+.nomargin {
+    margin: 0 !important;
+}

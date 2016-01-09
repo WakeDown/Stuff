@@ -69,10 +69,31 @@ namespace Stuff.Controllers
 
         public PartialViewResult CandidatesSelection()
         {
-            int totalCount;
-            var list = RecruitCandidate.GetList(out totalCount, 1000000);
-            return PartialView(list);
+            //int totalCount;
+            //var list = RecruitCandidate.GetList(out totalCount, 1000000);
+            return PartialView();
         }
+
+        [HttpPost]
+        public JsonResult GetCandidateList(int? topRows, int? pageNum, string cid, string fio, string age, string phone, string email, string added, byte? sex)
+        {
+            if (!topRows.HasValue)
+                topRows = 10;
+            if (!pageNum.HasValue) pageNum = 1;
+            bool? sexBool = null;
+            if (sex.HasValue)
+            {
+                if (sex.Value == 1)
+                    sexBool = true;
+                else if (sex.Value == 0)
+                    sexBool = false;
+            }
+
+            int totalCount;
+            var list = RecruitCandidate.GetList(out totalCount, topRows, pageNum, cid, fio, age, phone,email,added, sexBool);
+            return Json(new {list, totalCount});
+        }
+
         [HttpGet]
         public ActionResult CandidateNew()
         {

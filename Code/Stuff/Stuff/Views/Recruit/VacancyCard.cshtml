@@ -92,9 +92,9 @@
                 <div class="modal-header">
                     @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
                     <div>
-                        <h4 class="modal-title">Список резюме
+                        <h4 class="modal-title">Список резюме - всего <span id="candidatesSelectionTotalCount" class="badge"></span>
                             <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Отмена</button>
-                            <button name="addSelectedCandidates" class="btn btn-success pull-right">Добавить выбранные</button>
+                            <button name="addSelectedCandidates" class="btn btn-success pull-right">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
                         </h4>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                     <p id="candidateList"></p>
                 </div>
                 <div class="modal-footer">
-                    <button name="addSelectedCandidates" class="btn btn-success">Добавить выбранные</button>
+                    <button name="addSelectedCandidates" class="btn btn-success">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                 </div>
             </div>
@@ -164,16 +164,16 @@
     <script type="text/javascript">
         function loadCandidateSelectionList() {
             var $cont = $('#candidateList');
-            $.ajax({ url: '@Url.Action("CandidatesSelection")', method: 'GET', success: function(html) {$cont.html(html);} });
+            $.ajax({ url: '@Url.Action("CandidatesSelection")', method: 'GET', success: function(html) { $cont.html(html); } });
             $('[name="addSelectedCandidates"]').click(function() {
                 @*переменная selectedCandidateResume находится в view CandidatesSelection*@
                 $.ajax({
                     url: '@Url.Action("AppendCandidates2Vacancy")',
-                    method:'POST',
+                    method: 'POST',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
-                    data: JSON.stringify({idVacancy:@Model.Id, idCandidates:selectedCandidateResume}),
-                    success:function() {
+                    data: JSON.stringify({ idVacancy: @Model.Id, idCandidates: selectedCandidateResume }),
+                    success: function() {
                         loadCandidatesList();
                         selectedCandidateResume = [];
                     },
@@ -231,7 +231,7 @@
                     $('#selectionSetAcceptState').click(selectionSetAcceptState);
                     $('#selectionSetCurrentState').click(selectionSetCurrentState);
                 },
-                error:function() {
+                error: function() {
                     alert('Ошибка при загрузке списка кандидатов');
                 }
             });
@@ -246,18 +246,18 @@
 
             $.ajax({
                 url: '@Url.Action("SelectionHistory")?id=' + id,
-                mode:'GET',
+                mode: 'GET',
                 success: function(html) {
                     $cont.html(html);
                 },
-                error:function() {
+                error: function() {
                     alert('Ошибка при загрузке истории!');
                 }
             });
         }
 
         function getCandidateListRow(item) {
-            var $row = $('<tr id="sel-' + item.Id + '" slid="'+item.Id +'" class="cursor-pointer' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
+            var $row = $('<tr id="sel-' + item.Id + '" slid="' + item.Id + '" class="cursor-pointer' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
                 '<th>' + item.Candidate.Id + '</th>' +
                 '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.DisplayName + '</a></td>' +
                 '<td>' + item.Candidate.MaleStr + '</td>' +
@@ -306,15 +306,15 @@
             }
 
             $.ajax({
-                url:'@Url.Action("SelectionSetNextState")',
-                method:'POST',
-                data:{id:slid, idState:cstid, descr:descr},
-                success:function(data) {
+                url: '@Url.Action("SelectionSetNextState")',
+                method: 'POST',
+                data: { id: slid, idState: cstid, descr: descr },
+                success: function(data) {
                     var $row = $('#sel-' + slid);
                     $row.replaceWith(getCandidateListRow(data));
                     $modal.modal('hide');
                 },
-                error:function() {
+                error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
                 }
             });
@@ -329,16 +329,16 @@
             if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите принять утвердить данного кандидата?')) return;
 
             $.ajax({
-                url:'@Url.Action("SelectionSetAcceptState")',
-                method:'POST',
-                data:{id:slid, descr:descr},
-                success:function(data) {
+                url: '@Url.Action("SelectionSetAcceptState")',
+                method: 'POST',
+                data: { id: slid, descr: descr },
+                success: function(data) {
                     window.location.reload();
                     //var $row = $('#sel-' + slid);
                     //$row.replaceWith(getCandidateListRow(data));
                     //$modal.modal('hide');
                 },
-                error:function() {
+                error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
                 }
             });
@@ -357,15 +357,15 @@
             }
 
             $.ajax({
-                url:'@Url.Action("SelectionSetCancelState")',
-                method:'POST',
-                data:{id:slid, descr:descr},
-                success:function(data) {
+                url: '@Url.Action("SelectionSetCancelState")',
+                method: 'POST',
+                data: { id: slid, descr: descr },
+                success: function(data) {
                     var $row = $('#sel-' + slid);
                     $row.replaceWith(getCandidateListRow(data));
                     $modal.modal('hide');
                 },
-                error:function() {
+                error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
                 }
             });
@@ -379,15 +379,19 @@
             var descr = $('#stateComment').val();
 
             $.ajax({
-                url:'@Url.Action("SelectionSetNextState")',
-                method:'POST',
-                data:{id:slid,idState:nstid, descr:descr},
-                success:function(data) {
-                    var $row = $('#sel-' + slid);
-                    $row.replaceWith(getCandidateListRow(data));
-                    $modal.modal('hide');
+                url: '@Url.Action("SelectionSetNextState")',
+                method: 'POST',
+                data: { id: slid, idState: nstid, descr: descr },
+                success: function(data) {
+                    if (data.StateIsAccept != true) {
+                        var $row = $('#sel-' + slid);
+                        $row.replaceWith(getCandidateListRow(data));
+                        $modal.modal('hide');
+                    } else {
+                        window.location.reload();
+                    }
                 },
-                error:function() {
+                error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
                 }
             });

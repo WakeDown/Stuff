@@ -5,7 +5,54 @@
     Layout = null;
 }
 
-<table id="candidatesSelection" class="table table-bordered table-striped table-hover">
+<div class="row no-marg">
+    <div class="col-lg-8">
+        <div class="pull-left">
+            <nav>
+                <ul class="pagination nomargin pages"></ul>
+            </nav>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        
+        @*<div>
+            <div class="text-right">
+                <nav>
+                    <ul class="pagination pagesize nomargin">
+                        <li><a name="pageSize" value="30" class="btn btn-default btn-sm selected">30</a></li>
+                        <li><a name="pageSize" value="100" class="btn btn-default btn-sm">100</a></li>
+                        <li><a name="pageSize" value="300" class="btn btn-default btn-sm">300</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>*@
+    </div>
+</div>
+<div id="candidatesSelectionContainer"></div>
+<div class="row no-marg">
+    <div class="col-lg-8">
+        <div class="pull-left">
+            <nav>
+                <ul class="pagination nomargin pages"></ul>
+            </nav>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        
+        @*<div>
+                <div class="text-right">
+                    <nav>
+                        <ul class="pagination pagesize nomargin">
+                            <li><a name="pageSize" value="30" class="btn btn-default btn-sm selected">30</a></li>
+                            <li><a name="pageSize" value="100" class="btn btn-default btn-sm">100</a></li>
+                            <li><a name="pageSize" value="300" class="btn btn-default btn-sm">300</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>*@
+    </div>
+</div>
+@*<table id="candidatesSelection" class="table table-bordered table-striped table-hover">
     <thead>
     <tr class="bg-primary">
         <th class="min-width text-nowrap">ID</th>
@@ -34,9 +81,6 @@
                     <div><small>@rc.CreatorName</small>
                     </div>
                 </td>
-                @*<td>
-                        <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
-                    </td>*@
             </tr>
         }
     }
@@ -48,23 +92,214 @@
 
     }
     </tbody>
-</table>
+</table>*@
 
 <script type="text/javascript">
+    var queryString = '?';
     var selectedCandidateResume = [];
-    $(function () {
-        $('tr[cndid]').click(function () {
-            var $row = $(this);
-            var id = $row.attr('cndid');
-            var index = selectedCandidateResume.indexOf(id);
-            if (index > -1) {
-                selectedCandidateResume.splice(index, 1);
-                $row.removeClass('selected');
-            } else {
-                selectedCandidateResume.push(id);
-                $row.addClass('selected');
+    $('[name="selectedCandidatesSelection"]').text(selectedCandidateResume.length);
+
+    function loadCandidatesSelectionTable() {
+        var $cont = $('#candidatesSelectionContainer');
+
+
+        var topRows = getParameterByName('topRows');
+        if (topRows == null || topRows == '') {
+            topRows = 10;
+            updateQueryStringParameter('topRows', topRows);
+        }
+        var page = getParameterByName('page');
+        if (page == null || page=='') {
+            page = 1;
+            updateQueryStringParameter('page', page);
+        }
+
+        var cid = $('#cid').val();
+        var fio = $('#fio').val();
+        var age = $('#age').val();
+        var phone = $('#phone').val();
+        var email = $('#email').val();
+        var added = $('#added').val();
+        var sex = $('[name="sex"]:checked').val();
+        if (sex == undefined) sex = null;
+        $cont.empty();
+        $.ajax({
+            url: '@Url.Action("GetCandidateList")',
+            method: 'POST',
+            data: { topRows: topRows, pageNum: page, cid: cid, fio: fio, age: age, phone: phone, email: email, added: added, sex:sex },
+            success: function (data) {
+                var $table = $('<table id="candidatesSelection" class="table table-bordered table-striped table-hover"></table>');
+                $cont.append($table);
+                $table.append('<thead><tr class="bg-primary">' +
+                    '<th class="min-width text-nowrap">' +
+                    '<input id="cid" class="form-control input-xs" placeholder="ID" style="width: 50px;" value="' + (cid == undefined ? '' : cid) + '" />' +
+                    '</th>' +
+                    '<th>' +
+                    '<input id="fio" class="form-control input-xs" placeholder="ФИО" value="' + (fio == undefined ? '' : fio) + '" />' +
+                    '</th>' +
+                    '<th class="text-nowrap">' +
+                    '<input type="radio" name="sex" value="" ' + (sex == null || sex == '' ? 'checked' : '') + '>&nbsp;все&nbsp;<input type="radio" name="sex" value="1" ' + (sex == '1' ? 'checked' : '') + '>&nbsp;М&nbsp;<input type="radio" name="sex" value="0" ' + (sex == '0' ? 'checked' : '') + '>&nbsp;Ж' +
+                    //'<input id="sex" class="form-control input-xs" placeholder="Пол" value="' + (sex == undefined ? '' : sex) + '" />' +
+                    '</th>' +
+                    '<th>' +
+                    '<input id="age" class="form-control input-xs" placeholder="Возраст" value="' + (age == undefined ? '' : age) + '" />' +
+                    '</th>' +
+                    '<th>' +
+                    '<input id="phone" class="form-control input-xs" placeholder="Телефон" value="' + (phone == undefined ? '' : phone) + '" />' +
+                    '</th>' +
+                    '<th>' +
+                    '<input id="email" class="form-control input-xs" placeholder="E-mail" value="' + (email == undefined ? '' : email) + '" />' +
+                    '</th>' +
+                    '<th>' +
+                    '<input id="added" class="form-control input-xs" placeholder="Добавлено" value="' + (added == undefined ? '' : added) + '" />' +
+                    '</th>' +
+                    '<th class="min-width"><button id="candidatesSelectionRefresh" class="btn btn-default btn-xs" title="очистить фильтр"><i class="fa fa-refresh"></i></button></th>' +
+                    '</tr></thead>');
+
+                if (data.list.length > 0) {
+                    for (var i = 0; i < data.list.length; i++) {
+                        var item = data.list[i];
+                        var row = '<tr id="cnd-' + item.Id + '" cndid="' + item.Id + '" class="cursor-pointer ">' +
+                            '<th>' + item.Id + '</th>' +
+                            '<td>' + item.DisplayName + '</td>' +
+                            '<td>' + item.MaleStr + '</td>' +
+                            '<td>' + item.Age + '</td>' +
+                            '<td>' + item.Phone + '</td>' +
+                            '<td>' + item.Email + '</td><td>' + item.DateCreateStr + '<div><small>' + item.CreatorName + '</small></div></td>' +
+                            '<td></td>' +
+                            '</tr>';
+
+                        $table.append(row);
+                    }
+                    $('tr[cndid]').click(function () {
+                        var $row = $(this);
+                        var id = $row.attr('cndid');
+                        var index = selectedCandidateResume.indexOf(id);
+                        if (index > -1) {
+                            selectedCandidateResume.splice(index, 1);
+                            $row.removeClass('selected');
+                        } else {
+                            selectedCandidateResume.push(id);
+                            $row.addClass('selected');
+                        }
+                        $('[name="selectedCandidatesSelection"]').text(selectedCandidateResume.length);
+                    });
+
+                    
+
+
+                } else {
+                    $table.append('<tr><td>пусто</td></tr>');
+                }
+
+                $('#candidatesSelectionRefresh').click(function () {
+                    queryString = '';
+                    $('#cid').val('');
+                    $('#fio').val('');
+                    $('#age').val('');
+                    $('#phone').val('');
+                    $('#email').val('');
+                    $('#added').val('');
+                    //$('#sex').val('');
+                    $('[name="sex"]').prop('checked', false);
+                    $('[name="sex"][value=""]').prop('checked', true);
+                    loadCandidatesSelectionTable();
+                });
+
+                $('#candidatesSelection thead tr input').keypress(function (e) {
+                    if (e.keyCode != 13) return;
+                    loadCandidatesSelectionTable();
+                });
+                $('[name="sex"]').click(function () {
+                    loadCandidatesSelectionTable();
+                });
+
+                loadCandidatesSelectionTablePager(data.totalCount, topRows, page);
+            },
+            error:function() {
+                alert('Ошибка при заргузке списка резюме');
             }
         });
+    }
+
+    function loadCandidatesSelectionTablePager(totalCount, topRows, selPage) {
+        $('.pagination.pages li').remove();
+        $('#candidatesSelectionTotalCount').text('');
+        if (totalCount == null || totalCount <= 0) {
+            return;
+        }
+        $('#candidatesSelectionTotalCount').text(totalCount);
+        if (topRows == null) {
+            topRows = 10;
+            updateQueryStringParameter('topRows', topRows);
+        }
+        if (selPage == null) {
+            selPage = 1;
+            updateQueryStringParameter('page', selPage);
+        }
+
+        var pages = Math.floor(totalCount / topRows);
+        if ((totalCount % topRows) > 0) pages++;
+        //$('.pagination.pages li').remove();
+
+        var btnPrev = '<li name="page-prev"><a class="cursor-pointer" value="' + (selPage <= 1 ? 1 : selPage - 1) + '"><</a></li>';
+        $('.pagination.pages').append(btnPrev);
+        for (var i = 0; i < pages; i++) {
+            var btn = '<li name="page" value="' + (i + 1) + '" class="' + (selPage == i + 1 ? 'active' : '') + '"><a class="cursor-pointer" value="' + (i + 1) + '">' + (i + 1) + '</a></li>';
+            $('.pagination.pages').append(btn);
+
+            if (i > 2) {
+                btn = '<li name="page" value="' + (i + 2) + '" class="' + (selPage == i + 2 ? 'active' : '') + '"><a class="cursor-pointer" value="' + (i + 2) + '">...</a></li>';
+                $('.pagination.pages').append(btn);
+                break;
+            }
+        }
+        var btnNext = '<li name="page-next"><a class="cursor-pointer" value="' + (selPage >= pages ? pages : selPage + 1) + '">></a></li>';
+        $('.pagination.pages').append(btnNext);
+
+        $('[name="page"]:not(.disabled) a').click(function () {
+            var pg = parseInt($(this).attr('value'), 10);
+            updateQueryStringParameter('page', pg);
+            loadCandidatesSelectionTable();
+        });
+
+        $('[name="page-next"] a').click(function () {
+            var pg = parseInt(getParameterByName('page'), 10);
+            var nextPage = pg >= pages ? pages : pg + 1;
+            updateQueryStringParameter('page', nextPage);
+            loadCandidatesSelectionTable();
+        });
+        $('[name="page-prev"] a').click(function () {
+            var pg = parseInt(getParameterByName('page'), 10);
+            var prevPage = pg <= 1 ? 1 : pg - 1;
+            updateQueryStringParameter('page', prevPage);
+            loadCandidatesSelectionTable();
+        });
+
+    }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(queryString);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    function updateQueryStringParameter(key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = queryString.indexOf('?') !== -1 ? "&" : "?";
+        if (queryString.match(re)) {
+            queryString = queryString.replace(re, '$1' + key + "=" + value + '$2');
+            return;
+        } else {
+            queryString = queryString + separator + key + "=" + value;
+            return;
+        }
+    }
+
+    $(function () {
+        loadCandidatesSelectionTable();
+
 
         $('#candidatesSelection').dataTable({
             "bProcessing": true,
