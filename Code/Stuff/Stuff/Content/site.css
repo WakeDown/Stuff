@@ -147,8 +147,15 @@ ul.tree {
 #photo-min {
     width: 50px;
 }
+.pad-l-sm {
+    padding-left: 5px;
+}
 
-table .btn {
+.no-marg {
+    margin: 0 !important;
+}
+
+table td .btn-link, table td a.btn {
     padding: 0 !important;
     margin: 0 !important;
 }
@@ -195,6 +202,14 @@ table .btn {
 .cursor-pointer {
     cursor: pointer;
 }
+
+#candidatesSelection tr.selected {
+    background-color: #f7ecb5; 
+}
+
+/*#tblVacancyCandidateList tr.selected {
+    background-color: #f7ecb5 !important; 
+}*/
 
 
 
@@ -292,4 +307,73 @@ table.list4link tr.db-error .act {
 
 .valign-middle {
     vertical-align: middle !important;
+}
+
+#tblVacancyCandidateList .btn-block {
+    padding: 10% 0 !important;
+    white-space: normal !important;
+}
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('fonts/fontawesome-webfont.eot?v=4.3.0');
+  src: url('fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+th.tablesorter-headerUnSorted,th.tablesorter-headerAsc,th.tablesorter-headerDesc {
+    font: normal normal normal 14px/1 FontAwesome;
+    cursor: pointer;
+}
+
+th.tablesorter-headerUnSorted div:before {
+    content: "\f0dc";
+}
+
+th.tablesorter-headerAsc div:before {
+    content: "\f0de";
+}
+
+th.tablesorter-headerDesc div:before {
+    content: "\f0dd";
+}
+
+th.sorter-false div:before {
+    content: "";
+}
+
+.history-item {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #d3d3d3;
+}
+
+.input-xs {
+    height: 25px;
+  padding: 2px 5px;
+  font-size: 10px;
+  line-height: 1.5;
+  border-radius: 3px; 
+}
+
+.state-filter-item {
+    padding: 3px  7px;
+    border-color: #245580;
+}
+
+.state-filter-item .sel-mark  {
+    display: none;
+    
+}
+
+.state-filter-item.selected .sel-mark  {
+    display: block;
+}
+
+.sel-mark {
+    position: relative;
+    overflow: hidden;
+    float: left;
 }

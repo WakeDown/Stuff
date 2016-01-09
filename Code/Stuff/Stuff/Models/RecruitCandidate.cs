@@ -16,7 +16,8 @@ public string Name { get; set; }
        public string Patronymic { get; set; }
        public string DisplayName { get; set; }
        public bool Male { get; set; }
-       public DateTime DateCreate { get; set; }
+        public string MaleStr => Male ? "Муж." : "Жен.";
+        public DateTime DateCreate { get; set; }
         public string CreatorSid { get; set; }
         public string CreatorName { get; set; }
         public int IdCameResource { get; set; }

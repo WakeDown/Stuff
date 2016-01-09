@@ -1,0 +1,25 @@
+﻿@using Stuff.Models
+@model IEnumerable<Stuff.Models.HistoryItem>
+
+@{
+    Layout = null;
+}
+
+@if (Model != null && Model.Any())
+{
+
+    <div>
+        @foreach (HistoryItem h in Model)
+        {
+            <div class="history-item">
+                <strong>@h.StateName</strong><br/>
+                <small>@h.DateCreateStr - @h.CreatorName</small><br />
+                <small>@h.Descr</small>
+            </div>
+        }
+    </div>
+}
+else
+{
+    @:пусто
+}

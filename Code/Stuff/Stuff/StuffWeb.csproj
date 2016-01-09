@@ -202,6 +202,7 @@
     <Compile Include="Helpers\Db\Db.Stuff.cs" />
     <Compile Include="Helpers\MultiButtonAttribute.cs" />
     <Compile Include="Helpers\PdfCreator.cs" />
+    <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Models\Ad.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\DocMeetLink.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Models\DocumentLink.cs" />
     <Compile Include="Models\EmployeeSm.cs" />
     <Compile Include="Models\EngeneerState.cs" />
+    <Compile Include="Models\HistoryItem.cs" />
     <Compile Include="Models\ItBudgetReportItem.cs" />
     <Compile Include="Models\ItBudgetReportItemPeople.cs" />
     <Compile Include="Models\Language.cs" />
@@ -217,10 +219,12 @@
     <Compile Include="Models\EmployeeRestHoliday.cs" />
     <Compile Include="Models\RecruitCameResource.cs" />
     <Compile Include="Models\RecruitCandidate.cs" />
+    <Compile Include="Models\RecruitSelection.cs" />
     <Compile Include="Models\RecruitVacancy.cs" />
     <Compile Include="Models\RecruitVacancyCause.cs" />
     <Compile Include="Models\Report.cs" />
     <Compile Include="Models\RestHoliday.cs" />
+    <Compile Include="Models\StateItem.cs" />
     <Compile Include="Models\Statement.cs" />
     <Compile Include="Models\DocumentEmployeeList.cs" />
     <Compile Include="Models\StatementFired.cs" />
@@ -365,6 +369,8 @@
     <Content Include="Scripts\jquery.dateFormat-1.0.js" />
     <Content Include="Scripts\jquery.mask.min.js" />
     <Content Include="Scripts\jquery.scannerdetection.js" />
+    <Content Include="Scripts\jquery.tablesorter.js" />
+    <Content Include="Scripts\jquery.tablesorter.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\npm.js" />
@@ -456,6 +462,8 @@
     <Content Include="Views\Recruit\Candidates.cshtml" />
     <Content Include="Views\Recruit\CandidateNew.cshtml" />
     <Content Include="Views\Recruit\CandidateCard.cshtml" />
+    <Content Include="Views\Recruit\CandidatesSelection.cshtml" />
+    <Content Include="Views\Recruit\SelectionHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

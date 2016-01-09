@@ -39,8 +39,8 @@
 {
     <script type="text/javascript">
     $(function() {
-        $('#delete').click(function(
-        ) {
+        $('#delete').click(function() {
+            if (!confirm('Вы уверены что хотите удалить карточку резюме?')) return;
             $.ajax({
                 url: '@Url.Action("CandidateDelete")',
                 method: 'POST',

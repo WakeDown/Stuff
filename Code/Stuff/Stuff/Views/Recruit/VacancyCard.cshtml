@@ -8,32 +8,517 @@
 @section PanelHead
 {
     Вакансия №@Model.Id
-    <button id="delete" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i> удалить</button>
+
+    @if (Model.StateIsActive)
+    {
+        <button id="delete" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i> удалить</button>
+        <button id="change" class="btn btn-warning btn-sm pull-right"><i class="fa fa-edit"></i> изменить</button>
+    }
 }
 
 @section PanelBody
 {
+    <div class="row">
+        <div class="col-lg-8">
+            <div id="vacancyInfo">
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Причина возникновения:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CauseName)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Автор заявки:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.AuthorName)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Подразделение:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.DepartmentName)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Должность:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.PositionName)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Руководитель:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.ChiefName)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Руководитель принимающий решение:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.MatcherName)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Менеджер по персоналу:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm" id="personalManagerContainer">
+                        @Html.LabelFor(m => m, Model.PersonalManagerName)
+                    </div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата окончания План:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">
+                        <label>@Model.DeadlineDate.ToString("dd.MM.yyyy")</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        История
+                    </h4>
+                </div>
+                <div class="panel-body" id="history">
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>
+        <h4>
+            Список кандидатов <span id="candidatesCount" class="badge badge-info"></span>
+            @if (Model.StateIsActive)
+            {
+                <button id="addCandidate" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#candidateListModal"><i class="fa fa-plus-circle"></i> добавить из списка</button>
+                <a href="@Url.Action("CandidateNew")?vid=@Model.Id&returnUrl=@Request.Url" class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> новое резюме</a>
+            }
+        </h4>
 
+        <div id="candidatesList"></div>
+    </p>
+
+    <!-- Modal -->
+    <div id="candidateListModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                    <div>
+                        <h4 class="modal-title">Список резюме
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Отмена</button>
+                            <button name="addSelectedCandidates" class="btn btn-success pull-right">Добавить выбранные</button>
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p id="candidateList"></p>
+                </div>
+                <div class="modal-footer">
+                    <button name="addSelectedCandidates" class="btn btn-success">Добавить выбранные</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="candidateStateResultModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Укажите результат</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <textarea id="stateComment" class="form-control" placeholder="Комментарий" rows="9"></textarea>
+                        </div>
+                        <div class="col-lg-6">
+                            <button id="selectionSetNextState" class="btn btn-success btn-block">Перевести на следущюий этап</button>
+                            <button id="selectionSetCurrentState" class="btn btn-warning btn-block">Оставить на текущем этапе</button>
+                            <button id="selectionSetCancelState" class="btn btn-danger btn-block">Непригоден для вакансии</button>
+                            <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Отмена</button>
+                            <button id="selectionSetAcceptState" class="btn btn-primary btn-block">Утвердить кандидата</button>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="selectionHistoryModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">История кандидата для вакансии №@Model.Id</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="selectionHistoryList"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @section scripts
 {
     <script type="text/javascript">
-    $(function() {
-        $('#delete').click(function(
-        ) {
+        function loadCandidateSelectionList() {
+            var $cont = $('#candidateList');
+            $.ajax({ url: '@Url.Action("CandidatesSelection")', method: 'GET', success: function(html) {$cont.html(html);} });
+            $('[name="addSelectedCandidates"]').click(function() {
+                @*переменная selectedCandidateResume находится в view CandidatesSelection*@
+                $.ajax({
+                    url: '@Url.Action("AppendCandidates2Vacancy")',
+                    method:'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify({idVacancy:@Model.Id, idCandidates:selectedCandidateResume}),
+                    success:function() {
+                        loadCandidatesList();
+                        selectedCandidateResume = [];
+                    },
+                    error:
+                        function() {
+                            alert('Ошибка при добавлении списка кандидатов к вакансии! Восможно данные не были сохранены!');
+                            loadCandidatesList();
+                            selectedCandidateResume = [];
+                        }
+                });
+                $('#candidateListModal').modal('hide');
+            });
+        }
+
+        function loadCandidatesList() {
+            var $cont = $('#candidatesList');
+            var $candidatesCount = $('#candidatesCount');
+            $cont.empty();
+            $candidatesCount.empty();
             $.ajax({
-                url: '@Url.Action("VacancyDelete")',
+                url: '@Url.Action("GetVacancyCandadateList")',
                 method: 'POST',
                 data: { id: @Model.Id },
-                success: function() {
-                    window.location = '@Url.Action("Index")';
+                success: function(data) {
+                    $cont.empty();
+                    $candidatesCount.text(data.totalCount);
+                    var $table = $('<table id="tblVacancyCandidateList" class="table table-bordered table-striped table-hover"></table>');
+                    $table.append('<thead><tr class="bg-primary">' +
+                        '<th class="min-width text-nowrap">ID</th>' +
+                        '<th>ФИО</th>' +
+                        '<th>Пол</th>' +
+                        '<th>Возраст</th>' +
+                        '<th>Телефон</th>' +
+                        '<th>E-mail</th>' +
+                        '<th>Статус</th>' +
+                        '<th class="min-width"></th>' +
+                        '</tr></thead>');
+                    $cont.append($table);
+                    if (data.list.length > 0) {
+                        for (var i = 0; i < data.list.length; i++) {
+                            var item = data.list[i];
+                            $table.append(getCandidateListRow(item));
+                        }
+                        //$table.tablesorter({
+                        //    sortList: [[1,1]],
+                        //    headers: { 7: { sorter: false} }
+                        //});
+
+                    } else {
+                        $table.append('<tr><td>пусто</td></tr>');
+                    }
+
+                    $('#selectionSetNextState').click(selectionSetNextState);
+                    $('#selectionSetCancelState').click(selectionSetCancelState);
+                    $('#selectionSetAcceptState').click(selectionSetAcceptState);
+                    $('#selectionSetCurrentState').click(selectionSetCurrentState);
                 },
-                error: function() {
-                    alert('Ошибка при удалении, Удаление не выполнено!');
+                error:function() {
+                    alert('Ошибка при загрузке списка кандидатов');
                 }
             });
-        } );
-    })
-</script>
+        }
+
+        function showSelectionHistory() {
+            var $this = $(this);
+            var id = $this.attr('slid');
+            $('#selectionHistoryModal').modal('show');
+            var $cont = $('#selectionHistoryList');
+            $cont.empty();
+
+            $.ajax({
+                url: '@Url.Action("SelectionHistory")?id=' + id,
+                mode:'GET',
+                success: function(html) {
+                    $cont.html(html);
+                },
+                error:function() {
+                    alert('Ошибка при загрузке истории!');
+                }
+            });
+        }
+
+        function getCandidateListRow(item) {
+            var $row = $('<tr id="sel-' + item.Id + '" slid="'+item.Id +'" class="cursor-pointer' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
+                '<th>' + item.Candidate.Id + '</th>' +
+                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.DisplayName + '</a></td>' +
+                '<td>' + item.Candidate.MaleStr + '</td>' +
+                '<td>' + item.Candidate.Age + '</td>' +
+                '<td>' + item.Candidate.Phone + '</td>' +
+                '<td>' + item.Candidate.Email + '</td>' +
+                '<td><strong>' + item.StateName + '</strong><br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small><br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small></td>' +
+                '<td>' + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
+                    '<button name="selectionSetState" data-toggle="modal" data-target="#candidateStateResultModal" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning">Изменить статус</button>' : '') +
+                '</td>' +
+                '</tr>');
+
+            $row.click(showSelectionHistory);
+            $row.find('[name="selectionSetState"]').click(function(e) {
+                e.stopPropagation();
+                $('#candidateStateResultModal').modal('show');
+            });
+            $row.find('a').click(function(e) {
+                e.stopPropagation();
+            });
+            $('[name="selectionSetState"]', $row).click(function() {
+                var $this = $(this);
+                var slid = $this.attr('slid');
+                var nstid = $this.attr('nstid');
+                var cstid = $this.attr('cstid');
+                var nstnm = $this.attr('nstnm');
+                var $modal = $('#candidateStateResultModal');
+                $modal.attr('slid', slid);
+                $modal.attr('nstid', nstid);
+                $modal.attr('cstid', cstid);
+                $('#selectionSetNextState').text(nstnm);
+            });
+            return $row;
+        }
+
+        function selectionSetCurrentState(e) {
+            e.stopPropagation();
+            var $modal = $('#candidateStateResultModal');
+            var slid = $modal.attr('slid');
+            var cstid = $modal.attr('cstid');
+            var descr = $('#stateComment').val();
+            if (descr == null || descr == '') {
+                alert('Укажите причину!');
+                $('#stateComment').focus();
+                return;
+            }
+
+            $.ajax({
+                url:'@Url.Action("SelectionSetNextState")',
+                method:'POST',
+                data:{id:slid, idState:cstid, descr:descr},
+                success:function(data) {
+                    var $row = $('#sel-' + slid);
+                    $row.replaceWith(getCandidateListRow(data));
+                    $modal.modal('hide');
+                },
+                error:function() {
+                    alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                }
+            });
+        }
+
+        function selectionSetAcceptState(e) {
+            e.stopPropagation();
+            var $modal = $('#candidateStateResultModal');
+            var slid = $modal.attr('slid');
+            var descr = $('#stateComment').val();
+
+            if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите принять утвердить данного кандидата?')) return;
+
+            $.ajax({
+                url:'@Url.Action("SelectionSetAcceptState")',
+                method:'POST',
+                data:{id:slid, descr:descr},
+                success:function(data) {
+                    window.location.reload();
+                    //var $row = $('#sel-' + slid);
+                    //$row.replaceWith(getCandidateListRow(data));
+                    //$modal.modal('hide');
+                },
+                error:function() {
+                    alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                }
+            });
+        }
+
+        function selectionSetCancelState(e) {
+            e.stopPropagation();
+            var $modal = $('#candidateStateResultModal');
+            var slid = $modal.attr('slid');
+            var descr = $('#stateComment').val();
+
+            if (descr == null || descr == '') {
+                alert('Укажите причину отклонения!');
+                $('#stateComment').focus();
+                return;
+            }
+
+            $.ajax({
+                url:'@Url.Action("SelectionSetCancelState")',
+                method:'POST',
+                data:{id:slid, descr:descr},
+                success:function(data) {
+                    var $row = $('#sel-' + slid);
+                    $row.replaceWith(getCandidateListRow(data));
+                    $modal.modal('hide');
+                },
+                error:function() {
+                    alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                }
+            });
+        }
+
+        function selectionSetNextState(e) {
+            e.stopPropagation();
+            var $modal = $('#candidateStateResultModal');
+            var slid = $modal.attr('slid');
+            var nstid = $modal.attr('nstid');
+            var descr = $('#stateComment').val();
+
+            $.ajax({
+                url:'@Url.Action("SelectionSetNextState")',
+                method:'POST',
+                data:{id:slid,idState:nstid, descr:descr},
+                success:function(data) {
+                    var $row = $('#sel-' + slid);
+                    $row.replaceWith(getCandidateListRow(data));
+                    $modal.modal('hide');
+                },
+                error:function() {
+                    alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                }
+            });
+        }
+
+        function loadHistory() {
+            var $cont = $('#history');
+
+            $.ajax({
+                url: '@Url.Action("GetVacancyHistory")',
+                method: 'POST',
+                data: { id: @Model.Id, full: false },
+                success: function(data) {
+                    $cont.empty();
+
+                    if (data.list.length > 0) {
+                        for (var i = 0; i < data.list.length; i++) {
+                            var item = data.list[i];
+                            var cell = '<div><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small></div>';
+                            $cont.append(cell);
+
+                        }
+
+                        if (data.totalCount > data.list.length) {
+                            $cont.append('<button id="historyMore" class="btn btn-default btn-xs">еще...(' + (data.totalCount - data.list.length) + ')</button>');
+                            $('#historyMore').click(function() {
+                                $.ajax({
+                                    url: '@Url.Action("GetVacancyHistory")',
+                                    method: 'POST',
+                                    data: { id: @Model.Id, full: true },
+                                    success: function(data) {
+                                        $cont.empty();
+                                        if (data.list.length > 0) {
+                                            for (var i = 0; i <= data.list.length; i++) {
+                                                var item = data.list[i];
+                                                var cell = '<div><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small></div>';
+                                                $cont.append(cell);
+                                            }
+                                        }
+
+                                    },
+                                    error: function() {
+                                        alert('Ошибка при загрузке истории!');
+                                    }
+                                });
+                            });
+                        }
+                    }
+
+                },
+                error: function() {
+                    alert('Ошибка при загрузке истории!');
+                }
+            });
+        }
+
+        $(function() {
+            loadHistory();
+            loadCandidatesList();
+
+            $('#candidateListModal').on('shown.bs.modal', function() {
+                loadCandidateSelectionList();
+            });
+
+            $('#candidateStateResultModal').on('shown.bs.modal', function() {
+                $('#stateComment').val('');
+            });
+
+            $('#change').click(function() {
+                var $btnChange = $('#change');
+                var $btnSave = $('<button id="save" class="btn btn-success btn-sm pull-right"><i class="fa fa-save"></i> сохранить</button>');
+                $btnSave.click(saveVacancy);
+                $btnChange.replaceWith($btnSave);
+
+                var $cont = $('#personalManagerContainer');
+                $.ajax({
+                    url: '@Url.Action("GetPersonalManagerList")',
+                    method: 'POST',
+                    success: function(data) {
+                        if (data.length > 0) {
+                            $cont.empty();
+                            var $select = $('<select id="personalManager" class="input-sm form-control"></select>');
+                            $cont.append($select);
+                            var optionNull = '<option value="">--выберите--</option>';
+                            $select.append(optionNull);
+                            for (var i = 0; i <= data.length; i++) {
+                                var item = data[i];
+                                var option = '<option value="' + item.Key + '">' + item.Value + '</option>';
+                                $select.append(option);
+                            }
+                            $select.val('@Model.PersonalManagerSid');
+                        }
+                    },
+                    error: function() {
+                        alert('Ошибка при редактировании!');
+                    }
+                });
+            });
+
+            $('#delete').click(function() {
+                if (!confirm('Вы уверены что хотите удалить вакансию?')) return;
+                $.ajax({
+                    url: '@Url.Action("VacancyDelete")',
+                    method: 'POST',
+                    data: { id: @Model.Id },
+                    success: function() {
+                        window.location = '@Url.Action("Index")';
+                    },
+                    error: function() {
+                        alert('Ошибка при удалении. Удаление не выполнено!');
+                    }
+                });
+            });
+
+
+        });
+
+        function saveVacancy() {
+            var pesrManager = $('#personalManager').val();
+            $.ajax({
+                url: '@Url.Action("ChangeVacancy")',
+                method: 'POST',
+                data: { id: @Model.Id, personalManagerSid: pesrManager },
+                success: function() {
+                    window.location.reload();
+                },
+                error: function() {
+                    alert('Ошибка при сохранении. Возможно данные не были сохранены!');
+                }
+            });
+        }
+    </script>
 }
+);

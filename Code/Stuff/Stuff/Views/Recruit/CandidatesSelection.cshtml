@@ -1,0 +1,85 @@
+﻿@using Stuff.Models
+@model IEnumerable<Stuff.Models.RecruitCandidate>
+
+@{
+    Layout = null;
+}
+
+<table id="candidatesSelection" class="table table-bordered table-striped table-hover">
+    <thead>
+    <tr class="bg-primary">
+        <th class="min-width text-nowrap">ID</th>
+        <th>ФИО</th>
+        <th>Возраст</th>
+        <th>Телефон</th>
+        <th>E-mail</th>
+        <th>Добавлено</th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model != null && Model.Any())
+    {
+        foreach (RecruitCandidate rc in Model)
+        {
+            <tr id="cnd-@rc.Id" cndid="@rc.Id" class="cursor-pointer ">
+                <th>@rc.Id</th>
+                <td>
+                    @rc.DisplayName
+                </td>
+                <td>@rc.Age</td>
+                <td>@rc.Phone</td>
+                <td>@rc.Email</td>
+                <td>
+                    @rc.DateCreate.ToString("dd.MM.yyyy")
+                    <div><small>@rc.CreatorName</small>
+                    </div>
+                </td>
+                @*<td>
+                        <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
+                    </td>*@
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td>пусто</td>
+        </tr>
+
+    }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    var selectedCandidateResume = [];
+    $(function () {
+        $('tr[cndid]').click(function () {
+            var $row = $(this);
+            var id = $row.attr('cndid');
+            var index = selectedCandidateResume.indexOf(id);
+            if (index > -1) {
+                selectedCandidateResume.splice(index, 1);
+                $row.removeClass('selected');
+            } else {
+                selectedCandidateResume.push(id);
+                $row.addClass('selected');
+            }
+        });
+
+        $('#candidatesSelection').dataTable({
+            "bProcessing": true,
+            "oLanguage": {
+                "sLengthMenu": "Показать _MENU_ записей на странице",
+                "sZeroRecords": "Извините - ничего не найдено",
+                "sInfo": "Показано _START_ до _END_ из _TOTAL_ записей",
+                "sInfoEmpty": "Нет записей",
+                "sInfoFiltered": "(из _MAX_ записей)",
+                "sSearch": "Поиск:",
+                "oPaginate": {
+                    "sNext": "След. стр.",
+                    "sPrevious": "Пред. стр."
+                }
+            }
+        });
+    });
+</script>

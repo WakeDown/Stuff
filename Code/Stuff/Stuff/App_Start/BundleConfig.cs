@@ -9,8 +9,8 @@ namespace Stuff
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
-                        "~/Scripts/jquery-ui.js",
+                        //"~/Scripts/jquery-{version}.js",
+                        //"~/Scripts/jquery-ui.js",
                         "~/Scripts/jquery.unobtrusive-ajax.js",
                         "~/Scripts/jquery.mask.min.js",
                         "~/Scripts/jquery.dateFormat-{version}.js",
@@ -39,7 +39,8 @@ namespace Stuff
             //bundles.Add(new ScriptBundle("~/bundles/fuelux").Include(
             //            "~/Scripts/fuelux.min.js"));
 
-           
+            bundles.Add(new ScriptBundle("~/bundles/tablesorter").Include(
+                         "~/Scripts/jquery.tablesorter.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

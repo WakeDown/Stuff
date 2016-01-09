@@ -35,7 +35,11 @@ namespace Stuff.Models
         public string StateChangerSid { get; set; }
         public string StateChangerName { get; set; }
         public DateTime DateCreate { get; set; }
-        public int CandidateCount { get; set; }
+        public int CandidateTotalCount { get; set; }
+        public int CandidateCancelCount { get; set; }
+        //public int CandidateAcceptCount { get; set; }
+
+        public bool StateIsActive { get; set; }
 
         public RecruitVacancy()
         {
@@ -86,7 +90,11 @@ namespace Stuff.Models
             StateChangerSid = Db.DbHelper.GetValueString(row, "state_changer_sid");
             StateChangerName = Db.DbHelper.GetValueString(row, "state_changer_name");
             DateCreate = Db.DbHelper.GetValueDateTimeOrDefault(row, "date_create");
-            CandidateCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_count");
+            CandidateTotalCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_total_count");
+            CandidateCancelCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_cancel_count");
+            //CandidateAcceptCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_accept_count");
+
+            StateIsActive = Db.DbHelper.GetValueBool(row, "state_is_active");
         }
 
         public void Create(string creatorSid)
@@ -122,14 +130,20 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_set_state", pid, pstateSysName, pCreatorAdSid, pdescr);
         }
 
-        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null)
+        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
 
             SqlParameter ptopRows = new SqlParameter() { ParameterName = "top_rows", SqlValue = topRows, SqlDbType = SqlDbType.Int };
             SqlParameter ppageNum = new SqlParameter() { ParameterName = "page_num", SqlValue = pageNum, SqlDbType = SqlDbType.Int };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum);
+            SqlParameter pidVacancy = new SqlParameter() { ParameterName = "id", SqlValue = idVacancy, SqlDbType = SqlDbType.Int };
+            SqlParameter pvacancyName = new SqlParameter() { ParameterName = "vacancy_name", SqlValue = vacancyName, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pdeadlineDate = new SqlParameter() { ParameterName = "deadline_date", SqlValue = deadlineDate, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter ppersonalManagerName = new SqlParameter() { ParameterName = "personal_manager_name", SqlValue = personalManagerName, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pdateCreate = new SqlParameter() { ParameterName = "date_create", SqlValue = dateCreate, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pstate = new SqlParameter() { ParameterName = "state", SqlValue = state, SqlDbType = SqlDbType.NVarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate);
 
             totalCount = 0;
             var lst = new List<RecruitVacancy>();
@@ -151,6 +165,65 @@ namespace Stuff.Models
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
             SqlParameter pDeleterSid = new SqlParameter() { ParameterName = "deleter_sid", SqlValue = deleterSid, SqlDbType = SqlDbType.VarChar };
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_close", pId, pDeleterSid);
+        }
+
+        public static void Change(string creatorSid, int id, string personalManagerSid)
+        {
+            SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
+            SqlParameter ppersonalManagerSid = new SqlParameter() { ParameterName = "personal_manager_sid", SqlValue = personalManagerSid, SqlDbType = SqlDbType.VarChar };
+            SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_change", pId, pCreatorAdSid, ppersonalManagerSid);
+        }
+
+        public static IEnumerable<HistoryItem> GetHistory(out int totalCount, int id, bool fullList = false)
+        {
+            SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
+            SqlParameter pFullList= new SqlParameter() { ParameterName = "full_list", SqlValue = fullList, SqlDbType = SqlDbType.Bit };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_history", pId, pFullList);
+
+            totalCount = 0;
+            var lst = new List<HistoryItem>();
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    var model = new HistoryItem(row);
+                    lst.Add(model);
+                }
+                totalCount = Db.DbHelper.GetValueIntOrDefault(dt.Rows[0], "total_count");
+            }
+            return lst;
+        }
+
+        public static IEnumerable<RecruitSelection> GetCandidateList(out int totalCount, int id)
+        {
+           return RecruitSelection.GetList(out totalCount, id);
+        }
+
+        public static void AppendCandidateList(int id, int[] idCandidates, string creatorSid)
+        {
+            foreach (int idCandidate in idCandidates)
+            {
+                var sel = new RecruitSelection() {IdVacancy = id, IdCandidate = idCandidate};
+                sel.Create(creatorSid);
+            }
+        }
+
+        public static IEnumerable<StateItem> GetStateList()
+        {
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_state_list");
+            var lst = new List<StateItem>();
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    var model = new StateItem(row);
+                    lst.Add(model);
+                }
+            }
+            return lst;
         }
     }
 }
