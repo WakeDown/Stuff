@@ -43,7 +43,7 @@ namespace Stuff.Models
         public int CandidateCancelCount { get; set; }
         //public int CandidateAcceptCount { get; set; }
         public bool StateIsActive { get; set; }
-
+        public string StateBackgroundColor { get; set; }
         public string StateChangeDateStr
             => StateChangeDate.HasValue ? StateChangeDate.Value.ToString("dd.MM.yyyy") : String.Empty;
         public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
@@ -100,7 +100,7 @@ namespace Stuff.Models
             CandidateTotalCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_total_count");
             CandidateCancelCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_cancel_count");
             //CandidateAcceptCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_accept_count");
-
+            StateBackgroundColor = Db.DbHelper.GetValueString(row, "state_background_color");
             StateIsActive = Db.DbHelper.GetValueBool(row, "state_is_active");
         }
 

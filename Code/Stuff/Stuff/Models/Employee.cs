@@ -206,6 +206,7 @@ namespace Stuff.Models
             return new SelectList(Employee.GetList(), "AdSid", "DisplayName");
         }
 
+
         public Employee GetDirector()
         {
             Uri uri = new Uri(String.Format("{0}/Employee/GetDirector", OdataServiceUri));

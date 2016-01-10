@@ -13,12 +13,12 @@ namespace Stuff.Controllers
     public class RecruitController : BaseController
     {
         // GET: Recruit
-        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt)
+        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, bool? aon)
         {
             int totalCount;
             int id;
             int.TryParse(vid, out id);
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt);
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, aon);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }
@@ -81,7 +81,7 @@ namespace Stuff.Controllers
             return Json(new {});
         }
 
-        public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex)
+        public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {
             if (!topRows.HasValue)
                 topRows = 30;
@@ -96,7 +96,7 @@ namespace Stuff.Controllers
             }
 
             int totalCount;
-            var list = RecruitCandidate.GetList(out totalCount, topRows, page, cid, fio, age, phone, email, added, sexBool);
+            var list = RecruitCandidate.GetList(out totalCount, topRows, page, cid, fio, age, phone, email, added, sexBool, changed);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }
@@ -111,7 +111,7 @@ namespace Stuff.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetCandidateList(int? topRows, int? pageNum, string cid, string fio, string age, string phone, string email, string added, byte? sex)
+        public JsonResult GetCandidateList(int? topRows, int? pageNum, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {
             if (!topRows.HasValue)
                 topRows = 10;
@@ -126,7 +126,7 @@ namespace Stuff.Controllers
             }
 
             int totalCount;
-            var list = RecruitCandidate.GetList(out totalCount, topRows, pageNum, cid, fio, age, phone,email,added, sexBool);
+            var list = RecruitCandidate.GetList(out totalCount, topRows, pageNum, cid, fio, age, phone,email,added, sexBool, changed);
             return Json(new {list, totalCount});
         }
 
@@ -364,6 +364,20 @@ namespace Stuff.Controllers
             }
 
             return RedirectToAction("CandidateCard", new {id= model.Id});
+        }
+
+        [HttpPost]
+        public JsonResult GetEmployeeListSid()
+        {
+            var list = Employee.GetList();
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetPersonalManagerListSid()
+        {
+            var list = AdHelper.GetUserListByAdGroup(AdGroup.PersonalManager);
+            return Json(list);
         }
     }
 }

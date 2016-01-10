@@ -45,6 +45,11 @@ public string Name { get; set; }
 
         public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
 
+        public string LastSelectionStateName { get; set; }
+        public string LastSelectionStateChangerName { get; set; }
+        public DateTime? LastSelectionStateDateChange { get; set; }
+        public string LastSelectionStateDateChangeStr => DateCreate.ToString("dd.MM.yyyy HH:mm");
+
         public RecruitCandidate()
         {
 
@@ -85,6 +90,9 @@ public string Name { get; set; }
             Email = Db.DbHelper.GetValueString(row, "email");
             FileSid = Db.DbHelper.GetValueString(row, "file_sid");
             FileName = Db.DbHelper.GetValueString(row, "file_name");
+            LastSelectionStateName = Db.DbHelper.GetValueString(row, "selection_state_name");
+            LastSelectionStateChangerName = Db.DbHelper.GetValueString(row, "selection_state_changer_name");
+            LastSelectionStateDateChange = Db.DbHelper.GetValueDateTimeOrNull(row, "selection_state_change_date");
         }
 
         public void Create(string creatorSid)
@@ -113,7 +121,7 @@ public string Name { get; set; }
             }
         }
 
-        public static IEnumerable<RecruitCandidate> GetList(out int totalCount, int? topRows = null, int? pageNum = null, string idStr = null, string fio = null, string age = null, string phone = null, string email = null, string added = null, bool? sex=null)
+        public static IEnumerable<RecruitCandidate> GetList(out int totalCount, int? topRows = null, int? pageNum = null, string idStr = null, string fio = null, string age = null, string phone = null, string email = null, string added = null, bool? sex=null, string changed = null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
@@ -130,7 +138,8 @@ public string Name { get; set; }
             SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = email, SqlDbType = SqlDbType.NVarChar };
             SqlParameter padded = new SqlParameter() { ParameterName = "added", SqlValue = added, SqlDbType = SqlDbType.NVarChar };
             SqlParameter psex = new SqlParameter() { ParameterName = "sex", SqlValue = sex, SqlDbType = SqlDbType.Bit };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_list", ptopRows, ppageNum, pid, pfio, page, pPhone, pEmail, padded, psex);
+            SqlParameter pchanged = new SqlParameter() { ParameterName = "changed", SqlValue = changed, SqlDbType = SqlDbType.NVarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_list", ptopRows, ppageNum, pid, pfio, page, pPhone, pEmail, padded, psex, pchanged);
 
             totalCount = 0;
             var lst = new List<RecruitCandidate>();

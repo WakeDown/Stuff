@@ -82,7 +82,10 @@
             <input id="phone" class="form-control input-xs" placeholder="Телефон" value="@Request.QueryString["phone"]" />
         </th>
         <th>
-            <input id="email" class="form-control input-xs" placeholder="E-mail" value="@Request.QueryString["email"]" />
+            <input id="email" class="form-control input-xs" placeholder="E-mail" value="@Request.QueryString["email"]"/>
+        </th>
+        <th>
+            <input id="changed" class="form-control input-xs" placeholder="Изменено" value="@Request.QueryString["changed"]" />
         </th>
         <th>
             <input id="added" class="form-control input-xs" placeholder="Добавлено" value="@Request.QueryString["added"]"/>
@@ -106,8 +109,16 @@
                     <td>@rc.Age</td>
                     <td>@rc.Phone</td>
                     <td>@rc.Email</td>
-                    <td>@rc.DateCreate.ToString("dd.MM.yyyy")
-                        <div><small>@rc.CreatorName</small></div></td>
+                    <td>
+                        @if (rc.LastSelectionStateDateChange.HasValue)
+                        {
+                            <strong>@rc.LastSelectionStateName</strong>
+                            <div><small>@rc.LastSelectionStateDateChange.Value.ToString("dd.MM.yyyy  HH:mm") - @rc.LastSelectionStateChangerName</small>
+                            </div>
+                        }
+                    </td>
+                    <td><strong>Добавлено</strong>
+                        <div><small>@rc.DateCreate.ToString("dd.MM.yyyy") - @rc.CreatorName</small></div></td>
                     @*<td>
                             <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
                         </td>*@
@@ -163,6 +174,8 @@
             url = updateQueryStringParameter(url, 'phone', phone);
             var email = $('#email').val();
             url = updateQueryStringParameter(url, 'email', email);
+            var changed = $('#changed').val();
+            url = updateQueryStringParameter(url, 'changed', changed);
             var added = $('#added').val();
             url = updateQueryStringParameter(url, 'added', added);
             url = updateQueryStringParameter(url, 'page', 1);

@@ -53,6 +53,8 @@
     </div>
     <div class="col-lg-5 col-sm-12 col-xs-12">
         <div id="stateFilterList"></div>
+        <input name="activeOnly" type="radio" @(!Request.QueryString.AllKeys.Contains("aon") || String.IsNullOrEmpty(Request.QueryString["aon"]) ? "checked" : String.Empty) value="" />&nbsp;все&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty ) value="true" />&nbsp;только активные&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("false") ? "checked" : String.Empty ) value="false" />&nbsp;только неактивные
+        @*<input type="checkbox" id="activeOnly" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty) />&nbsp;только активные*@
     </div>
     <div class="col-lg-2 col-sm-6 col-xs-6">
         <div>
@@ -101,8 +103,8 @@
         {
             foreach (RecruitVacancy rv in Model)
              {
-                 <tr id="vac-@rv.Id" vacid="@rv.Id" class="cursor-pointer ">
-                     <th>@rv.Id</th>
+                 <tr id="vac-@rv.Id" vacid="@rv.Id" class="cursor-pointer" style="@(!String.IsNullOrEmpty(rv.StateBackgroundColor) ? "background-color: #" + rv.StateBackgroundColor : String.Empty)">
+                     <th class="text-center">@rv.Id</th>
                      <td>
                          <div>@rv.PositionName</div>
                          <div><small>@rv.DepartmentName</small>
@@ -149,6 +151,8 @@
                 if (e.keyCode != 13) return;
                 search();
             });
+
+            $('[name="activeOnly"]').click(search);
 
             //loadStateFilterList();
         });
@@ -201,7 +205,8 @@
             url = updateQueryStringParameter(url, 'dtcr', dtcr);
             var stt = $('#stt').val();
             url = updateQueryStringParameter(url, 'stt', stt);
-
+            var aon = $('[name=activeOnly]:checked').val();
+            url = updateQueryStringParameter(url, 'aon', aon);
             //var $grpStateElem = $('[name="stateFilterItem"].selected');
             //var state = '';
             //if ($grpStateElem.length > 0) {

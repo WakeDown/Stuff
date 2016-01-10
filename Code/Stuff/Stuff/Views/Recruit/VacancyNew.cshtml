@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Новая вакансия";
     Layout = "~/Views/Shared/_Editor.cshtml";
-    var empList =Employee.GetEmployeeListSid();
+    //var empList =Employee.GetEmployeeListSid();
 }
 
 @section PanelHead
@@ -34,7 +34,8 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="author">Автор заявки</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.AuthorSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "author", required = "required", data_error = "Заполните поле Автор"})
+                @*@Html.DropDownListFor(m => m.AuthorSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "author", required = "required", data_error = "Заполните поле Автор"})*@
+                <select id="author" required="required" data_error="Заполните поле Автор" class="form-control required-mark" name="AuthorSid"></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -55,21 +56,24 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="chief">Руководитель</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.ChiefSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "chief", required = "required", data_error = "Заполните поле Руководитель" })
+                @*@Html.DropDownListFor(m => m.ChiefSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "chief", required = "required", data_error = "Заполните поле Руководитель" })*@
+                <select id="chief" required="required" data_error="Заполните поле Подразделение" class="form-control required-mark" name="ChiefSid"></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-lg-2 control-label" for="matcher">Руководитель принимающий решение</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.MatcherSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "matcher", required = "required", data_error = "Заполните поле Руководитель принимающий решение"})
+                @*@Html.DropDownListFor(m => m.MatcherSid, empList, "--выберите--", new {@class = "form-control required-mark", @id = "matcher", required = "required", data_error = "Заполните поле Руководитель принимающий решение"})*@
+                <select id="matcher" required="required" data_error="Заполните поле Руководитель принимающий решение" class="form-control required-mark" name="MatcherSid"></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
             <label class="col-lg-2 control-label" for="personalManager">Менеджер по персоналу</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.PersonalManagerSid, new SelectList(AdHelper.GetUserListByAdGroup(AdGroup.PersonalManager), "Key", "Value"), "--выберите--", new {@class = "form-control required-mark", @id = "personalManager", required = "required", data_error = "Заполните поле Менеджер по персоналу"})
+                @*@Html.DropDownListFor(m => m.PersonalManagerSid, new SelectList(AdHelper.GetUserListByAdGroup(AdGroup.PersonalManager), "Key", "Value"), "--выберите--", new {@class = "form-control required-mark", @id = "personalManager", required = "required", data_error = "Заполните поле Менеджер по персоналу"})*@
+                <select id="personalManager" required="required" data_error="Заполните поле Менеджер по персоналу" class="form-control required-mark" name="PersonalManagerSid"></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -104,6 +108,52 @@
                 todayBtn: "linked",
                 language: "ru"
             });
-        })
+
+            fillEmployeeLists();
+        });
+
+        function fillEmployeeLists() {
+            $.ajax({
+                url: '@Url.Action("GetEmployeeListSid")',
+                method: 'POST',
+                success: function(data) {
+                    var $selectAuthor = $('#author');
+                    var $selectChief = $('#chief');
+                    var $selectMatcher = $('#matcher');
+
+                    if (data.length > 0) {
+                        var nullOpt = '<option value="">--выберите--</option>';
+                        $selectAuthor.append(nullOpt);
+                        $selectChief.append(nullOpt);
+                        $selectMatcher.append(nullOpt);
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var opt = '<option value="' + item.AdSid + '">' + item.DisplayName + '</option>';
+                            $selectAuthor.append(opt);
+                            $selectChief.append(opt);
+                            $selectMatcher.append(opt);
+                        }
+                    }
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetPersonalManagerListSid")',
+                method: 'POST',
+                success: function (data) {
+                    var $selectPersonalManager = $('#personalManager');
+
+                    if (data.length > 0) {
+                        var nullOpt = '<option value="">--выберите--</option>';
+                        $selectPersonalManager.append(nullOpt);
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var opt = '<option value="' + item.Key + '">' + item.Value + '</option>';
+                            $selectPersonalManager.append(opt);
+                        }
+                    }
+                }
+            });
+        }
     </script>
 }
