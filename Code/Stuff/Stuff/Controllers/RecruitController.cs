@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -21,6 +22,26 @@ namespace Stuff.Controllers
             ViewBag.TotalCount = totalCount;
             return View(list);
         }
+
+        public PartialViewResult VacancySelection()
+        {
+            int totalCount;
+            var list = RecruitVacancy.GetList(out totalCount, 1000, activeOnly:true);
+            ViewBag.TotalCount = totalCount;
+            return PartialView(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetVacancyList(int? topRows, int? page, string vid, string vnm, string dtdl, string pmgr, string dtcr, string stt, bool? activeOnly)
+        {
+            int totalCount;
+            int id;
+            int.TryParse(vid, out id);
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt);
+            ViewBag.TotalCount = totalCount;
+            return Json(new { list, totalCount });
+        }
+
         [HttpGet]
         public ActionResult VacancyNew()
         {
@@ -60,12 +81,27 @@ namespace Stuff.Controllers
             return Json(new {});
         }
 
-        public ActionResult Candidates()
+        public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex)
         {
+            if (!topRows.HasValue)
+                topRows = 30;
+            if (!page.HasValue) page = 1;
+            bool? sexBool = null;
+            if (sex.HasValue)
+            {
+                if (sex.Value == 1)
+                    sexBool = true;
+                else if (sex.Value == 0)
+                    sexBool = false;
+            }
+
             int totalCount;
-            var list = RecruitCandidate.GetList(out totalCount);
+            var list = RecruitCandidate.GetList(out totalCount, topRows, page, cid, fio, age, phone, email, added, sexBool);
+            ViewBag.TotalCount = totalCount;
             return View(list);
         }
+
+       
 
         public PartialViewResult CandidatesSelection()
         {
@@ -94,6 +130,8 @@ namespace Stuff.Controllers
             return Json(new {list, totalCount});
         }
 
+        
+
         [HttpGet]
         public ActionResult CandidateNew()
         {
@@ -105,6 +143,22 @@ namespace Stuff.Controllers
         {
             try
             {
+                if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
+                {
+                    var file = Request.Files[0];
+
+                    string ext = Path.GetExtension(file.FileName).ToLower();
+
+                    //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
+
+                    byte[] data = null;
+                    using (var br = new BinaryReader(file.InputStream))
+                    {
+                        data = br.ReadBytes(file.ContentLength);
+                    }
+                    model.File = data;
+                    model.FileName = file.FileName;
+                }
                 model.Create(CurUser.Sid);
 
                 if (!String.IsNullOrEmpty(Request.Form["append2Vacancy"]) && !String.IsNullOrEmpty(Request.QueryString["vid"]))
@@ -172,16 +226,41 @@ namespace Stuff.Controllers
         }
 
         [HttpPost]
+        public JsonResult GetCandidateHistory(int id, bool full = false)
+        {
+            int totalCount;
+            var list = RecruitCandidate.GetHistory(out totalCount, id, full);
+            return Json(new { list, totalCount });
+        }
+
+        [HttpPost]
         public JsonResult GetVacancyCandadateList(int id)
         {
             int totalCount;
             var list = RecruitVacancy.GetCandidateList(out totalCount, id);
             return Json(new { list, totalCount });
         }
+
+        [HttpPost]
+        public JsonResult GetCandadateVacancyList(int id)
+        {
+            int totalCount;
+            var list = RecruitCandidate.GetVacancyList(out totalCount, id);
+            return Json(new { list, totalCount });
+        }
+
         [HttpPost]
         public JsonResult AppendCandidates2Vacancy(int idVacancy, int[] idCandidates)
         {
             RecruitVacancy.AppendCandidateList(idVacancy, idCandidates, CurUser.Sid);
+
+            return Json(new { });
+        }
+
+        [HttpPost]
+        public JsonResult ChangeVacancy4Candidate(int idSelection, int[] idVacancies)
+        {
+            RecruitSelection.ChangeVacancy(idSelection, idVacancies, CurUser.Sid);
 
             return Json(new {});
         }
@@ -225,6 +304,66 @@ namespace Stuff.Controllers
         {
             var list = RecruitVacancy.GetStateList();
             return Json(list);
+        }
+
+        [HttpGet]
+        public FileResult GetCandidateFile(string sid)
+        {
+            string fileName;
+            var data = RecruitCandidate.GetFileData(sid, out fileName);
+            if (data != null && data.Length > 0)
+            {
+                var mimeType = MimeTypeHelper.GetMimeType(Path.GetExtension(fileName));
+                return File(data, mimeType, fileName);
+                //return File(data, "application/pdf");
+            }
+            else
+            {
+                return null;
+                //return HttpNotFound();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CandidateChange(RecruitCandidate model)
+        {
+            try
+            {
+                if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
+                {
+                    var file = Request.Files[0];
+
+                    string ext = Path.GetExtension(file.FileName).ToLower();
+
+                    //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
+
+                    byte[] data = null;
+                    using (var br = new BinaryReader(file.InputStream))
+                    {
+                        data = br.ReadBytes(file.ContentLength);
+                    }
+                    model.File = data;
+                    model.FileName = file.FileName;
+                }
+                model.Change(CurUser.Sid);
+
+                //if (!String.IsNullOrEmpty(Request.Form["append2Vacancy"]) && !String.IsNullOrEmpty(Request.QueryString["vid"]))
+                //{
+                //    int idVacancy;
+                //    int.TryParse(Request.QueryString["vid"], out idVacancy);
+                //    if (idVacancy > 0 && model.Id > 0)
+                //    {
+                //        RecruitVacancy.AppendCandidateList(idVacancy, new[] { model.Id }, CurUser.Sid);
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+                return View("CandidateCard", model);
+            }
+
+            return RedirectToAction("CandidateCard", new {id= model.Id});
         }
     }
 }

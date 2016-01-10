@@ -26,6 +26,10 @@ public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
 
+        public byte[] File { get; set; }
+        public string FileName {get; set; }
+        public string FileSid { get; set; }
+
         public int? Age
         {
             get
@@ -76,9 +80,11 @@ public string Name { get; set; }
             DateCreate = Db.DbHelper.GetValueDateTimeOrDefault(row, "dattim1");
             IdCameResource = Db.DbHelper.GetValueIntOrDefault(row, "id_came_resource");
             CameResourceName = Db.DbHelper.GetValueString(row, "came_resource_name");
-            BirthDate = Db.DbHelper.GetValueDateTimeOrDefault(row, "birth_date");
+            BirthDate = Db.DbHelper.GetValueDateTimeOrNull(row, "birth_date");
             Phone = Db.DbHelper.GetValueString(row, "phone");
             Email = Db.DbHelper.GetValueString(row, "email");
+            FileSid = Db.DbHelper.GetValueString(row, "file_sid");
+            FileName = Db.DbHelper.GetValueString(row, "file_name");
         }
 
         public void Create(string creatorSid)
@@ -95,8 +101,10 @@ public string Name { get; set; }
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pPhone = new SqlParameter() { ParameterName = "phone", SqlValue = Phone, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = Email, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
+            SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_create", pSurname, pName, pPatronymic, pDisplayName, pMale, pIdCameResource, pBirthDate, pCreatorAdSid, pPhone, pEmail);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_create", pSurname, pName, pPatronymic, pDisplayName, pMale, pIdCameResource, pBirthDate, pCreatorAdSid, pPhone, pEmail, pFile, pFileName);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
@@ -144,6 +152,67 @@ public string Name { get; set; }
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
             SqlParameter pDeleterSid = new SqlParameter() { ParameterName = "deleter_sid", SqlValue = deleterSid, SqlDbType = SqlDbType.VarChar };
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_close", pId, pDeleterSid);
+        }
+
+        public static byte[] GetFileData(string sid, out string fileName)
+        {
+            SqlParameter pSid = new SqlParameter() { ParameterName = "sid", SqlValue = sid, SqlDbType = SqlDbType.NVarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_file", pSid);
+            byte[] data = new byte[0];
+            fileName = String.Empty;
+            if (dt.Rows.Count > 0)
+            {
+                data = Db.DbHelper.GetByteArr(dt.Rows[0], "data");
+                fileName = Db.DbHelper.GetValueString(dt.Rows[0], "file_name");
+            }
+            return data;
+        }
+
+        public void Change(string creatorSid)
+        {
+            DisplayName = Employee.ShortName($"{Surname} {Name} {Patronymic}").Trim();
+
+            SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = Id, SqlDbType = SqlDbType.Int };
+            SqlParameter pSurname = new SqlParameter() { ParameterName = "surname", SqlValue = Surname, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pName = new SqlParameter() { ParameterName = "name", SqlValue = Name, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pPatronymic = new SqlParameter() { ParameterName = "patronymic", SqlValue = Patronymic, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pDisplayName = new SqlParameter() { ParameterName = "display_name", SqlValue = DisplayName, SqlDbType = SqlDbType.NVarChar };
+            //SqlParameter pMale = new SqlParameter() { ParameterName = "male", SqlValue = Male, SqlDbType = SqlDbType.NVarChar };
+            //SqlParameter pIdCameResource = new SqlParameter() { ParameterName = "id_came_resource", SqlValue = IdCameResource, SqlDbType = SqlDbType.Int };
+            SqlParameter pBirthDate = new SqlParameter() { ParameterName = "birth_date", SqlValue = BirthDate, SqlDbType = SqlDbType.DateTime };
+            SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+            SqlParameter pPhone = new SqlParameter() { ParameterName = "phone", SqlValue = Phone, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = Email, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
+            SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
+
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_change", pId, pSurname, pName, pPatronymic, pDisplayName,  pBirthDate, pCreatorAdSid, pPhone, pEmail, pFile, pFileName);
+        }
+
+        public static IEnumerable<HistoryItem> GetHistory(out int totalCount, int id, bool fullList = false)
+        {
+            SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
+            SqlParameter pFullList = new SqlParameter() { ParameterName = "full_list", SqlValue = fullList, SqlDbType = SqlDbType.Bit };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_history", pId, pFullList);
+
+            totalCount = 0;
+            var lst = new List<HistoryItem>();
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    var model = new HistoryItem(row);
+                    lst.Add(model);
+                }
+                totalCount = Db.DbHelper.GetValueIntOrDefault(dt.Rows[0], "total_count");
+            }
+            return lst;
+        }
+
+        public static IEnumerable<RecruitSelection> GetVacancyList(out int totalCount, int id)
+        {
+            return RecruitSelection.GetList(out totalCount, idCandidate:id);
         }
     }
 }

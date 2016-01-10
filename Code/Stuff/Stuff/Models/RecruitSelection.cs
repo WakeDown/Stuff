@@ -14,6 +14,7 @@ namespace Stuff.Models
         public int IdVacancy { get; set; }
         public int IdCandidate { get; set; }
         public RecruitCandidate Candidate { get; set; }
+        public RecruitVacancy Vacancy { get; set; }
 
         public int IdState { get; set; }
         public string StateName { get; set; }
@@ -22,7 +23,7 @@ namespace Stuff.Models
         public string CreatorName { get; set; }
         public DateTime? StateChangeDate { get; set; }
 
-        public string StateChangeDateStr=> StateChangeDate.HasValue ? StateChangeDate.Value.ToString("dd.MM.yyyy") : String.Empty;
+        public string StateChangeDateStr=> StateChangeDate.HasValue ? StateChangeDate.Value.ToString("dd.MM.yyyy HH:mm") : String.Empty;
         public string StateChangerSid { get; set; }
         public string StateChangerName { get; set; }
         public DateTime DateCreate { get; set; }
@@ -37,6 +38,7 @@ namespace Stuff.Models
         public RecruitSelection()
         {
             Candidate = new RecruitCandidate();
+            Vacancy = new RecruitVacancy();
         }
         public RecruitSelection(int id)
         {
@@ -81,7 +83,28 @@ namespace Stuff.Models
                 BirthDate = Db.DbHelper.GetValueDateTimeOrNull(row, "candidate_birth_date"),
                 Phone = Db.DbHelper.GetValueString(row, "candidate_phone"),
                 Email = Db.DbHelper.GetValueString(row, "candidate_email"),
-                Male = Db.DbHelper.GetValueBool(row, "candidate_male")
+                Male = Db.DbHelper.GetValueBool(row, "candidate_male"),
+                Surname = Db.DbHelper.GetValueString(row, "candidate_surname"),
+                Name = Db.DbHelper.GetValueString(row, "candidate_name"),
+                Patronymic = Db.DbHelper.GetValueString(row, "candidate_patronymic"),
+                FileName = Db.DbHelper.GetValueString(row, "candidate_file_name"),
+                FileSid = Db.DbHelper.GetValueString(row, "candidate_file_sid")
+            };
+
+            Vacancy = new RecruitVacancy()
+            {
+                Id = IdVacancy,
+                PositionName = Db.DbHelper.GetValueString(row, "vacancy_position_name"),
+                DepartmentName  = Db.DbHelper.GetValueString(row, "vacancy_department_name"),
+                CandidateTotalCount  = Db.DbHelper.GetValueIntOrDefault(row, "vacancy_candidate_total_count"),
+                CandidateCancelCount = Db.DbHelper.GetValueIntOrDefault(row, "vacancy_candidate_cancel_count"),
+                PersonalManagerName =  Db.DbHelper.GetValueString(row, "vacancy_personal_manager_name"),
+                CreatorName = Db.DbHelper.GetValueString(row, "vacancy_creator_name"),
+                DateCreate   = Db.DbHelper.GetValueDateTimeOrDefault(row, "vacancy_date_create"),
+                StateName =  Db.DbHelper.GetValueString(row, "vacancy_state_name"),
+                StateChangeDate= Db.DbHelper.GetValueDateTimeOrNull(row, "vacancy_state_change_date"),
+                StateChangerName =  Db.DbHelper.GetValueString(row, "vacancy_state_changer_name"),
+                CauseName = Db.DbHelper.GetValueString(row, "vacancy_cause_name")
             };
         }
 
@@ -100,11 +123,12 @@ namespace Stuff.Models
             }
         }
 
-        public static IEnumerable<RecruitSelection> GetList(out int totalCount, int idVacancy)
+        public static IEnumerable<RecruitSelection> GetList(out int totalCount, int? idVacancy = null, int? idCandidate = null)
         {
             
             SqlParameter pidVacancy = new SqlParameter() { ParameterName = "id_vacancy", SqlValue = idVacancy, SqlDbType = SqlDbType.Int };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_list", pidVacancy);
+            SqlParameter pidCandidate = new SqlParameter() { ParameterName = "id_candidate", SqlValue = idCandidate, SqlDbType = SqlDbType.Int };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_list", pidVacancy, pidCandidate);
 
             totalCount = 0;
             var lst = new List<RecruitSelection>();
@@ -164,6 +188,24 @@ namespace Stuff.Models
                 }
             }
             return lst;
+        }
+
+        public static void ChangeVacancy(int id, int[] idVacancies, string creatorSid )
+        {
+            foreach (int idVacancy in idVacancies)
+            {
+                CloneInAnotherVacancy(id, idVacancy, creatorSid);
+            }
+            SetState(id, "CANCEL", creatorSid, "Перенос на другую вакансию.");
+        }
+
+        public static void CloneInAnotherVacancy(int id, int idVacancy, string creatorSid)
+        {
+            SqlParameter pid = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
+            SqlParameter pidVacancy = new SqlParameter() { ParameterName = "id_vacancy", SqlValue = idVacancy, SqlDbType = SqlDbType.Int };
+            SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_clone_in_another_vacancy", pid, pidVacancy, pCreatorAdSid);
         }
     }
 }

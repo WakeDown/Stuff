@@ -1,26 +1,95 @@
-﻿@using Stuff.Models
-@model IEnumerable<Stuff.Models.RecruitCandidate>
+﻿@using Stuff.Helpers
+@using Stuff.Models
+@model IEnumerable<RecruitCandidate>
 
 @{
     ViewBag.Title = "Банк резюме";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int topRows = Request.QueryString["topRows"] != null ? Convert.ToInt32(Request.QueryString["topRows"]) : 30;
+    int currPage = Request.QueryString["page"] != null ? Convert.ToInt32(Request.QueryString["page"]) : 1;
+    int pageCount = (ViewBag.TotalCount / topRows);
+    if (ViewBag.TotalCount % topRows > 0)
+    {
+        pageCount++;
+    }
 }
 
+<div class="row">
+    <div class="col-lg-5 col-sm-12 col-xs-12 hidden-sm hidden-xs">
+        <div class="pull-left">
+            <nav>
+                <ul class="pagination no-marg pages">
 
-<p>
-    <a class="btn btn-primary" href="@Url.Action("CandidateNew")"><i class="fa fa-plus-circle"></i> новое резюме</a>
-</p>
+                    <li name="page" class="@(currPage == 1 ? "disabled" : String.Empty)"><a href="@Url.Current(new {page = Convert.ToInt32(Request.QueryString["page"]) - 1})"><</a></li>
 
+                    @for (int i = 1; i <= pageCount; i++)
+                    {
+                        if (i > 4)
+                        {
+                            <li name="page" class="@(i == currPage ? "active" : String.Empty)"><a href="@Url.Current(new {page = i})">...</a></li>
+                            break;
 
-<table class="table table-bordered table-striped table-hover">
+                        }
+                        else
+                        {
+                            <li name="page" class="@(i == currPage ? "active" : String.Empty)"><a href="@Url.Current(new {page = i})">@i</a></li>
+                        }
+                    }
+
+                    <li name="page" class="@(currPage == pageCount ? "disabled" : String.Empty)"><a href="@Url.Current(new {page = Convert.ToInt32(Request.QueryString["page"]) + 1})">></a></li>
+
+                </ul>
+            </nav>
+        </div>
+        <div class="pull-left pad-l-sm">
+            <a class="btn btn-primary" href="@Url.Action("CandidateNew")"><i class="fa fa-plus-circle"></i> новое резюме</a>
+        </div>
+    </div>
+    <div class="col-lg-5 col-sm-12 col-xs-12">
+        <div id="stateFilterList"></div>
+    </div>
+    <div class="col-lg-2 col-sm-6 col-xs-6">
+        <div>
+            <div class="text-right">
+                <nav>
+                    <ul class="pagination pagesize no-marg">
+                        <li><a name="pageSize" value="30" href="@Url.Current(new { topRows=30, page=1})" class="btn btn-default btn-sm selected">30</a></li>
+                        <li><a name="pageSize" value="100" href="@Url.Current(new { topRows=100, page=1})" class="btn btn-default btn-sm">100</a></li>
+                        <li><a name="pageSize" value="300" href="@Url.Current(new { topRows=300, page=1})" class="btn btn-default btn-sm">300</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<table id="candidateList" class="table table-bordered table-striped table-hover">
     <thead>
     <tr class="bg-primary">
-        <th class="min-width">ID</th>
-        <th>ФИО</th>
-        <th>Возраст</th>
-        <th>Телефон</th>
-        <th>E-mail</th>
-        <th>Добавлено</th>
+        <th class="min-width">
+            <input id="cid" class="form-control input-xs" placeholder="ID" value="@Request.QueryString["cid"]" style="width: 50px;"/>
+        </th>
+        <th>
+            <input id="fio" class="form-control input-xs" placeholder="ФИО" value="@Request.QueryString["fio"]" />
+        </th>
+        <th>
+            @*<input id="sex" class="form-control input-xs" placeholder="Пол" value="@Request.QueryString["sex"]" />*@
+            <input type="radio" name="sex" value="" @(String.IsNullOrEmpty(Request.QueryString["sex"]) ? "checked" : String.Empty)>&nbsp;все&nbsp;<input type="radio" name="sex" value="1" @(!String.IsNullOrEmpty(Request.QueryString["sex"]) && Request.QueryString["sex"].Equals("1") ? "checked" : String.Empty)>&nbsp;М&nbsp;<input type="radio" name="sex" value="0" @(!String.IsNullOrEmpty(Request.QueryString["sex"]) && Request.QueryString["sex"].Equals("0") ? "checked" : String.Empty)>&nbsp;Ж
+        </th>
+        <th>
+            <input id="age" class="form-control input-xs" placeholder="Возраст" value="@Request.QueryString["age"]" />
+        </th>
+        <th>
+            <input id="phone" class="form-control input-xs" placeholder="Телефон" value="@Request.QueryString["phone"]" />
+        </th>
+        <th>
+            <input id="email" class="form-control input-xs" placeholder="E-mail" value="@Request.QueryString["email"]" />
+        </th>
+        <th>
+            <input id="added" class="form-control input-xs" placeholder="Добавлено" value="@Request.QueryString["added"]"/>
+        </th>
+        <th class="min-width">
+            <a href="@Url.Action("Candidates")" class="btn btn-default btn-xs" title="очистить фильтр"><i class="fa fa-refresh"></i></a>
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -33,6 +102,7 @@
                     <td>
                         @rc.DisplayName
                     </td>
+                    <td>@rc.MaleStr</td>
                     <td>@rc.Age</td>
                     <td>@rc.Phone</td>
                     <td>@rc.Email</td>
@@ -41,6 +111,7 @@
                     @*<td>
                             <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
                         </td>*@
+                    <td></td>
                 </tr>
             }
         }
@@ -58,15 +129,62 @@
 {
     <script type="text/javascript">
         $(function() {
-            $('tr[cndid]').click(function () {
+            $('tr[cndid]').click(function() {
                 var id = $(this).attr('cndid');
                 window.location = '@Url.Action("CandidateCard")?id=' + id;
             });
-            $('tr[cndid]').on('contextmenu', function () {
+            $('tr[cndid]').on('contextmenu', function() {
                 var id = $(this).attr('cndid');
                 window.open('@Url.Action("CandidateCard")?id=' + id);
             });
-        })
+            $('#candidateList thead tr input').keypress(function(e) {
+                if (e.keyCode != 13) return;
+                search();
+            });
+            $('[name="sex"]').click(function () {
+                search();
+            });
+        });
+
+        function search() {
+            var curUrl = '@Request.RawUrl.Replace("&amp;", "&")';
+            var url = curUrl;
+            var cid = $('#cid').val();
+            url = updateQueryStringParameter(url, 'cid', cid);
+            var fio = $('#fio').val();
+            url = updateQueryStringParameter(url, 'fio', fio);
+            //var sex = $('#sex').val();
+            var sex = $('[name="sex"]:checked').val();
+            if (sex == undefined) sex = null;
+            url = updateQueryStringParameter(url, 'sex', sex);
+            var age = $('#age').val();
+            url = updateQueryStringParameter(url, 'age', age);
+            var phone = $('#phone').val();
+            url = updateQueryStringParameter(url, 'phone', phone);
+            var email = $('#email').val();
+            url = updateQueryStringParameter(url, 'email', email);
+            var added = $('#added').val();
+            url = updateQueryStringParameter(url, 'added', added);
+            url = updateQueryStringParameter(url, 'page', 1);
+            window.location = url;
+        }
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function updateQueryStringParameter(uri, key, value) {
+            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+            if (uri.match(re)) {
+                return uri.replace(re, '$1' + key + "=" + value + '$2');
+            } else {
+                return uri + separator + key + "=" + value;
+            }
+        }
     </script>
 }
 

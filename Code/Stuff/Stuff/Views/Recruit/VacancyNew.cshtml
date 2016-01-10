@@ -76,7 +76,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="deadlineDate">Дата окончания План</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(m => m.DeadlineDate, new { @class = "form-control text-right required-mark", @id = "deadlineDate", data_mask = "00.00.0000" })
+                @Html.TextBoxFor(m => m.DeadlineDate, new {@class = "form-control text-right required-mark", @id = "deadlineDate", data_mask = "00.00.0000"})
                 <span class="help-block with-errors"></span>
             </div>
         </div>

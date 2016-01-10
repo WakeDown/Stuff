@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
+using System.Web.Http.Routing;
 using DataProvider.Helpers;
+using Stuff.Helpers;
 
 namespace Stuff.Models
 {
@@ -38,8 +42,11 @@ namespace Stuff.Models
         public int CandidateTotalCount { get; set; }
         public int CandidateCancelCount { get; set; }
         //public int CandidateAcceptCount { get; set; }
-
         public bool StateIsActive { get; set; }
+
+        public string StateChangeDateStr
+            => StateChangeDate.HasValue ? StateChangeDate.Value.ToString("dd.MM.yyyy") : String.Empty;
+        public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
 
         public RecruitVacancy()
         {
@@ -118,6 +125,15 @@ namespace Stuff.Models
                 int.TryParse(dt.Rows[0]["id"].ToString(), out id);
                 Id = id;
             }
+
+            //Если создал не менеджер по персоналу вакансии, то уведомляем его
+            if (!creatorSid.Equals(PersonalManagerSid) && !String.IsNullOrEmpty(PersonalManagerSid))
+            {
+                string poralUrl = ConfigurationManager.AppSettings["PortalUrl"];
+                string link = $"{poralUrl}/Recruit/VacancyCard?id={Id}";
+                string text = $"Добрый день.<br />Вам назначена проработка новой вакансии.<br />Ссылка - <a href=\"{link}\">{link}</a>";
+                MessageHelper.SendMailSmtp($"[Вакансия №{Id}]", text, true, Employee.GetEmailBySid(PersonalManagerSid));
+            }
         }
 
         public static void SetState(int id, string stateSysName, string creatorSid, string descr)
@@ -130,7 +146,7 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_set_state", pid, pstateSysName, pCreatorAdSid, pdescr);
         }
 
-        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null)
+        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
@@ -143,7 +159,8 @@ namespace Stuff.Models
             SqlParameter ppersonalManagerName = new SqlParameter() { ParameterName = "personal_manager_name", SqlValue = personalManagerName, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pdateCreate = new SqlParameter() { ParameterName = "date_create", SqlValue = dateCreate, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pstate = new SqlParameter() { ParameterName = "state", SqlValue = state, SqlDbType = SqlDbType.NVarChar };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate);
+            SqlParameter pactiveOnly = new SqlParameter() { ParameterName = "active_only", SqlValue = activeOnly, SqlDbType = SqlDbType.Bit };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly);
 
             totalCount = 0;
             var lst = new List<RecruitVacancy>();

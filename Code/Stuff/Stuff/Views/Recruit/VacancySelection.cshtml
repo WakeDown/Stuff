@@ -1,0 +1,79 @@
+﻿@using Stuff.Models
+@model IEnumerable<RecruitVacancy>
+
+@{
+    Layout = null;
+}
+
+<table id="candidatesSelection" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr class="bg-primary">
+            <th class="min-width text-nowrap">ID</th>
+            <th>Вакансия</th>
+            <th>Кандидатов всего</th>
+            <th>Менеджер</th>
+            <th>Статус</th>
+            <th>Дабавлена</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (RecruitVacancy rv in Model)
+            {
+                <tr id="vac-@rv.Id" vacid="@rv.Id" class="cursor-pointer ">
+                    <th>@rv.Id</th>
+                    <td>
+                        <div>@rv.PositionName</div>
+                        <div>
+                            <small>@rv.DepartmentName</small>
+                        </div>
+                        <span name="curVacNote" class="alert-danger"></span>
+                    </td>
+                    <td class="text-nowrap bold text-center">@rv.CandidateTotalCount</td>
+                    <td>@rv.PersonalManagerName</td>
+                    <td>
+                        <strong>@rv.StateName</strong>
+                        <div><small>@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.StateChangerName</small></div>
+                    </td>
+                    <td>
+                        <strong>Добавлена</strong>
+                        <div><small>@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>пусто</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    var selectedVacancies = [];
+    $(function () {
+        $('#vacancySelectionTotalCount').text('@ViewBag.TotalCount');
+        var curvid = $('#vacancyChangeListModal').attr('curvid');
+        var $curVac = $('[vacid="' + curvid + '"]')
+        //$curVac.addClass('bg-danger');
+        $curVac.find('[name="curVacNote"]').text('Текущая вакансия');
+        $('tr[vacid]:not([vacid="' + curvid + '"])').click(function () {
+            var $row = $(this);
+            var id = $row.attr('vacid');
+            var index = selectedVacancies.indexOf(id);
+            if (index > -1) {
+                selectedVacancies.splice(index, 1);
+                $row.removeClass('selected');
+            } else {
+                selectedVacancies.push(id);
+                $row.addClass('selected');
+            }
+
+            $('[name="selectedVacanciesSelection"]').text(selectedVacancies.length);
+        });
+    });
+</script>

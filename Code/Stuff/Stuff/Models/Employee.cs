@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using DataProvider.Helpers;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -267,6 +270,19 @@ namespace Stuff.Models
             Uri uri = new Uri(String.Format("{0}/Employee/GetFullRecipientList?citySysName={1}", OdataServiceUri, citySysName));
             string jsonString = GetJson(uri);
             var email = JsonConvert.DeserializeObject<IEnumerable<string>>(jsonString);
+            return email;
+        }
+
+        public static string GetEmailBySid(string sid)
+        {
+            if (String.IsNullOrEmpty(sid)) return String.Empty;
+            SqlParameter pSid = new SqlParameter() { ParameterName = "sid", SqlValue = sid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("get_email", pSid);
+            string email = String.Empty;
+            if (dt.Rows.Count > 0)
+            {
+                email = Db.DbHelper.GetValueString(dt.Rows[0], "email");
+            }
             return email;
         }
     }

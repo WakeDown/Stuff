@@ -200,6 +200,7 @@
     <Compile Include="Helpers\AdHelper.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Helpers\Db\Db.Stuff.cs" />
+    <Compile Include="Helpers\MimeTypeHelper.cs" />
     <Compile Include="Helpers\MultiButtonAttribute.cs" />
     <Compile Include="Helpers\PdfCreator.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="Models\VendorState.cs" />
     <Compile Include="Objects\AdGroup.cs" />
     <Compile Include="Objects\AdUserGroup.cs" />
+    <Compile Include="Objects\AttachmentFile.cs" />
     <Compile Include="Objects\BinaryContentResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -464,6 +466,7 @@
     <Content Include="Views\Recruit\CandidateCard.cshtml" />
     <Content Include="Views\Recruit\CandidatesSelection.cshtml" />
     <Content Include="Views\Recruit\SelectionHistory.cshtml" />
+    <Content Include="Views\Recruit\VacancySelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -19,7 +19,7 @@
 {
     @*@using (Html.BeginForm("CandidateNew", "Recruit", FormMethod.Post, new { @id = "posForm", @class = "form-horizontal", role = "form" }))
     {*@
-<form action='@Url.Action("CandidateNew", "Recruit")?vid=@Request.QueryString["vid"]&returnUrl=@Request.QueryString["ReturnUrl"]' method="post" class="form-horizontal">
+<form action='@Url.Action("CandidateNew", "Recruit")?vid=@Request.QueryString["vid"]&returnUrl=@Request.QueryString["ReturnUrl"]' method="post" enctype="multipart/form-data" class="form-horizontal" role="form">
     <div class="form-group">
         <label class="col-lg-2 control-label" for="birthDate">Пол</label>
         <div class="col-lg-2">
@@ -69,8 +69,14 @@
     <div class="form-group">
         <label class="col-lg-2 control-label" for="email">E-mail</label>
         <div class="col-lg-2">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @id = "email" })
+            @Html.TextBoxFor(m => m.Email, new {@class = "form-control", @id = "email"})
             <span class="help-block with-errors"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-lg-2 control-label">Файл</label>
+        <div class="col-lg-5">
+            <input id="fileResume" type="file" name="fileResume" />
         </div>
     </div>
     <div class="form-group">

@@ -15,6 +15,7 @@ namespace Stuff.Models
         public string CreatorSid { get; set; }
         public string CreatorName { get; set; }
         public DateTime DateCreate { get; set; }
+        public int? LinkId { get; set; }
 
         public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy HH:mm");
 
@@ -38,6 +39,7 @@ namespace Stuff.Models
             StateName = Db.DbHelper.GetValueString(row, "state_name");
             Descr = Db.DbHelper.GetValueString(row, "descr");
             DateCreate = Db.DbHelper.GetValueDateTimeOrDefault(row, "dattim1");
+            LinkId = Db.DbHelper.GetValueIntOrNull(row, "link_id");
         }
     }
 }

@@ -11,8 +11,8 @@
 
     @if (Model.StateIsActive)
     {
-        <button id="delete" class="btn btn-danger btn-sm pull-right"><i class="fa fa-trash"></i> удалить</button>
-        <button id="change" class="btn btn-warning btn-sm pull-right"><i class="fa fa-edit"></i> изменить</button>
+        <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
+        <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>
     }
 }
 
@@ -62,7 +62,7 @@
         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4>
+                    <h4 class="nomargin">
                         История
                     </h4>
                 </div>
@@ -84,30 +84,7 @@
         <div id="candidatesList"></div>
     </p>
 
-    <!-- Modal -->
-    <div id="candidateListModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
-                    <div>
-                        <h4 class="modal-title">Список резюме - всего <span id="candidatesSelectionTotalCount" class="badge"></span>
-                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Отмена</button>
-                            <button name="addSelectedCandidates" class="btn btn-success pull-right">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
-                        </h4>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <p id="candidateList"></p>
-                </div>
-                <div class="modal-footer">
-                    <button name="addSelectedCandidates" class="btn btn-success">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Modal -->
     <div id="candidateStateResultModal" class="modal fade" role="dialog">
@@ -147,6 +124,10 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">История кандидата для вакансии №@Model.Id</h4>
+                    <div><small>@Model.PositionName<br/>@Model.DepartmentName</small>
+                    </div>
+                    <div>Кандидат - <strong id="historyCandidateName"></strong>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <p id="selectionHistoryList"></p>
@@ -157,11 +138,92 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div id="candidateListModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                    <div>
+                        <h4 class="modal-title">
+                            Список резюме - всего <span id="candidatesSelectionTotalCount" class="badge"></span>
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Отмена</button>
+                            <button name="addSelectedCandidates" class="btn btn-success pull-right">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
+                        </h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p id="candidateList"></p>
+                </div>
+                <div class="modal-footer">
+                    <button name="addSelectedCandidates" class="btn btn-success">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+<div id="vacancyChangeListModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
+                <div>
+                    <h4 class="modal-title">
+                        Список вакансий - всего <span id="vacancySelectionTotalCount" class="badge"></span>
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Отмена</button>
+                        <button name="addSelectedVacancies" class="btn btn-success pull-right">Перенести кандидата на отмеченные <span name="selectedVacanciesSelection" class="badge"></span></button>
+                    </h4>
+                    <div>Кандидат - <strong id="vacancyChangeCandidateName"></strong></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="vacancyChangeList"></p>
+            </div>
+            <div class="modal-footer">
+                <button name="addSelectedVacancies" class="btn btn-success">Перенести кандидата на отмеченные <span name="selectedVacanciesSelection" class="badge"></span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
 }
 
 @section scripts
 {
     <script type="text/javascript">
+        function loadVacancySelectionList() {
+            var $cont = $('#vacancyChangeList');
+            var slid = $('#vacancyChangeListModal').attr('slid');
+            //var curvid =  $('#vacancyChangeListModal').attr('curvid');
+            $.ajax({ url: '@Url.Action("VacancySelection")', method: 'GET', success: function(html) { $cont.html(html); } });
+            $('[name="addSelectedVacancies"]').click(function() {
+                @*переменная selectedCandidateResume находится в view CandidatesSelection*@
+                $.ajax({
+                    url: '@Url.Action("ChangeVacancy4Candidate")',
+                    method: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    data: JSON.stringify({ idSelection: slid, idVacancies: selectedVacancies }),
+                    success: function() {
+                        loadCandidatesList();
+                        selectedVacancies = [];
+                    },
+                    error:
+                        function() {
+                            alert('Ошибка при добавлении списка кандидатов к вакансии! Восможно данные не были сохранены!');
+                            loadCandidatesList();
+                            selectedVacancies = [];
+                        }
+                });
+                $('#candidateListModal').modal('hide');
+            });
+        }
+
         function loadCandidateSelectionList() {
             var $cont = $('#candidateList');
             $.ajax({ url: '@Url.Action("CandidatesSelection")', method: 'GET', success: function(html) { $cont.html(html); } });
@@ -240,10 +302,12 @@
         function showSelectionHistory() {
             var $this = $(this);
             var id = $this.attr('slid');
+            var cname = $this.attr('cname');
             $('#selectionHistoryModal').modal('show');
             var $cont = $('#selectionHistoryList');
             $cont.empty();
-
+            $('#historyCandidateName').text('');
+            $('#historyCandidateName').text(cname);
             $.ajax({
                 url: '@Url.Action("SelectionHistory")?id=' + id,
                 mode: 'GET',
@@ -257,27 +321,40 @@
         }
 
         function getCandidateListRow(item) {
-            var $row = $('<tr id="sel-' + item.Id + '" slid="' + item.Id + '" class="cursor-pointer' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
+            var $row = $('<tr id="sel-' + item.Id + '" slid="' + item.Id + '" class="' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
                 '<th>' + item.Candidate.Id + '</th>' +
-                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.DisplayName + '</a></td>' +
-                '<td>' + item.Candidate.MaleStr + '</td>' +
-                '<td>' + item.Candidate.Age + '</td>' +
-                '<td>' + item.Candidate.Phone + '</td>' +
-                '<td>' + item.Candidate.Email + '</td>' +
-                '<td><strong>' + item.StateName + '</strong><br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small><br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small></td>' +
+                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null? '' : item.Candidate.Patronymic)  + '</a>' +
+                (item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br /><a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>') +
+                '</td>' +
+                '<td>' + (item.Candidate.MaleStr == null? '' : item.Candidate.MaleStr) + '</td>' +
+                '<td>' + (item.Candidate.Age == null? '' : item.Candidate.Age) + '</td>' +
+                '<td>' + (item.Candidate.Phone == null? '' : item.Candidate.Phone) + '</td>' +
+                '<td>' + (item.Candidate.Email == null? '' : item.Candidate.Email) + '</td>' +
+                '<td><strong>' + item.StateName + '</strong>' +
+                '<button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button>' +
+                '<br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small><br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small></td>' +
                 '<td>' + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
-                    '<button name="selectionSetState" data-toggle="modal" data-target="#candidateStateResultModal" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning">Изменить статус</button>' : '') +
+                    '<button name="selectionSetState" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning btn-sm btn-block">Изменить статус</button>' +
+                    '<button name="changeVac" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>' : '') +
                 '</td>' +
                 '</tr>');
 
-            $row.click(showSelectionHistory);
-            $row.find('[name="selectionSetState"]').click(function(e) {
-                e.stopPropagation();
-                $('#candidateStateResultModal').modal('show');
+            $('[name="sel-history"]', $row).click(showSelectionHistory);
+
+            $row.find('[name="changeVac"]').click(function() {
+                var $this = $(this);
+                var slid = $this.attr('slid');
+                var cname = $this.attr('cname');
+                var curvid = $this.attr('curvid');
+                $('#vacancyChangeCandidateName').text('');
+                $('#vacancyChangeCandidateName').text(cname);
+
+                var $modal = $('#vacancyChangeListModal');
+                $modal.attr('slid', slid);
+                $modal.attr('curvid', curvid);
+                $modal.modal('show');
             });
-            $row.find('a').click(function(e) {
-                e.stopPropagation();
-            });
+
             $('[name="selectionSetState"]', $row).click(function() {
                 var $this = $(this);
                 var slid = $this.attr('slid');
@@ -289,6 +366,7 @@
                 $modal.attr('nstid', nstid);
                 $modal.attr('cstid', cstid);
                 $('#selectionSetNextState').text(nstnm);
+                $modal.modal('show');
             });
             return $row;
         }
@@ -410,7 +488,7 @@
                     if (data.list.length > 0) {
                         for (var i = 0; i < data.list.length; i++) {
                             var item = data.list[i];
-                            var cell = '<div><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small></div>';
+                            var cell = '<div class="history-item"><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small></div>';
                             $cont.append(cell);
 
                         }
@@ -427,7 +505,7 @@
                                         if (data.list.length > 0) {
                                             for (var i = 0; i <= data.list.length; i++) {
                                                 var item = data.list[i];
-                                                var cell = '<div><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small></div>';
+                                                var cell = '<div class="history-item"><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small></div>';
                                                 $cont.append(cell);
                                             }
                                         }
@@ -451,6 +529,10 @@
         $(function() {
             loadHistory();
             loadCandidatesList();
+
+            $('#vacancyChangeListModal').on('shown.bs.modal', function() {
+                loadVacancySelectionList();
+            });
 
             $('#candidateListModal').on('shown.bs.modal', function() {
                 loadCandidateSelectionList();
