@@ -22,10 +22,6 @@
         <div class="col-lg-8">
             <div id="vacancyInfo">
                 <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Причина возникновения:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CauseName)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
                     <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Автор заявки:</div>
                     <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.AuthorName)</div>
                 </div>
@@ -57,6 +53,10 @@
                         <label>@Model.DeadlineDate.ToString("dd.MM.yyyy")</label>
                     </div>
                 </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Причина возникновения:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CauseName)</div>
+                </div>
             </div>
         </div>
         <div class="col-lg-4">
@@ -77,7 +77,7 @@
             @if (Model.StateIsActive)
             {
                 <button id="addCandidate" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#candidateListModal"><i class="fa fa-plus-circle"></i> добавить из списка</button>
-                <a href="@Url.Action("CandidateNew")?vid=@Model.Id&returnUrl=@Request.Url" class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> новое резюме</a>
+                <a href="@Url.Action("CandidateNew")?vid=@Model.Id&returnUrl=@Request.Url" class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> новый кандидат</a>
             }
         </h4>
 
@@ -88,7 +88,7 @@
 
     <!-- Modal -->
     <div id="candidateStateResultModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,15 +97,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <textarea id="stateComment" class="form-control" placeholder="Комментарий" rows="9"></textarea>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <button id="selectionSetNextState" class="btn btn-success btn-block">Перевести на следущюий этап</button>
                             <button id="selectionSetCurrentState" class="btn btn-warning btn-block">Оставить на текущем этапе</button>
                             <button id="selectionSetCancelState" class="btn btn-danger btn-block">Непригоден для вакансии</button>
                             <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Отмена</button>
                             <button id="selectionSetAcceptState" class="btn btn-primary btn-block">Утвердить кандидата</button>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="candidateStateResultHistory"></div>
                         </div>
                     </div>
                 </div>
@@ -148,7 +151,7 @@
                     @*<button type="button" class="close" data-dismiss="modal">&times;</button>*@
                     <div>
                         <h4 class="modal-title">
-                            Список резюме - всего <span id="candidatesSelectionTotalCount" class="badge"></span>
+                            Список кандидатов - всего <span id="candidatesSelectionTotalCount" class="badge"></span>
                             <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Отмена</button>
                             <button name="addSelectedCandidates" class="btn btn-success pull-right">Добавить выбранные <span name="selectedCandidatesSelection" class="badge"></span></button>
                         </h4>
@@ -202,6 +205,8 @@
             //var curvid =  $('#vacancyChangeListModal').attr('curvid');
             $.ajax({ url: '@Url.Action("VacancySelection")', method: 'GET', success: function(html) { $cont.html(html); } });
             $('[name="addSelectedVacancies"]').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
                 @*переменная selectedCandidateResume находится в view CandidatesSelection*@
                 $.ajax({
                     url: '@Url.Action("ChangeVacancy4Candidate")',
@@ -212,12 +217,14 @@
                     success: function() {
                         loadCandidatesList();
                         selectedVacancies = [];
+                        hideSpinnerAndEnabled($this);
                     },
                     error:
                         function() {
                             alert('Ошибка при добавлении списка кандидатов к вакансии! Восможно данные не были сохранены!');
                             loadCandidatesList();
                             selectedVacancies = [];
+                            hideSpinnerAndEnabled($this);
                         }
                 });
                 $('#vacancyChangeListModal').modal('hide');
@@ -228,6 +235,8 @@
             var $cont = $('#candidateList');
             $.ajax({ url: '@Url.Action("CandidatesSelection")', method: 'GET', success: function(html) { $cont.html(html); } });
             $('[name="addSelectedCandidates"]').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
                 @*переменная selectedCandidateResume находится в view CandidatesSelection*@
                 $.ajax({
                     url: '@Url.Action("AppendCandidates2Vacancy")',
@@ -238,12 +247,14 @@
                     success: function() {
                         loadCandidatesList();
                         selectedCandidateResume = [];
+                        hideSpinnerAndEnabled($this);
                     },
                     error:
                         function() {
                             alert('Ошибка при добавлении списка кандидатов к вакансии! Восможно данные не были сохранены!');
                             loadCandidatesList();
                             selectedCandidateResume = [];
+                            hideSpinnerAndEnabled($this);
                         }
                 });
                 $('#candidateListModal').modal('hide');
@@ -372,7 +383,10 @@
         }
 
         function selectionSetCurrentState(e) {
+
             e.stopPropagation();
+            var $this = $(this);
+            showSpinnerAppendAndDisable($this);
             var $modal = $('#candidateStateResultModal');
             var slid = $modal.attr('slid');
             var cstid = $modal.attr('cstid');
@@ -391,20 +405,25 @@
                     var $row = $('#sel-' + slid);
                     $row.replaceWith(getCandidateListRow(data));
                     $modal.modal('hide');
+                    hideSpinnerAndEnabled($this);
                 },
                 error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                    hideSpinnerAndEnabled($this);
                 }
             });
         }
 
         function selectionSetAcceptState(e) {
             e.stopPropagation();
+            var $this = $(this);
+            showSpinnerAppendAndDisable($this);
             var $modal = $('#candidateStateResultModal');
             var slid = $modal.attr('slid');
             var descr = $('#stateComment').val();
 
             if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите принять утвердить данного кандидата?')) return;
+
 
             $.ajax({
                 url: '@Url.Action("SelectionSetAcceptState")',
@@ -415,15 +434,19 @@
                     //var $row = $('#sel-' + slid);
                     //$row.replaceWith(getCandidateListRow(data));
                     //$modal.modal('hide');
+
                 },
                 error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                    hideSpinnerAndEnabled($this);
                 }
             });
         }
 
         function selectionSetCancelState(e) {
             e.stopPropagation();
+            var $this = $(this);
+            showSpinnerAppendAndDisable($this);
             var $modal = $('#candidateStateResultModal');
             var slid = $modal.attr('slid');
             var descr = $('#stateComment').val();
@@ -442,15 +465,19 @@
                     var $row = $('#sel-' + slid);
                     $row.replaceWith(getCandidateListRow(data));
                     $modal.modal('hide');
+                    hideSpinnerAndEnabled($this);
                 },
                 error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                    hideSpinnerAndEnabled($this);
                 }
             });
         }
 
         function selectionSetNextState(e) {
             e.stopPropagation();
+            var $this = $(this);
+            showSpinnerAppendAndDisable($this);
             var $modal = $('#candidateStateResultModal');
             var slid = $modal.attr('slid');
             var nstid = $modal.attr('nstid');
@@ -465,12 +492,14 @@
                         var $row = $('#sel-' + slid);
                         $row.replaceWith(getCandidateListRow(data));
                         $modal.modal('hide');
+                        hideSpinnerAndEnabled($this);
                     } else {
                         window.location.reload();
                     }
                 },
                 error: function() {
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                    hideSpinnerAndEnabled($this);
                 }
             });
         }
@@ -526,6 +555,24 @@
             });
         }
 
+        function loadCandidateStateResultHistory() {
+            var $this = $(this);
+            var $modal = $('#candidateStateResultModal');
+            var slid = $modal.attr('slid');
+            var $cont = $('#candidateStateResultHistory');
+            $cont.empty();
+            $.ajax({
+                url: '@Url.Action("SelectionTinyHistory")?id=' + slid,
+                mode: 'GET',
+                success: function(html) {
+                    $cont.html(html);
+                },
+                error: function() {
+                    alert('Ошибка при загрузке истории!');
+                }
+            });
+        }
+
         $(function() {
             loadHistory();
             loadCandidatesList();
@@ -540,9 +587,12 @@
 
             $('#candidateStateResultModal').on('shown.bs.modal', function() {
                 $('#stateComment').val('');
+                loadCandidateStateResultHistory();
             });
 
             $('#change').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
                 var $btnChange = $('#change');
                 var $btnSave = $('<button id="save" class="btn btn-success btn-sm pull-right"><i class="fa fa-save"></i> сохранить</button>');
                 $btnSave.click(saveVacancy);
@@ -574,6 +624,8 @@
             });
 
             $('#delete').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
                 if (!confirm('Вы уверены что хотите удалить вакансию?')) return;
                 $.ajax({
                     url: '@Url.Action("VacancyDelete")',
@@ -584,6 +636,7 @@
                     },
                     error: function() {
                         alert('Ошибка при удалении. Удаление не выполнено!');
+                        hideSpinnerAndEnabled($this);
                     }
                 });
             });
@@ -592,6 +645,8 @@
         });
 
         function saveVacancy() {
+            var $this = $(this);
+            showSpinnerAppendAndDisable($this);
             var pesrManager = $('#personalManager').val();
             $.ajax({
                 url: '@Url.Action("ChangeVacancy")',
@@ -602,6 +657,7 @@
                 },
                 error: function() {
                     alert('Ошибка при сохранении. Возможно данные не были сохранены!');
+                    hideSpinnerAndEnabled($this);
                 }
             });
         }

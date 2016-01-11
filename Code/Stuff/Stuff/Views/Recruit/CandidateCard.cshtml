@@ -1,13 +1,13 @@
 ﻿@model Stuff.Models.RecruitCandidate
 
 @{
-    ViewBag.Title = "Резюме №" + Model.Id;
+    ViewBag.Title = "Кандидат №" + Model.Id;
     Layout = "~/Views/Shared/_Editor.cshtml";
 }
 
 @section PanelHead
 {
-    Резюме №@Model.Id
+    Кандидат №@Model.Id
     <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
     <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>
 }
@@ -81,7 +81,7 @@
     </div>
 <p>
     <h4>
-        Список вакансий в которых участвовало резюме <span id="vacancyCount" class="badge badge-info"></span>
+        Список вакансий в которых участвовал кандидат <span id="vacancyCount" class="badge badge-info"></span>
     </h4>
 
     <div id="vacancyList"></div>
@@ -192,7 +192,7 @@
             loadHistory();
             loadVacancyList();
             $('#delete').click(function() {
-                if (!confirm('Вы уверены что хотите удалить карточку резюме?')) return;
+                if (!confirm('Вы уверены что хотите удалить кандидата?')) return;
                 $.ajax({
                     url: '@Url.Action("CandidateDelete")',
                     method: 'POST',

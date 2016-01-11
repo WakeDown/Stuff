@@ -143,31 +143,47 @@ namespace Stuff.Controllers
         {
             try
             {
-                if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
-                {
-                    var file = Request.Files[0];
-
-                    string ext = Path.GetExtension(file.FileName).ToLower();
-
-                    //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
-
-                    byte[] data = null;
-                    using (var br = new BinaryReader(file.InputStream))
-                    {
-                        data = br.ReadBytes(file.ContentLength);
-                    }
-                    model.File = data;
-                    model.FileName = file.FileName;
-                }
-                model.Create(CurUser.Sid);
-
-                if (!String.IsNullOrEmpty(Request.Form["append2Vacancy"]) && !String.IsNullOrEmpty(Request.QueryString["vid"]))
+                if (!String.IsNullOrEmpty(Request.Form["appendExistsing2Vacancy"]) &&
+                    !String.IsNullOrEmpty(Request.QueryString["vid"]) &&
+                    !String.IsNullOrEmpty(Request.Form["existsingId"]))
                 {
                     int idVacancy;
                     int.TryParse(Request.QueryString["vid"], out idVacancy);
-                    if (idVacancy > 0 && model.Id > 0)
+                    int id;
+                    int.TryParse(Request.Form["existsingId"], out id);
+                    if (idVacancy > 0 && id > 0) { 
+                        RecruitVacancy.AppendCandidateList(idVacancy, new[] { id }, CurUser.Sid);
+                    }
+                }
+                else
+                {
+                    if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
                     {
-                        RecruitVacancy.AppendCandidateList(idVacancy, new []{model.Id}, CurUser.Sid);
+                        var file = Request.Files[0];
+
+                        string ext = Path.GetExtension(file.FileName).ToLower();
+
+                        //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
+
+                        byte[] data = null;
+                        using (var br = new BinaryReader(file.InputStream))
+                        {
+                            data = br.ReadBytes(file.ContentLength);
+                        }
+                        model.File = data;
+                        model.FileName = file.FileName;
+                    }
+                    model.Create(CurUser.Sid);
+
+                    if (!String.IsNullOrEmpty(Request.Form["append2Vacancy"]) &&
+                        !String.IsNullOrEmpty(Request.QueryString["vid"]))
+                    {
+                        int idVacancy;
+                        int.TryParse(Request.QueryString["vid"], out idVacancy);
+                        if (idVacancy > 0 && model.Id > 0)
+                        {
+                            RecruitVacancy.AppendCandidateList(idVacancy, new[] {model.Id}, CurUser.Sid);
+                        }
                     }
                 }
             }
@@ -299,6 +315,15 @@ namespace Stuff.Controllers
             return PartialView(list);
         }
 
+        public PartialViewResult SelectionTinyHistory(int? id)
+        {
+            if (!id.HasValue) return null;
+
+            var list = RecruitSelection.GetHistory(id.Value);
+
+            return PartialView(list);
+        }
+
         [HttpPost]
         public JsonResult GetVacancyStateList()
         {
@@ -379,5 +404,13 @@ namespace Stuff.Controllers
             var list = AdHelper.GetUserListByAdGroup(AdGroup.PersonalManager);
             return Json(list);
         }
+
+        [HttpPost]
+        public JsonResult CheckCandidateClone(string surname, string name, string patronymic)
+        {
+            int id = RecruitCandidate.CheckClone(surname, name, patronymic);
+            return Json(id);
+        }
+        
     }
 }

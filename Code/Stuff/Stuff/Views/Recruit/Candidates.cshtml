@@ -3,7 +3,7 @@
 @model IEnumerable<RecruitCandidate>
 
 @{
-    ViewBag.Title = "Банк резюме";
+    ViewBag.Title = "Кандидаты";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int topRows = Request.QueryString["topRows"] != null ? Convert.ToInt32(Request.QueryString["topRows"]) : 30;
     int currPage = Request.QueryString["page"] != null ? Convert.ToInt32(Request.QueryString["page"]) : 1;

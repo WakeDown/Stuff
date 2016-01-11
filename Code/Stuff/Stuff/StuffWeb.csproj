@@ -467,6 +467,7 @@
     <Content Include="Views\Recruit\CandidatesSelection.cshtml" />
     <Content Include="Views\Recruit\SelectionHistory.cshtml" />
     <Content Include="Views\Recruit\VacancySelection.cshtml" />
+    <Content Include="Views\Recruit\SelectionTinyHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

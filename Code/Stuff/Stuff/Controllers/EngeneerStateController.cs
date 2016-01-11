@@ -75,20 +75,15 @@ namespace Stuff.Controllers
         public ActionResult New()
         {
             if (!CurUser.HasAccess(AdGroup.EngeneerStateEdit)) return HttpNotFound();
-            if (!CurUser.HasAccess(AdGroup.EngeneerStateEdit))
-                return HttpNotFound();
 
             return View();
         }
         public void Delete(int id)
         {
             if (!CurUser.HasAccess(AdGroup.EngeneerStateEdit)) return;
-            var user = DisplayCurUser();
 
             try
             {
-                if (!user.HasAccess(AdGroup.EngeneerStateEdit))
-                    throw new Exception("Нет доступа!");
                 EngeneerState.Close(id, CurUser.Sid);
             }
             catch (Exception ex)

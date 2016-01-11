@@ -223,5 +223,21 @@ public string Name { get; set; }
         {
             return RecruitSelection.GetList(out totalCount, idCandidate:id);
         }
+
+        public static int CheckClone(string surname, string name, string patronymic)
+        {
+            SqlParameter psurname = new SqlParameter() { ParameterName = "surname", SqlValue = surname, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pname = new SqlParameter() { ParameterName = "name", SqlValue = name, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter ppatronymic = new SqlParameter() { ParameterName = "patronymic", SqlValue = patronymic, SqlDbType = SqlDbType.NVarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_check_clone", psurname, pname, ppatronymic);
+
+            int id = 0;
+
+            if (dt.Rows.Count > 0)
+            {
+                id = Db.DbHelper.GetValueIntOrDefault(dt.Rows[0], "id");
+            }
+            return id;
+        }
     }
 }

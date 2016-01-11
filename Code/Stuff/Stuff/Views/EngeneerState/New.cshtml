@@ -29,7 +29,7 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="Name">Инженер</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.EngeneerSid, new SelectList(AdHelper.GetUserListByAdGroup(AdGroup.ServiceEngeneer), "Key", "Value"), "--выберите--", new { @class = "form-control required-mark", @id = "Name", required = "required", data_error = "Выберите инженера" })
+                @Html.DropDownListFor(m => m.EngeneerSid, Employee.GetEmployeeListSid(), "--выберите--", new { @class = "form-control required-mark", @id = "Name", required = "required", data_error = "Выберите инженера" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
