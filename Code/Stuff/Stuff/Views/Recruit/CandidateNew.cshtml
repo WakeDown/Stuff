@@ -81,10 +81,10 @@
     </div>
     <div class="form-group">
         <div class="col-lg-push-2 col-lg-5">
-            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</button>
+            @*<button type="submit" class="btn btn-success"><i class="fa fa-save"></i>&nbsp;сохранить</button>*@
             @if (idVacancy > 0)
             {
-                <button type="submit" class="btn btn-warning" name="append2Vacancy" value="append2Vacancy"><i class="fa fa-save"></i>&nbsp;сохранить и привязать к вакансии</button>
+                <button type="submit" class="btn btn-success" name="append2Vacancy" value="append2Vacancy"><i class="fa fa-save"></i>&nbsp;сохранить</button>
             }
             <a href="@(String.IsNullOrEmpty(Request.QueryString["returnUrl"]) ? Url.Action("Candidates") : Request.QueryString["returnUrl"])" class="btn btn-default"><i class="fa fa-mail-reply"></i> назад</a>
         </div>
