@@ -49,6 +49,8 @@ public string Name { get; set; }
         public string LastSelectionStateChangerName { get; set; }
         public DateTime? LastSelectionStateDateChange { get; set; }
         public string LastSelectionStateDateChangeStr => DateCreate.ToString("dd.MM.yyyy HH:mm");
+        public int? IdCameType { get; set; }
+        public string CameTypeName { get; set; }
 
         public RecruitCandidate()
         {
@@ -93,6 +95,8 @@ public string Name { get; set; }
             LastSelectionStateName = Db.DbHelper.GetValueString(row, "selection_state_name");
             LastSelectionStateChangerName = Db.DbHelper.GetValueString(row, "selection_state_changer_name");
             LastSelectionStateDateChange = Db.DbHelper.GetValueDateTimeOrNull(row, "selection_state_change_date");
+            IdCameType = Db.DbHelper.GetValueIntOrNull(row, "id_came_type");
+            CameTypeName = Db.DbHelper.GetValueString(row, "came_type_name");
         }
 
         public void Create(string creatorSid)
@@ -111,8 +115,9 @@ public string Name { get; set; }
             SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = Email, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
             SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pIdCameType = new SqlParameter() { ParameterName = "id_came_type", SqlValue = IdCameType, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_create", pSurname, pName, pPatronymic, pDisplayName, pMale, pIdCameResource, pBirthDate, pCreatorAdSid, pPhone, pEmail, pFile, pFileName);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_create", pSurname, pName, pPatronymic, pDisplayName, pMale, pIdCameResource, pBirthDate, pCreatorAdSid, pPhone, pEmail, pFile, pFileName, pIdCameType);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

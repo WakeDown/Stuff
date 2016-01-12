@@ -69,7 +69,7 @@ namespace Stuff.Controllers
             }
             
 
-            return RedirectToAction("Index");
+            return RedirectToAction("VacancyCard",new {id=model.Id});
         }
 
         [HttpGet]
@@ -431,7 +431,21 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetPersonalManagerListSid()
         {
-            var list = AdHelper.GetUserListByAdGroup(AdGroup.PersonalManager);
+            var list = AdHelper.GetUserListByAdGroup(AdGroup.RecruitManager, AdGroup.RecruitControler);
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetPositionList()
+        {
+            var list = Position.GetList();
+            return Json(list);
+        }
+
+        [HttpPost]
+        public JsonResult GetDepartmentList()
+        {
+            var list = Department.GetList();
             return Json(list);
         }
 

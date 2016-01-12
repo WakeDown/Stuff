@@ -56,6 +56,18 @@
                     </div>
                 </div>
                 <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата окончания Регламент:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">
+                        <label>@(Model.OrderEndDate.HasValue ? Model.OrderEndDate.Value.ToString("dd.MM.yyyy") : "не указана")</label>
+                    </div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата окончания Заявка:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">
+                        <label>@(Model.ClaimEndDate.HasValue ? Model.ClaimEndDate.Value.ToString("dd.MM.yyyy") : "не указана")</label>
+                    </div>
+                </div>
+                <div class="row pad-t-sm-sm">
                     <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Причина возникновения:</div>
                     <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CauseName)</div>
                 </div>
@@ -129,7 +141,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">История кандидата для вакансии №@Model.Id</h4>
-                    <div><small>@Model.PositionName<br/>@Model.DepartmentName</small>
+                    <div>@Model.PositionName<br/><small>@Model.DepartmentName</small>
                     </div>
                     <div>Кандидат - <strong id="historyCandidateName"></strong>
                     </div>

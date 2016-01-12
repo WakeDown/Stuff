@@ -136,7 +136,7 @@ namespace Stuff.Helpers
             }
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> GetUserListByAdGroup(AdGroup grp)
+        public static IEnumerable<KeyValuePair<string, string>> GetUserListByAdGroup(params AdGroup[] grps)
         {
             var list = new Dictionary<string, string>();
 
@@ -145,6 +145,8 @@ namespace Stuff.Helpers
                     nc))
             {
                 var domain = new PrincipalContext(ContextType.Domain);
+                foreach (AdGroup grp in grps)
+                {
                 var group = GroupPrincipal.FindByIdentity(domain, IdentityType.Sid, AdUserGroup.GetSidByAdGroup(grp));
                 if (group != null)
                 {
@@ -156,9 +158,10 @@ namespace Stuff.Helpers
                         {
                             var name = Employee.ShortName(userPrincipal.DisplayName);
                             var sid = userPrincipal.Sid.Value;
-                            list.Add(sid, name);
+                                if (!list.ContainsKey(sid))list.Add(sid, name);
                         }
                     }
+                }
                 }
             }
 

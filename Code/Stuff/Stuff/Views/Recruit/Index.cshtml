@@ -82,7 +82,7 @@
             @*<th>Дата открытия</th>*@
             <th>Кандидатов (всего / отклонено)</th>
             <th>
-                <input id="dtdl" class="form-control input-xs" placeholder="Дата закрытия План" value="@Request.QueryString["dtdl"]" />
+                <input id="dtdl" class="form-control input-xs" placeholder="Дата закрытия" value="@Request.QueryString["dtdl"]" />
             </th>
             <th>
                 <input id="pmgr" class="form-control input-xs" placeholder="Менеджер" value="@Request.QueryString["pmgr"]"/>
@@ -112,7 +112,15 @@
                      </td>
                      @*<td>@rv.DateCreate.ToString("dd.MM.yyyy")</td>*@
                      <td class="text-nowrap bold text-center">@rv.CandidateTotalCount / <span class="text-danger">@rv.CandidateCancelCount</span></td>
-                     <td>@rv.DeadlineDate.ToString("dd.MM.yyyy")</td>
+                     <td><small class="text-primary">
+    @rv.DeadlineDate.ToString("dd.MM.yyyy")  - План
+                         </small><br/><small class="text-success">
+    @(rv.OrderEndDate.HasValue ? rv.OrderEndDate.Value.ToString("dd.MM.yyyy") : "не указана")  - Регламент
+                         </small><br/><small class="text-danger">
+    @(rv.ClaimEndDate.HasValue ? rv.ClaimEndDate.Value.ToString("dd.MM.yyyy") : "не указана")  - Заявка
+</small>
+                
+                     </td>
                      <td>@rv.PersonalManagerName</td>
                      <td><strong>@rv.StateName</strong>
                         <div><small>@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.StateChangerName</small></div></td>

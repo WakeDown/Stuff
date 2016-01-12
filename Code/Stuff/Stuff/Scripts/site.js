@@ -27,6 +27,7 @@ function showSpinnerAfter(obj, offset, offsetTop, offsetLeft) {
     var stOf = "";
     if (offset) {
         of = "on-element";
+        if (offsetTop == undefined || offsetTop == null || offsetTop == '') offsetTop = 5;
         stOf = "top:" + offsetTop + "px;left:" + offsetLeft + "px";
     }
     var loading = "<div class='spinner active " + of + "' style='" + stOf + "'><i class='fa fa-spin fa-spinner'></i></div>";

@@ -47,6 +47,8 @@ namespace Stuff.Models
         public string StateChangeDateStr
             => StateChangeDate.HasValue ? StateChangeDate.Value.ToString("dd.MM.yyyy") : String.Empty;
         public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
+        public DateTime? OrderEndDate { get; set; }
+        public DateTime? ClaimEndDate { get; set; }
 
         public RecruitVacancy()
         {
@@ -96,12 +98,14 @@ namespace Stuff.Models
             StateChangeDate = Db.DbHelper.GetValueDateTimeOrNull(row, "state_change_date");
             StateChangerSid = Db.DbHelper.GetValueString(row, "state_changer_sid");
             StateChangerName = Db.DbHelper.GetValueString(row, "state_changer_name");
-            DateCreate = Db.DbHelper.GetValueDateTimeOrDefault(row, "date_create");
+            DateCreate = Db.DbHelper.GetValueDateTimeOrDefault(row, "dattim1");
             CandidateTotalCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_total_count");
             CandidateCancelCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_cancel_count");
             //CandidateAcceptCount = Db.DbHelper.GetValueIntOrDefault(row, "candidate_accept_count");
             StateBackgroundColor = Db.DbHelper.GetValueString(row, "state_background_color");
             StateIsActive = Db.DbHelper.GetValueBool(row, "state_is_active");
+            OrderEndDate= Db.DbHelper.GetValueDateTimeOrNull(row, "order_end_date");
+            ClaimEndDate = Db.DbHelper.GetValueDateTimeOrNull(row, "claim_end_date");
         }
 
         public void Create(string creatorSid)
@@ -114,11 +118,13 @@ namespace Stuff.Models
             SqlParameter pMatcherSid = new SqlParameter() { ParameterName = "matcher_sid", SqlValue = MatcherSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pPersonalManagerSid = new SqlParameter() { ParameterName = "personal_manager_sid", SqlValue = PersonalManagerSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pDeadlineDate = new SqlParameter() { ParameterName = "deadline_date", SqlValue = DeadlineDate, SqlDbType = SqlDbType.DateTime };
+            SqlParameter pOrderEndDate = new SqlParameter() { ParameterName = "order_end_date", SqlValue = OrderEndDate, SqlDbType = SqlDbType.Date };
+            SqlParameter pClaimEndDate = new SqlParameter() { ParameterName = "claim_end_date", SqlValue = ClaimEndDate, SqlDbType = SqlDbType.Date };
             //SqlParameter pEndDate = new SqlParameter() { ParameterName = "end_date", SqlValue = EndDate, SqlDbType = SqlDbType.DateTime };
             //SqlParameter pIdState = new SqlParameter() { ParameterName = "id_state", SqlValue = IdState, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

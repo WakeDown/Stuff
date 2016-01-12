@@ -219,6 +219,7 @@
     <Compile Include="Models\OrgStateImage.cs" />
     <Compile Include="Models\EmployeeRestHoliday.cs" />
     <Compile Include="Models\RecruitCameResource.cs" />
+    <Compile Include="Models\RecruitCandidateCameType.cs" />
     <Compile Include="Models\RecruitCandidate.cs" />
     <Compile Include="Models\RecruitSelection.cs" />
     <Compile Include="Models\RecruitVacancy.cs" />
