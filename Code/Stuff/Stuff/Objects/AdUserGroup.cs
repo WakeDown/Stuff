@@ -29,6 +29,8 @@ namespace Stuff.Objects
             list.Add(new AdUserGroup(AdGroup.EngeneerStateEdit, "S-1-5-21-1970802976-3466419101-4042325969-7673"));
             list.Add(new AdUserGroup(AdGroup.EngeneerStateExpiresDelivery, "S-1-5-21-1970802976-3466419101-4042325969-7674"));
             list.Add(new AdUserGroup(AdGroup.ServiceEngeneer, "S-1-5-21-1970802976-3466419101-4042325969-2558"));
+            list.Add(new AdUserGroup(AdGroup.RecruitManager, "S-1-5-21-1970802976-3466419101-4042325969-7676"));
+            list.Add(new AdUserGroup(AdGroup.RecruitControler, "S-1-5-21-1970802976-3466419101-4042325969-7677"));
             return list;//Вендоры
         }
 

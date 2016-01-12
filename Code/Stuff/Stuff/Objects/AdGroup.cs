@@ -16,6 +16,8 @@ namespace Stuff.Objects
         EngeneerStateView,
         EngeneerStateEdit,
         EngeneerStateExpiresDelivery,
-        ServiceEngeneer
+        ServiceEngeneer,
+            RecruitManager,
+        RecruitControler
     }
 }

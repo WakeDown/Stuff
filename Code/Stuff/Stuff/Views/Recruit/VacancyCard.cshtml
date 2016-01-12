@@ -1,4 +1,5 @@
-﻿@model Stuff.Models.RecruitVacancy
+﻿@using Stuff.Objects
+@model Stuff.Models.RecruitVacancy
 
 @{
     ViewBag.Title = "Вакансия №" + Model.Id;
@@ -9,7 +10,8 @@
 {
     Вакансия №@Model.Id
 
-    @if (Model.StateIsActive)
+
+    @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.StateIsActive)
     {
         <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
         <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>

@@ -146,7 +146,7 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_set_state", pid, pstateSysName, pCreatorAdSid, pdescr);
         }
 
-        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null)
+        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null,string persManagerSid = null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
@@ -157,10 +157,11 @@ namespace Stuff.Models
             SqlParameter pvacancyName = new SqlParameter() { ParameterName = "vacancy_name", SqlValue = vacancyName, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pdeadlineDate = new SqlParameter() { ParameterName = "deadline_date", SqlValue = deadlineDate, SqlDbType = SqlDbType.NVarChar };
             SqlParameter ppersonalManagerName = new SqlParameter() { ParameterName = "personal_manager_name", SqlValue = personalManagerName, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter ppersonalManagerSid = new SqlParameter() { ParameterName = "personal_manager_sid", SqlValue = persManagerSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pdateCreate = new SqlParameter() { ParameterName = "date_create", SqlValue = dateCreate, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pstate = new SqlParameter() { ParameterName = "state", SqlValue = state, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pactiveOnly = new SqlParameter() { ParameterName = "active_only", SqlValue = activeOnly, SqlDbType = SqlDbType.Bit };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly, ppersonalManagerSid);
 
             totalCount = 0;
             var lst = new List<RecruitVacancy>();

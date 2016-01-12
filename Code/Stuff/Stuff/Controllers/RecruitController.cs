@@ -15,18 +15,22 @@ namespace Stuff.Controllers
         // GET: Recruit
         public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, bool? aon)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return HttpNotFound();
             int totalCount;
             int id;
             int.TryParse(vid, out id);
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, aon);
+            string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, aon, persManagerSid);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }
 
         public PartialViewResult VacancySelection()
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
-            var list = RecruitVacancy.GetList(out totalCount, 1000, activeOnly:true);
+            string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
+            var list = RecruitVacancy.GetList(out totalCount, 1000, activeOnly:true, persManagerSid: persManagerSid);
             ViewBag.TotalCount = totalCount;
             return PartialView(list);
         }
@@ -34,10 +38,12 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetVacancyList(int? topRows, int? page, string vid, string vnm, string dtdl, string pmgr, string dtcr, string stt, bool? activeOnly)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
             int id;
             int.TryParse(vid, out id);
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt);
+            string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid);
             ViewBag.TotalCount = totalCount;
             return Json(new { list, totalCount });
         }
@@ -51,6 +57,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public ActionResult VacancyNew(RecruitVacancy model)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             try
             {
                 model.Create(CurUser.Sid);
@@ -68,21 +75,26 @@ namespace Stuff.Controllers
         [HttpGet]
         public ActionResult VacancyCard(int? id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return HttpNotFound();
             if (!id.HasValue) return RedirectToAction("VacancyNew");
 
             var model = new RecruitVacancy(id.Value);
+            if (CurUser.Is(AdGroup.RecruitManager) && model.PersonalManagerSid != CurUser.Sid)
+                return HttpNotFound();
             return View(model);
         }
 
         [HttpPost]
         public JsonResult VacancyDelete(int id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler)) return null;
             RecruitVacancy.Close(id, CurUser.Sid);
             return Json(new {});
         }
 
         public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!topRows.HasValue)
                 topRows = 30;
             if (!page.HasValue) page = 1;
@@ -113,6 +125,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetCandidateList(int? topRows, int? pageNum, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!topRows.HasValue)
                 topRows = 10;
             if (!pageNum.HasValue) pageNum = 1;
@@ -135,12 +148,13 @@ namespace Stuff.Controllers
         [HttpGet]
         public ActionResult CandidateNew()
         {
-
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             return View();
         }
         [HttpPost]
         public ActionResult CandidateNew(RecruitCandidate model)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             try
             {
                 if (!String.IsNullOrEmpty(Request.Form["appendExistsing2Vacancy"]) &&
@@ -206,6 +220,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult CandidateDelete(int id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler)) return null;
             RecruitCandidate.Close(id, CurUser.Sid);
             return Json(new { });
         }
@@ -228,6 +243,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult ChangeVacancy(int id, string personalManagerSid)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler)) return null;
             RecruitVacancy.Change(CurUser.Sid, id, personalManagerSid);
 
             return Json(new {});
@@ -236,6 +252,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetVacancyHistory(int id, bool full=false)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
            var list = RecruitVacancy.GetHistory(out totalCount, id, full);
             return Json(new { list, totalCount});
@@ -244,6 +261,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetCandidateHistory(int id, bool full = false)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
             var list = RecruitCandidate.GetHistory(out totalCount, id, full);
             return Json(new { list, totalCount });
@@ -252,6 +270,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetVacancyCandadateList(int id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
             var list = RecruitVacancy.GetCandidateList(out totalCount, id);
             return Json(new { list, totalCount });
@@ -260,6 +279,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetCandadateVacancyList(int id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
             var list = RecruitCandidate.GetVacancyList(out totalCount, id);
             return Json(new { list, totalCount });
@@ -268,6 +288,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult AppendCandidates2Vacancy(int idVacancy, int[] idCandidates)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             RecruitVacancy.AppendCandidateList(idVacancy, idCandidates, CurUser.Sid);
 
             return Json(new { });
@@ -276,6 +297,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult ChangeVacancy4Candidate(int idSelection, int[] idVacancies)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             RecruitSelection.ChangeVacancy(idSelection, idVacancies, CurUser.Sid);
 
             return Json(new {});
@@ -285,6 +307,7 @@ namespace Stuff.Controllers
             [HttpPost]
         public JsonResult SelectionSetCancelState(int id, string descr)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             RecruitSelection.SetState(id, "CANCEL", CurUser.Sid, descr);
             var sel = new RecruitSelection(id);
             return Json(sel);
@@ -293,6 +316,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult SelectionSetAcceptState(int id, string descr)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             RecruitSelection.SetState(id, "SECCHIEFACCEPT", CurUser.Sid, descr);
             var sel = new RecruitSelection(id);
             return Json(sel);
@@ -301,6 +325,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult SelectionSetNextState(int id, int idState, string descr)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             RecruitSelection.SetState(id, idState, CurUser.Sid, descr);
             var sel = new RecruitSelection(id);
             return Json(sel);
@@ -308,6 +333,7 @@ namespace Stuff.Controllers
 
         public PartialViewResult SelectionHistory(int? id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!id.HasValue) return null;
 
             var list = RecruitSelection.GetHistory(id.Value);
@@ -317,6 +343,7 @@ namespace Stuff.Controllers
 
         public PartialViewResult SelectionTinyHistory(int? id)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!id.HasValue) return null;
 
             var list = RecruitSelection.GetHistory(id.Value);
@@ -327,6 +354,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetVacancyStateList()
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             var list = RecruitVacancy.GetStateList();
             return Json(list);
         }
@@ -334,6 +362,7 @@ namespace Stuff.Controllers
         [HttpGet]
         public FileResult GetCandidateFile(string sid)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             string fileName;
             var data = RecruitCandidate.GetFileData(sid, out fileName);
             if (data != null && data.Length > 0)
@@ -352,6 +381,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public ActionResult CandidateChange(RecruitCandidate model)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             try
             {
                 if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
@@ -408,6 +438,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult CheckCandidateClone(string surname, string name, string patronymic)
         {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int id = RecruitCandidate.CheckClone(surname, name, patronymic);
             return Json(id);
         }
