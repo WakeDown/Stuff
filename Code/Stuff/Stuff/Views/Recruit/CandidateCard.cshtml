@@ -38,10 +38,10 @@
                     <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Ресурс:</div>
                     <div class="col-lg-4 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CameResourceName)</div>
                 </div>
-                <div class="row pad-t-sm-sm">
+                @*<div class="row pad-t-sm-sm">
                     <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Как поступил:</div>
                     <div class="col-lg-4 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CameTypeName)</div>
-                </div>
+                </div>*@
                 <div class="row pad-t-sm-sm">
                     <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Дата рождения:</div>
                     <div class="col-lg-2 col-sm-12 text-center-sm bold" id="birthDateContainer">@(Model.BirthDate.HasValue ? String.Format("{0}", Model.BirthDate.Value.ToString("dd.MM.yyyy"), Model.Age) : "не указана")</div>

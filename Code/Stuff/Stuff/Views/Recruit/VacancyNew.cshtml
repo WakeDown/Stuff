@@ -39,6 +39,14 @@
                 <span class="help-block with-errors"></span>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="city">Город</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.IdCity, City.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "city", required = "required", data_error = "Заполните поле Город" })
+                @*<select id="department" required="required" data_error="Заполните поле Подразделение" class="form-control required-mark" name="IdDepartment"></select>*@
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
     <div class="form-group">
     <label class="col-lg-2 control-label" for="department">Подразделение</label>
     <div class="col-lg-5">
@@ -79,24 +87,24 @@
                 <span class="help-block with-errors"></span>
             </div>
         </div>
-        <div class="form-group">
+        @*<div class="form-group">
             <label class="col-lg-2 control-label" for="deadlineDate">Дата окончания План</label>
             <div class="col-lg-2">
                 @Html.TextBoxFor(m => m.DeadlineDate, new {@class = "form-control text-right required-mark", @id = "deadlineDate", required="required", data_mask = "00.00.0000"})
                 <span class="help-block with-errors"></span>
             </div>
-        </div>
+        </div>*@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="orderEndDate">Дата окончания Регламент</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(m => m.OrderEndDate, new {@class = "form-control text-right", @id = "orderEndDate", data_mask = "00.00.0000"})
+                @Html.TextBoxFor(m => m.OrderEndDate, new {@class = "form-control text-right required-mark", @id = "orderEndDate", required = "required", data_mask = "00.00.0000"})
                 <span class="help-block with-errors"></span>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-2 control-label" for="claimEndDate">Дата окончания План</label>
+            <label class="col-lg-2 control-label" for="claimEndDate">Дата окончания Заявка</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(m => m.ClaimEndDate, new { @class = "form-control text-right", @id = "claimEndDate", data_mask = "00.00.0000" })
+                @Html.TextBoxFor(m => m.ClaimEndDate, new { @class = "form-control text-right required-mark", @id = "claimEndDate", required = "required", data_mask = "00.00.0000" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -160,17 +168,19 @@
                         $selectMatcher.append(nullOpt);
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var opt = '<option value="' + item.AdSid + '">' + item.DisplayName + '</option>';
-                            $selectAuthor.append(opt);
-                            $selectChief.append(opt);
-                            $selectMatcher.append(opt);
+                            if (item.AdSid != null && item.AdSid != '') {
+                                var opt = '<option value="' + item.AdSid + '">' + item.DisplayName + '</option>';
+                                $selectAuthor.append(opt);
+                                $selectChief.append(opt);
+                                $selectMatcher.append(opt);
+                            }
                         }
                     }
                     hideSpinner($selectAuthor);
                     hideSpinner($selectChief);
                     hideSpinner($selectMatcher);
                 },
-                error:function() {
+                error: function() {
                     hideSpinner($selectAuthor);
                     hideSpinner($selectChief);
                     hideSpinner($selectMatcher);
@@ -181,21 +191,21 @@
             $.ajax({
                 url: '@Url.Action("GetPersonalManagerListSid")',
                 method: 'POST',
-                success: function (data) {
+                success: function(data) {
                     if (data.length > 0) {
                         var nullOpt = '<option value="">--выберите--</option>';
                         $selectPersonalManager.append(nullOpt);
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            var opt = '<option value="' + item.Key + '">' + item.Value + '</option>';
-                            $selectPersonalManager.append(opt);
+                                var opt = '<option value="' + item.Key + '">' + item.Value + '</option>';
+                                $selectPersonalManager.append(opt);
                         }
                         var curPersonalManagerSid = '@ViewBag.CurUser.Sid';
                         $selectPersonalManager.val(curPersonalManagerSid);
                     }
                     hideSpinner($selectPersonalManager);
                 },
-                error:function() {
+                error: function() {
                     hideSpinner($selectPersonalManager);
                 }
             });
@@ -204,7 +214,7 @@
             $.ajax({
                 url: '@Url.Action("GetPositionList")',
                 method: 'POST',
-                success: function (data) {
+                success: function(data) {
                     if (data.length > 0) {
                         var nullOpt = '<option value="">--выберите--</option>';
                         $position.append(nullOpt);
@@ -216,7 +226,7 @@
                     }
                     hideSpinner($position);
                 },
-                error: function () {
+                error: function() {
                     hideSpinner($position);
                 }
             });
@@ -226,7 +236,7 @@
             $.ajax({
                 url: '@Url.Action("GetDepartmentList")',
                 method: 'POST',
-                success: function (data) {
+                success: function(data) {
                     if (data.length > 0) {
                         var nullOpt = '<option value="">--выберите--</option>';
                         $department.append(nullOpt);
@@ -238,7 +248,7 @@
                     }
                     hideSpinner($department);
                 },
-                error: function () {
+                error: function() {
                     hideSpinner($department);
                 }
             });

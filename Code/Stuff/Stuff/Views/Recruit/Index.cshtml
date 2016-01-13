@@ -112,14 +112,16 @@
                      </td>
                      @*<td>@rv.DateCreate.ToString("dd.MM.yyyy")</td>*@
                      <td class="text-nowrap bold text-center">@rv.CandidateTotalCount / <span class="text-danger">@rv.CandidateCancelCount</span></td>
-                     <td><small class="text-primary">
-    @rv.DeadlineDate.ToString("dd.MM.yyyy")  - План
-                         </small><br/><small class="text-success">
-    @(rv.OrderEndDate.HasValue ? rv.OrderEndDate.Value.ToString("dd.MM.yyyy") : "не указана")  - Регламент
+                     <td>
+                         @*<small class="text-primary">
+                             @rv.DeadlineDate.ToString("dd.MM.yyyy") - План
+                         </small><br/>*@
+                         <small class="text-success">
+                             @(rv.OrderEndDate.HasValue ? rv.OrderEndDate.Value.ToString("dd.MM.yyyy") : "не указана") - Регламент
                          </small><br/><small class="text-danger">
-    @(rv.ClaimEndDate.HasValue ? rv.ClaimEndDate.Value.ToString("dd.MM.yyyy") : "не указана")  - Заявка
-</small>
-                
+                             @(rv.ClaimEndDate.HasValue ? rv.ClaimEndDate.Value.ToString("dd.MM.yyyy") : "не указана") - Заявка
+                         </small>
+
                      </td>
                      <td>@rv.PersonalManagerName</td>
                      <td><strong>@rv.StateName</strong>

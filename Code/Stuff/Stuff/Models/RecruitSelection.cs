@@ -33,7 +33,8 @@ namespace Stuff.Models
         public string NextStateName { get; set; }
         public string NextStateButtonName { get; set; }
         public bool StateIsAccept { get; set; }
-
+        public int? IdCameType { get; set; }
+        public string CameTypeName { get; set; }
 
         public RecruitSelection()
         {
@@ -75,6 +76,8 @@ namespace Stuff.Models
             ShowNextStateButton = Db.DbHelper.GetValueBool(row, "show_next_state_btn");
             NextStateButtonName = Db.DbHelper.GetValueString(row, "next_state_btn_name");
             StateIsAccept = Db.DbHelper.GetValueBool(row, "state_is_accept");
+            IdCameType = Db.DbHelper.GetValueIntOrNull(row, "id_came_type");
+            CameTypeName = Db.DbHelper.GetValueString(row, "came_type_name");
 
             Candidate = new RecruitCandidate()
             {
@@ -112,9 +115,10 @@ namespace Stuff.Models
         {
             SqlParameter pIdVacancy = new SqlParameter() { ParameterName = "id_vacancy", SqlValue = IdVacancy, SqlDbType = SqlDbType.Int };
             SqlParameter pIdCandidate = new SqlParameter() { ParameterName = "id_candidate", SqlValue = IdCandidate, SqlDbType = SqlDbType.Int };
+            SqlParameter pIdCameType = new SqlParameter() { ParameterName = "id_came_type", SqlValue = IdCameType, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_create", pIdVacancy, pIdCandidate, pCreatorAdSid);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_create", pIdVacancy, pIdCandidate, pCreatorAdSid, pIdCameType);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

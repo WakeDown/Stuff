@@ -166,7 +166,7 @@ namespace Stuff.Controllers
                     int id;
                     int.TryParse(Request.Form["existsingId"], out id);
                     if (idVacancy > 0 && id > 0) { 
-                        RecruitVacancy.AppendCandidateList(idVacancy, new[] { id }, CurUser.Sid);
+                        RecruitVacancy.AppendCandidateList(idVacancy, new[] { id }, CurUser.Sid, null);
                     }
                 }
                 else
@@ -196,7 +196,7 @@ namespace Stuff.Controllers
                         int.TryParse(Request.QueryString["vid"], out idVacancy);
                         if (idVacancy > 0 && model.Id > 0)
                         {
-                            RecruitVacancy.AppendCandidateList(idVacancy, new[] {model.Id}, CurUser.Sid);
+                            RecruitVacancy.AppendCandidateList(idVacancy, new[] {model.Id}, CurUser.Sid, model.IdCameType);
                         }
                     }
                 }
@@ -289,7 +289,7 @@ namespace Stuff.Controllers
         public JsonResult AppendCandidates2Vacancy(int idVacancy, int[] idCandidates)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
-            RecruitVacancy.AppendCandidateList(idVacancy, idCandidates, CurUser.Sid);
+            RecruitVacancy.AppendCandidateList(idVacancy, idCandidates, CurUser.Sid, null);
 
             return Json(new { });
         }

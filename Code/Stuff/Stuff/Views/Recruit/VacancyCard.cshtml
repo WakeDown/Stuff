@@ -24,8 +24,8 @@
         <div class="col-lg-8">
             <div id="vacancyInfo">
                 <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Автор заявки:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.AuthorName)</div>
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Город:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.CityName)</div>
                 </div>
                 <div class="row pad-t-sm-sm">
                     <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Подразделение:</div>
@@ -50,11 +50,15 @@
                     </div>
                 </div>
                 <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Автор заявки:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.AuthorName)</div>
+                </div>
+                @*<div class="row pad-t-sm-sm">
                     <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата окончания План:</div>
                     <div class="col-lg-8 col-sm-12 text-center-sm">
                         <label>@Model.DeadlineDate.ToString("dd.MM.yyyy")</label>
                     </div>
-                </div>
+                </div>*@
                 <div class="row pad-t-sm-sm">
                     <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата окончания Регламент:</div>
                     <div class="col-lg-8 col-sm-12 text-center-sm">
@@ -141,7 +145,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">История кандидата для вакансии №@Model.Id</h4>
-                    <div>@Model.PositionName<br/><small>@Model.DepartmentName</small>
+                    <div>@Model.CityName<br/>@Model.PositionName<br/><small>@Model.DepartmentName</small>
                     </div>
                     <div>Кандидат - <strong id="historyCandidateName"></strong>
                     </div>
@@ -348,7 +352,9 @@
         function getCandidateListRow(item) {
             var $row = $('<tr id="sel-' + item.Id + '" slid="' + item.Id + '" class="' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
                 '<th>' + item.Candidate.Id + '</th>' +
-                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null? '' : item.Candidate.Patronymic)  + '</a>' +
+                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null? '' : item.Candidate.Patronymic)  + '</a>' + 
+                (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName +'</small>') 
+                +
                 (item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br /><a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>') +
                 '</td>' +
                 '<td>' + (item.Candidate.MaleStr == null? '' : item.Candidate.MaleStr) + '</td>' +

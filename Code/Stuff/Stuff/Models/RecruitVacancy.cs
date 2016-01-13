@@ -31,7 +31,7 @@ namespace Stuff.Models
         public string MatcherName { get; set; }
         public string PersonalManagerSid { get; set; }
         public string PersonalManagerName { get; set; }
-        public DateTime DeadlineDate { get; set; }
+        public DateTime? DeadlineDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int IdState { get; set; }
         public string StateName { get; set; }
@@ -49,6 +49,8 @@ namespace Stuff.Models
         public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
         public DateTime? OrderEndDate { get; set; }
         public DateTime? ClaimEndDate { get; set; }
+        public int IdCity { get; set; }
+        public string CityName { get; set; }
 
         public RecruitVacancy()
         {
@@ -91,7 +93,7 @@ namespace Stuff.Models
             MatcherName = Db.DbHelper.GetValueString(row, "matcher_name");
             PersonalManagerSid = Db.DbHelper.GetValueString(row, "personal_manager_sid");
             PersonalManagerName = Db.DbHelper.GetValueString(row, "personal_manager_name");
-            DeadlineDate = Db.DbHelper.GetValueDateTimeOrDefault(row, "deadline_date");
+            DeadlineDate = Db.DbHelper.GetValueDateTimeOrNull(row, "deadline_date");
             EndDate = Db.DbHelper.GetValueDateTimeOrNull(row, "end_date");
             IdState = Db.DbHelper.GetValueIntOrDefault(row, "id_state");
             StateName = Db.DbHelper.GetValueString(row, "state_name");
@@ -106,6 +108,8 @@ namespace Stuff.Models
             StateIsActive = Db.DbHelper.GetValueBool(row, "state_is_active");
             OrderEndDate= Db.DbHelper.GetValueDateTimeOrNull(row, "order_end_date");
             ClaimEndDate = Db.DbHelper.GetValueDateTimeOrNull(row, "claim_end_date");
+            IdCity = Db.DbHelper.GetValueIntOrDefault(row, "id_city");
+            CityName = Db.DbHelper.GetValueString(row, "city_name");
         }
 
         public void Create(string creatorSid)
@@ -123,8 +127,9 @@ namespace Stuff.Models
             //SqlParameter pEndDate = new SqlParameter() { ParameterName = "end_date", SqlValue = EndDate, SqlDbType = SqlDbType.DateTime };
             //SqlParameter pIdState = new SqlParameter() { ParameterName = "id_state", SqlValue = IdState, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+            SqlParameter pIdCity = new SqlParameter() { ParameterName = "id_city", SqlValue = IdCity, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
@@ -225,11 +230,11 @@ namespace Stuff.Models
            return RecruitSelection.GetList(out totalCount, id);
         }
 
-        public static void AppendCandidateList(int id, int[] idCandidates, string creatorSid)
+        public static void AppendCandidateList(int id, int[] idCandidates, string creatorSid, int? idCameType)
         {
             foreach (int idCandidate in idCandidates)
             {
-                var sel = new RecruitSelection() {IdVacancy = id, IdCandidate = idCandidate};
+                var sel = new RecruitSelection() {IdVacancy = id, IdCandidate = idCandidate, IdCameType = idCameType };
                 sel.Create(creatorSid);
             }
         }
