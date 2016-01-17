@@ -13,14 +13,35 @@ namespace Stuff.Controllers
     public class RecruitController : BaseController
     {
         // GET: Recruit
-        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, bool? aon)
+        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, int? aon)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return HttpNotFound();
+
+            bool? activeOnly = null;
+            if (aon.HasValue)
+            {
+                if (aon.Value == 1)
+                {
+                    activeOnly = true;
+                }
+                else if (aon.Value == 0)
+                {
+                    activeOnly = false;
+                }
+                else
+                {
+                    activeOnly = null;
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", new {topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon=1 });
+            }
             int totalCount;
             int id;
             int.TryParse(vid, out id);
             string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, aon, persManagerSid);
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }

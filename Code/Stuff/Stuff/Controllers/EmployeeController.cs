@@ -80,7 +80,7 @@ namespace Stuff.Controllers
         }
 
         [HttpGet]
-        public ActionResult New(bool? test)
+        public ActionResult New(bool? test, bool? sex, string sur, string nam, string pat, string bdt, int? cit)
         {
             var user = DisplayCurUser();
             if (!user.UserCanEdit()) return RedirectToAction("AccessDenied", "Error");
@@ -102,6 +102,21 @@ namespace Stuff.Controllers
                 emp.Department = new Department() { Id = 10 };
             }
 
+            emp.Male = sex.HasValue && sex.Value;
+            emp.Surname = sur;
+            emp.Name = nam;
+            emp.Patronymic = pat;
+            DateTime birthDate;
+            DateTime.TryParse(bdt, out birthDate);
+            if (birthDate.Year > 1900)
+            {
+                emp.BirthDate = birthDate;
+            }
+            if (cit.HasValue)
+            {
+                emp.City = new City();
+                emp.City.Id = cit.Value;
+            }
             return View(emp);
         }
 

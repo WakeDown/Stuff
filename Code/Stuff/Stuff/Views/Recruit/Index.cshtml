@@ -53,7 +53,7 @@
     </div>
     <div class="col-lg-5 col-sm-12 col-xs-12">
         <div id="stateFilterList"></div>
-        <input name="activeOnly" type="radio" @(!Request.QueryString.AllKeys.Contains("aon") || String.IsNullOrEmpty(Request.QueryString["aon"]) ? "checked" : String.Empty) value="" />&nbsp;все&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty ) value="true" />&nbsp;только активные&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("false") ? "checked" : String.Empty ) value="false" />&nbsp;только неактивные
+        <input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("-1") ? "checked" : String.Empty) value="-1" />&nbsp;все&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("1") ? "checked" : String.Empty ) value="1" />&nbsp;только активные&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("0") ? "checked" : String.Empty ) value="0" />&nbsp;только неактивные
         @*<input type="checkbox" id="activeOnly" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty) />&nbsp;только активные*@
     </div>
     <div class="col-lg-2 col-sm-6 col-xs-6">
@@ -124,10 +124,13 @@
 
                      </td>
                      <td>@rv.PersonalManagerName</td>
-                     <td><strong>@rv.StateName</strong>
-                        <div><small>@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.StateChangerName</small></div></td>
+                     <td>
+                         <strong>@rv.StateName</strong>
+                         <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.StateChangerName</small>
+                         </div>
+                     </td>
                      <td><strong>Добавлена</strong>
-                        <div><small>@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
+                        <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
                      </td>
                      @*<td>
                          <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>

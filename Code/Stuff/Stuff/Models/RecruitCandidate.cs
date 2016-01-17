@@ -23,6 +23,7 @@ public string Name { get; set; }
         public int IdCameResource { get; set; }
         public string CameResourceName { get; set; }
         public DateTime? BirthDate { get; set; }
+        public string BirthDateQueStr => BirthDate.HasValue ? BirthDate.Value.ToString("dd-MM-yyyy") : String.Empty;
         public string Phone { get; set; }
         public string Email { get; set; }
 
@@ -244,5 +245,7 @@ public string Name { get; set; }
             }
             return id;
         }
+
+        
     }
 }

@@ -1,9 +1,11 @@
-﻿@using Stuff.Objects
+﻿@using Stuff.Models
+@using Stuff.Objects
 @model Stuff.Models.RecruitVacancy
 
 @{
     ViewBag.Title = "Вакансия №" + Model.Id;
     Layout = "~/Views/Shared/_Editor.cshtml";
+    var stateCount = RecruitSelection.GetStateList().Count();
 }
 
 @section PanelHead
@@ -352,8 +354,8 @@
         function getCandidateListRow(item) {
             var $row = $('<tr id="sel-' + item.Id + '" slid="' + item.Id + '" class="' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
                 '<th>' + item.Candidate.Id + '</th>' +
-                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null? '' : item.Candidate.Patronymic)  + '</a>' + 
-                (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName +'</small>') 
+                '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null? '' : item.Candidate.Patronymic)  + '</a>' +
+                (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName +'</small>')
                 +
                 (item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br /><a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>') +
                 '</td>' +
@@ -361,12 +363,15 @@
                 '<td>' + (item.Candidate.Age == null? '' : item.Candidate.Age) + '</td>' +
                 '<td>' + (item.Candidate.Phone == null? '' : item.Candidate.Phone) + '</td>' +
                 '<td>' + (item.Candidate.Email == null? '' : item.Candidate.Email) + '</td>' +
-                '<td><strong>' + item.StateName + '</strong>' +
-                '<button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button>' +
-                '<br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small><br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small></td>' +
+                '<td><div>' + 
+                '<strong class="pull-left">' + item.StateName + '</strong>' + '<div class="pull-right">' + getstateIndicate(item.FullStateCount, item.StateIsCancel) +'</div>' +
+                '</div>' +
+                '<div class="clearfix"></div><div><div class="pull-left"><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small><br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small></div>'+
+                '<button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button></div></td>' +
                 '<td>' + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
                     '<button name="selectionSetState" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning btn-sm btn-block">Изменить статус</button>' +
                     '<button name="changeVac" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>' : '') +
+                    (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity +'" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '') +
                 '</td>' +
                 '</tr>');
 
@@ -400,6 +405,18 @@
                 $modal.modal('show');
             });
             return $row;
+        }
+
+        function getstateIndicate(curStateNum, isCancel) {
+            var stateCount = @stateCount;
+            var result =  '<div class="stateIndicateContainer">';
+
+            for (var i = 1; i < stateCount; i++) {
+                result += '<div class="state-indicate-item ' + (i<=curStateNum ? 'full':'empty') +'' + (isCancel == true && i==curStateNum ? ' cancel':'') +'">&nbsp;&nbsp;</div>';
+            }
+            result += '</div>';
+
+            return result;
         }
 
         function selectionSetCurrentState(e) {
@@ -614,7 +631,7 @@
                 var $this = $(this);
                 showSpinnerAppendAndDisable($this);
                 var $btnChange = $('#change');
-                var $btnSave = $('<button id="save" class="btn btn-success btn-sm pull-right"><i class="fa fa-save"></i> сохранить</button>');
+                var $btnSave = $('<button id="save" class="btn btn-success btn-xs pull-right"><i class="fa fa-save"></i> сохранить</button>');
                 $btnSave.click(saveVacancy);
                 $btnChange.replaceWith($btnSave);
 

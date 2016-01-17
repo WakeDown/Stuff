@@ -35,6 +35,8 @@ namespace Stuff.Models
         public bool StateIsAccept { get; set; }
         public int? IdCameType { get; set; }
         public string CameTypeName { get; set; }
+        public int FullStateCount { get; set; }
+        public bool StateIsCancel { get; set; }
 
         public RecruitSelection()
         {
@@ -78,6 +80,8 @@ namespace Stuff.Models
             StateIsAccept = Db.DbHelper.GetValueBool(row, "state_is_accept");
             IdCameType = Db.DbHelper.GetValueIntOrNull(row, "id_came_type");
             CameTypeName = Db.DbHelper.GetValueString(row, "came_type_name");
+            FullStateCount = Db.DbHelper.GetValueIntOrDefault(row, "full_state_count");
+            StateIsCancel = Db.DbHelper.GetValueBool(row, "state_is_cancel");
 
             Candidate = new RecruitCandidate()
             {
@@ -107,7 +111,8 @@ namespace Stuff.Models
                 StateName =  Db.DbHelper.GetValueString(row, "vacancy_state_name"),
                 StateChangeDate= Db.DbHelper.GetValueDateTimeOrNull(row, "vacancy_state_change_date"),
                 StateChangerName =  Db.DbHelper.GetValueString(row, "vacancy_state_changer_name"),
-                CauseName = Db.DbHelper.GetValueString(row, "vacancy_cause_name")
+                CauseName = Db.DbHelper.GetValueString(row, "vacancy_cause_name"),
+                IdCity = Db.DbHelper.GetValueIntOrDefault(row, "vacancy_id_city"),
             };
         }
 
@@ -210,6 +215,22 @@ namespace Stuff.Models
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
 
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_clone_in_another_vacancy", pid, pidVacancy, pCreatorAdSid);
+        }
+
+        public static IEnumerable<StateItem> GetStateList()
+        {
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_state_list");
+            var lst = new List<StateItem>();
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    var model = new StateItem(row);
+                    lst.Add(model);
+                }
+            }
+            return lst;
         }
     }
 }
