@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.EntitySql;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using Stuff.Helpers;
 using Stuff.Models;
@@ -477,6 +479,14 @@ namespace Stuff.Controllers
             int id = RecruitCandidate.CheckClone(surname, name, patronymic);
             return Json(id);
         }
-        
+
+        [HttpPost]
+        public JsonResult CreateQuestionLink(int idSelection)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler)) return null;
+
+            string sid = RecruitQuestionForm.CreateLink(CurUser.Sid, idSelection);
+            return Json(new {sid});
+        }
     }
 }

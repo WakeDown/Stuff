@@ -11,8 +11,8 @@ namespace Stuff.Models
     public class RecruitCandidate
     {
        public int Id { get; set; }
-public string Surname { get; set; }
-public string Name { get; set; }
+       public string Surname { get; set; }
+       public string Name { get; set; }
        public string Patronymic { get; set; }
        public string DisplayName { get; set; }
        public bool Male { get; set; }

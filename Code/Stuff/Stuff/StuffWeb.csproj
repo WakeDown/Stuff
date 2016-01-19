@@ -192,6 +192,7 @@
     <Compile Include="Controllers\OrganizationController.cs" />
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\RecruitController.cs" />
+    <Compile Include="Controllers\RecruitQuestionController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RestHolidayController.cs" />
     <Compile Include="Controllers\RestHolidayTransferDaysController.cs" />
@@ -221,6 +222,7 @@
     <Compile Include="Models\RecruitCameResource.cs" />
     <Compile Include="Models\RecruitCandidateCameType.cs" />
     <Compile Include="Models\RecruitCandidate.cs" />
+    <Compile Include="Models\RecruitQuestionForm.cs" />
     <Compile Include="Models\RecruitSelection.cs" />
     <Compile Include="Models\RecruitVacancy.cs" />
     <Compile Include="Models\RecruitVacancyCause.cs" />
@@ -271,6 +273,7 @@
     <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-timepicker.min.css" />
+    <Content Include="Content\bootstrap-wysiwyg.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrapValidator.css" />
     <Content Include="Content\font-awesome.css" />
@@ -295,6 +298,7 @@
     <Content Include="Content\images\sto_gazprom_9001.png" />
     <Content Include="Content\jquery.dataTables.min.css" />
     <Content Include="Content\sattement.css" />
+    <Content Include="Content\tiny.editor.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
@@ -309,6 +313,7 @@
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.ru.js" />
     <Content Include="Scripts\bootstrap-timepicker.js" />
+    <Content Include="Scripts\bootstrap-wysiwyg.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrapValidator.js" />
     <Content Include="Scripts\BootstrapValidator\language\en_US.js" />
@@ -380,6 +385,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\tiny.editor.min.js" />
     <Content Include="Scripts\validator.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
@@ -469,6 +475,7 @@
     <Content Include="Views\Recruit\SelectionHistory.cshtml" />
     <Content Include="Views\Recruit\VacancySelection.cshtml" />
     <Content Include="Views\Recruit\SelectionTinyHistory.cshtml" />
+    <Content Include="Views\RecruitQuestion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

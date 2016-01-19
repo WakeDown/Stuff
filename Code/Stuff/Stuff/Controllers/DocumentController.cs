@@ -233,18 +233,25 @@ namespace Stuff.Controllers
             ResponseMessage rm;
             if(statementPrint.Save(out rm))
                 statementPrint.Id = rm.Id;
-            string url = Url.Action("StatementRestHours", new { sid = data.SidEmployee, dateRest = data.DateRest, hourStart = data.HourStart, hoursCount = data.HoursCount, cause = data.Cause, id = statementPrint.Id});
+
+            //return RedirectToAction("StatementRestHours",
+            //    new
+            //    {
+            //        sid = data.SidEmployee,
+            //        dateRest = data.DateRest,
+            //        hourStart = data.HourStart,
+            //        hoursCount = data.HoursCount,
+            //        cause = data.Cause,
+            //        id = statementPrint.Id
+            //    });
+
+            string url = Url.Action("StatementRestHours", new { sid = data.SidEmployee, dateRest = data.DateRest, hourStart = data.HourStart, hoursCount = data.HoursCount, cause = data.Cause, id = statementPrint.Id });
             var leftPartUrl = String.Format("{0}://{1}:{2}", Request.RequestContext.HttpContext.Request.Url.Scheme, Request.RequestContext.HttpContext.Request.Url.Host, Request.RequestContext.HttpContext.Request.Url.Port);
             url = String.Format("{1}{0}", url, leftPartUrl);
             PdfDocument doc = converter.ConvertUrl(url);
-       //     var t = StatementPrint.GetList();
-            
-   //         t = StatementPrint.GetList();
             MemoryStream stream = new MemoryStream();
             doc.Save(stream);
             return File(stream.ToArray(), "application/pdf");
-
-            //return View("StatementNoOf", data);
         }
 
         public ActionResult StatementRestHours(string sid, DateTime? dateRest, DateTime? hourStart, int? hoursCount, string cause,int id)
@@ -381,8 +388,16 @@ namespace Stuff.Controllers
                 return View("StatementFormRest", data);
             }
             HtmlToPdf converter = new HtmlToPdf();
-            
-            string url = Url.Action("StatementRestPdf", new { sid = data.SidEmployee, dateStart = data.DateStart, dateEnd = data.DateEnd, daysCount=data.DaysCount });
+
+            //return RedirectToAction("StatementRestPdf",
+            //    new
+            //    {
+            //        sid = data.SidEmployee,
+            //        dateStart = data.DateStart,
+            //        dateEnd = data.DateEnd,
+            //        daysCount = data.DaysCount
+            //    });
+            string url = Url.Action("StatementRestPdf", new { sid = data.SidEmployee, dateStart = data.DateStart, dateEnd = data.DateEnd, daysCount = data.DaysCount });
             var leftPartUrl = String.Format("{0}://{1}:{2}", Request.RequestContext.HttpContext.Request.Url.Scheme, Request.RequestContext.HttpContext.Request.Url.Host, Request.RequestContext.HttpContext.Request.Url.Port);
             url = String.Format("{1}{0}", url, leftPartUrl);
             PdfDocument doc = converter.ConvertUrl(url);
