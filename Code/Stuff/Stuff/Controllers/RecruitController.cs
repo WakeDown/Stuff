@@ -12,6 +12,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class RecruitController : BaseController
     {
         // GET: Recruit
@@ -487,6 +488,22 @@ namespace Stuff.Controllers
 
             string sid = RecruitQuestionForm.CreateLink(CurUser.Sid, idSelection);
             return Json(new {sid});
+        }
+
+        [ValidateInput(false)]
+        [HttpPost]
+        public JsonResult SendCameMail(string subj, string text, string mail)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler)) return null;
+            try
+            {
+                MessageHelper.SendMailSmtp(subj, text, true, mail);
+            }
+            catch (Exception ex)
+            {
+                return Json(new {error=ex.Message });
+            }
+            return Json(new { });
         }
     }
 }

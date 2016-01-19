@@ -12,6 +12,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class RestHolidayController : BaseController
     {
         public ActionResult Index(int? year, bool?success, string message)

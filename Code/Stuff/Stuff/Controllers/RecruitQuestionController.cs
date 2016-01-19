@@ -7,16 +7,33 @@ using Stuff.Models;
 
 namespace Stuff.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class RecruitQuestionController : Controller
     {
         [AllowAnonymous]
+        [HttpGet]
         public ActionResult Index(string sid)
         {
             if (String.IsNullOrEmpty(sid)) return HttpNotFound();
-            if (!RecruitQuestionForm.CheckLink(sid)) return new HttpStatusCodeResult(404, "Ссылка устарела!");
+            try
+            {
+                if (!RecruitQuestionForm.CheckLink(sid)) return new HttpStatusCodeResult(404, "Ссылка устарела!");
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(404, "Некорректная ссылка!");
+            }
             RecruitQuestionForm.Create(sid);
             var model = new RecruitQuestionForm(sid);
+
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult Index(RecruitQuestionForm model)
+        {
+
 
             return View(model);
         }

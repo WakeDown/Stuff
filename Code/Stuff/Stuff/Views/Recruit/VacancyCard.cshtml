@@ -233,13 +233,19 @@
             </div>
             <div class="modal-body form-horizontal">
                 <div class="form-group">
-                    <label for="email" class="col-lg-2 control-label">Адрес</label>
+                    <label for="questionFormEmail" class="col-lg-2 control-label">Кому</label>
                     <div class="col-lg-10">
                         <input type="email" class="form-control" id="questionFormEmail" name="email" placeholder="example@outlook.ru" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="message" class="col-lg-2 control-label">Сообщение</label>
+                    <label for="questionFormSubject" class="col-lg-2 control-label">Тема</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" id="questionFormSubject" name="subject" placeholder="Тема" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="questionFormMessageContainer" class="col-lg-2 control-label">Сообщение</label>
                     <div class="col-lg-10">
                         <textarea class="form-control" rows="8" name="message" id="questionFormMessageContainer"></textarea>
                     </div>
@@ -248,7 +254,7 @@
             <div class="modal-footer">
                 <div class="form-group">
                     <div class="col-lg-push-2 col-lg-10">
-                        <button type="button" class="btn btn-success" >Отправить письмо</button>
+                        <button type="button" class="btn btn-success" id="sendCameMail">Отправить письмо</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     </div>
                 </div>
@@ -407,23 +413,27 @@
                 '<td>' + (item.Candidate.Age == null ? '' : item.Candidate.Age) + '</td>' +
                 '<td>' + (item.Candidate.Phone == null ? '' : item.Candidate.Phone) + '</td>' +
                 '<td>' + (item.Candidate.Email == null ? '' : item.Candidate.Email) + '</td>' +
-                '<td><div>' +
-                '<strong class="pull-left">' + item.StateName + '</strong>' + '<div class="pull-right">' + getstateIndicate(item.FullStateCount, item.StateIsCancel) + '</div>' +
+                '<td>' +
+                '<div class="row">' +
+                    '<div class="col-lg-8">' +
+                        '<strong>' + item.StateName + '</strong>' + 
+                        '<br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small>' +
+                        '<br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small>' +
+                    '</div>' + 
+                    '<div class="col-lg-4">' +
+                        '<div class="pull-right">' + getstateIndicate(item.FullStateCount, item.StateIsCancel) + '</div>' +
+                        '<div><button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button></div>' +
+                        '<div></div>' +
+                    '</div>' + 
                 '</div>' +
-                '<div class="clearfix"></div>' +
-                '<div>' +
-                '<div class="pull-left">' +
-                '<small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small>' +
-                '<br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small>' +
-                '</div>' +
-                '<button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button>' +
-                '</div>' +
-                //'<div><button name="create-link" class="btn btn-info btn-xs" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">сгенерировать приглашение</button></div>' +
                 '</td>' +
                 '<td>' + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
                     '<button name="selectionSetState" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning btn-sm btn-block">Изменить статус</button>' +
-                    '<button name="changeVac" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>' : '') +
-                (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '') +
+                    '<button name="changeVac" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>' +
+                    '<button name="create-link" class="btn btn-info btn-sm btn-block pull-right" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">Приглашение</button>'
+                    : '') +
+                (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' 
+                : '') +
                 '</td>' +
                 '</tr>');
 
@@ -475,7 +485,7 @@
                         var $cont = $('#questionFormMessageContainer');
                         $cont.wysihtml5();
                         $cont.val(msg);
-                        
+                        $('#questionFormSubject').val('Приглашение на собеседование');
                         $('#questionFormEmail').val(email);
                         $('#questionFormMessageModal').modal('show');
                         
@@ -759,29 +769,28 @@
                 });
             });
 
-            
-            //var editor = new TINY.editor.edit('editor', {
-            //    id: 'tinyeditor',
-            //    width: 584,
-            //    height: 175,
-            //    cssclass: 'tinyeditor',
-            //    controlclass: 'tinyeditor-control',
-            //    rowclass: 'tinyeditor-header',
-            //    dividerclass: 'tinyeditor-divider',
-            //    controls: ['bold', 'italic', 'underline', 'strikethrough', '|', 'subscript', 'superscript', '|',
-            //        'orderedlist', 'unorderedlist', '|', 'outdent', 'indent', '|', 'leftalign',
-            //        'centeralign', 'rightalign', 'blockjustify', '|', 'unformat', '|', 'undo', 'redo', 'n',
-            //        'font', 'size', 'style', '|', 'image', 'hr', 'link', 'unlink', '|', 'print'],
-            //    footer: true,
-            //    fonts: ['Verdana','Arial','Georgia','Trebuchet MS'],
-            //    xhtml: true,
-            //    cssfile: 'custom.css',
-            //    bodyid: 'editor',
-            //    footerclass: 'tinyeditor-footer',
-            //    toggle: {text: 'source', activetext: 'wysiwyg', cssclass: 'toggle'},
-            //    resize: {cssclass: 'resize'}
-            //});
-
+            $('#sendCameMail').click(function() {
+                
+                var mail = $('#questionFormEmail').val();
+                var subj = $('#questionFormSubject').val();
+                var text = $('#questionFormMessageContainer').val();
+                
+                $.ajax({
+                    url:'@Url.Action("SendCameMail")',
+                    method:'POST',
+                    data: {mail:mail,text:text, subj:subj},
+                    success:function(data) {
+                        if (data.error) {
+                            alert('Возможно письмо не было отправлено! Ошибка - ' + data.error);
+                        } else {
+                            $('#questionFormMessageModal').modal('hide');
+                        }
+                    },
+                    error:function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
         });
 
         function saveVacancy() {

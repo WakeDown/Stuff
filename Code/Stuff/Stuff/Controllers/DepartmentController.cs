@@ -10,6 +10,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class DepartmentController : BaseController
     {
         public ActionResult List()

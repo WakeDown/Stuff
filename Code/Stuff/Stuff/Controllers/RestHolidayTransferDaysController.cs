@@ -8,6 +8,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class RestHolidayTransferDaysController : BaseController
     {
         public ActionResult Index(int? year)

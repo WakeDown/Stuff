@@ -9,6 +9,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class EngeneerStateController : BaseController
     {
         // GET: EngeneerState
