@@ -10,6 +10,33 @@ namespace Stuff.Models
 {
     public class RecruitQuestionForm
     {
+        /// <summary>
+        /// Родственник
+        /// </summary>
+        public class Relative
+        {
+             public int Id { get; set; }
+            public string RelationDegree { get; set; }
+            public string Name { get; set; }
+            public DateTime? BirthDate { get; set; }
+            public string BirthPlace { get; set; }
+            public string WorkPlace { get; set; }
+            public string Address { get; set; }
+        }
+        /// <summary>
+        /// Образование (основное)
+        /// </summary>
+        public class Education
+        {
+            public int Id { get; set; }
+            public int YearStart { get; set; }
+            public int YearEnd { get; set; }
+            public string Place { get; set; }//Учебное заведение
+            public string StudyType { get; set; }//Форма обучения
+            public string Faculty { get; set; }
+            public string Speciality { get; set; }
+        }
+
         public int Id { get; set; }
         public int IdSelection { get; set; }
         public int IdVacancy { get; set; }
@@ -24,6 +51,26 @@ namespace Stuff.Models
         public string BirthDateQueStr => BirthDate.HasValue ? BirthDate.Value.ToString("dd-MM-yyyy") : String.Empty;
         public string Phone { get; set; }
         public string Email { get; set; }
+        public string Nationality { get; set; }
+        public string Address { get; set; }
+        public int IdQuestionHaмуConviction { get; set; }//Имеете ли судимость или увольнение по статье
+        public int IdQuestionOrganizationOwner { get; set; }//Являетесь ли владельцем предприятий
+        public string OwnedOrganization { get; set; }//Каких предприятий организатор
+        public int IdQuestionWhenWork { get; set; }//Когда могли бы приступить к работе
+        public int IdQuestionDriverLicense { get; set; }//Имеете ли водительское удостоверение
+        public int IdQuestionHaveCar { get; set; }//Наличие автомобиля
+        public string CarModel { get; set; }//Марка автомобиля
+        public int DriverExpirence { get; set; }//Водительский стаж
+        public int IdQuestionMaritalStatus { get; set; }//Семейное положение
+        public IEnumerable<Relative> RelativeList { get; set; } //Ближайшие родственники
+        public int IdPosition { get; set; }//Претендую на должность
+        public string PositionName { get; set; }
+        public decimal MinimumSalaty { get; set; }//Минимальный уровень ЗП
+        public decimal OptimalSalary { get; set; }//Оптимальный уровень ЗП
+        public int IdEducation { get; set; }//Образование
+        public string ScienceDegree { get; set; }//Научная степень
+        public IEnumerable<Education> EducationList { get; set; }//Основное образование
+
 
         public RecruitQuestionForm()
         {

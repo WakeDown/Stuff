@@ -206,6 +206,7 @@
     <Compile Include="Helpers\PdfCreator.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Models\Ad.cs" />
+    <Compile Include="Models\BranchOffice.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\DocMeetLink.cs" />
     <Compile Include="Models\DocMeetLinkList.cs" />

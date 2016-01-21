@@ -49,8 +49,10 @@ namespace Stuff.Models
         public string DateCreateStr => DateCreate.ToString("dd.MM.yyyy");
         public DateTime? OrderEndDate { get; set; }
         public DateTime? ClaimEndDate { get; set; }
-        public int IdCity { get; set; }
+        public int? IdCity { get; set; }
         public string CityName { get; set; }
+        public int IdBranchOffice { get; set; }
+        public string BranchOfficeName { get; set; }
 
         public RecruitVacancy()
         {
@@ -108,8 +110,10 @@ namespace Stuff.Models
             StateIsActive = Db.DbHelper.GetValueBool(row, "state_is_active");
             OrderEndDate= Db.DbHelper.GetValueDateTimeOrNull(row, "order_end_date");
             ClaimEndDate = Db.DbHelper.GetValueDateTimeOrNull(row, "claim_end_date");
-            IdCity = Db.DbHelper.GetValueIntOrDefault(row, "id_city");
+            IdCity = Db.DbHelper.GetValueIntOrNull(row, "id_city");
             CityName = Db.DbHelper.GetValueString(row, "city_name");
+            IdBranchOffice = Db.DbHelper.GetValueIntOrDefault(row, "id_branch_office");
+            BranchOfficeName = Db.DbHelper.GetValueString(row, "branch_office_name");
         }
 
         public void Create(string creatorSid)
@@ -128,8 +132,9 @@ namespace Stuff.Models
             //SqlParameter pIdState = new SqlParameter() { ParameterName = "id_state", SqlValue = IdState, SqlDbType = SqlDbType.Int };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pIdCity = new SqlParameter() { ParameterName = "id_city", SqlValue = IdCity, SqlDbType = SqlDbType.Int };
+            SqlParameter pIdBranchOffice = new SqlParameter() { ParameterName = "id_branch_office", SqlValue = IdBranchOffice, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity, pIdBranchOffice);
             int id = 0;
             if (dt.Rows.Count > 0)
             {

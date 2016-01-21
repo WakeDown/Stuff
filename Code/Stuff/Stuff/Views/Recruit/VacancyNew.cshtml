@@ -40,13 +40,19 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-2 control-label" for="city">Город</label>
+            <label class="col-lg-2 control-label" for="city">Филиал</label>
             <div class="col-lg-5">
-                @Html.DropDownListFor(m => m.IdCity, City.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "city", required = "required", data_error = "Заполните поле Город" })
-                @*<select id="department" required="required" data_error="Заполните поле Подразделение" class="form-control required-mark" name="IdDepartment"></select>*@
+                @Html.DropDownListFor(m => m.IdBranchOffice, BranchOffice.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "city", required = "required", data_error = "Заполните поле Филиал" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
+        @*<div class="form-group">
+            <label class="col-lg-2 control-label" for="city">Город</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.IdCity, City.GetSelectionList(), "--выберите--", new { @class = "form-control required-mark", @id = "city", required = "required", data_error = "Заполните поле Город" })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>*@
     <div class="form-group">
     <label class="col-lg-2 control-label" for="department">Подразделение</label>
     <div class="col-lg-5">
