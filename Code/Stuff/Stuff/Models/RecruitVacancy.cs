@@ -59,10 +59,11 @@ namespace Stuff.Models
             
         }
 
-        public RecruitVacancy(int id)
+        public RecruitVacancy(int id, string viewerSid = null)
         {
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get", pId);
+            SqlParameter pViewerSid = new SqlParameter() { ParameterName = "viewer_sid", SqlValue = viewerSid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get", pId, pViewerSid);
             if (dt.Rows.Count > 0)
             {
                 var row = dt.Rows[0];
@@ -162,7 +163,7 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_set_state", pid, pstateSysName, pCreatorAdSid, pdescr);
         }
 
-        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null,string persManagerSid = null)
+        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null,string persManagerSid = null, string viewerSid = null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
@@ -177,7 +178,8 @@ namespace Stuff.Models
             SqlParameter pdateCreate = new SqlParameter() { ParameterName = "date_create", SqlValue = dateCreate, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pstate = new SqlParameter() { ParameterName = "state", SqlValue = state, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pactiveOnly = new SqlParameter() { ParameterName = "active_only", SqlValue = activeOnly, SqlDbType = SqlDbType.Bit };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly, ppersonalManagerSid);
+            SqlParameter pViewerSid = new SqlParameter() { ParameterName = "viewer_sid", SqlValue = viewerSid, SqlDbType = SqlDbType.VarChar };//Пользователь который зашел на страничку
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly, ppersonalManagerSid, pViewerSid);
 
             totalCount = 0;
             var lst = new List<RecruitVacancy>();
@@ -230,9 +232,9 @@ namespace Stuff.Models
             return lst;
         }
 
-        public static IEnumerable<RecruitSelection> GetCandidateList(out int totalCount, int id)
+        public static IEnumerable<RecruitSelection> GetCandidateList(out int totalCount, int id, string viewerSid = null)
         {
-           return RecruitSelection.GetList(out totalCount, id);
+           return RecruitSelection.GetList(out totalCount, id, viewerSid: viewerSid);
         }
 
         public static void AppendCandidateList(int id, int[] idCandidates, string creatorSid, int? idCameType)

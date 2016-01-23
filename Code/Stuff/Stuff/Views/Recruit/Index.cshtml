@@ -47,7 +47,10 @@
             </nav>
         </div>
         <div class="pull-left pad-l-sm">
-            <a class="btn btn-primary" href="@Url.Action("VacancyNew")"><i class="fa fa-plus-circle"></i> новая вакансия</a>
+            @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+            {
+                <a class="btn btn-primary" href="@Url.Action("VacancyNew")"><i class="fa fa-plus-circle"></i> новая вакансия</a>
+            }
             @*<a class="btn btn-primary" href="@Url.Action("CandidateNew")?returnUrl=@Request.Url"><i class="fa fa-plus-circle"></i> новое резюме</a>*@
         </div>
     </div>

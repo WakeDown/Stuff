@@ -18,8 +18,6 @@ namespace Stuff.Controllers
         // GET: Recruit
         public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, int? aon)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return HttpNotFound();
-
             bool? activeOnly = null;
             if (aon.HasValue)
             {
@@ -38,13 +36,22 @@ namespace Stuff.Controllers
             }
             else
             {
-                return RedirectToAction("Index", new {topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon=1 });
+                return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon = 1 });
             }
+
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            //userIsViewer = true;
+            //viewerSid = "S-1-5-21-1970802976-3466419101-4042325969-1838";
+            
             int totalCount;
             int id;
             int.TryParse(vid, out id);
             string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid);
+
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid, viewerSid);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }
@@ -54,6 +61,7 @@ namespace Stuff.Controllers
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             int totalCount;
             string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
+
             var list = RecruitVacancy.GetList(out totalCount, 1000, activeOnly:true, persManagerSid: persManagerSid);
             ViewBag.TotalCount = totalCount;
             return PartialView(list);
@@ -99,11 +107,17 @@ namespace Stuff.Controllers
         [HttpGet]
         public ActionResult VacancyCard(int? id)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return HttpNotFound();
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            //userIsViewer = true;
+            //viewerSid = "S-1-5-21-1970802976-3466419101-4042325969-1838";
+
             if (!id.HasValue) return RedirectToAction("VacancyNew");
 
-            var model = new RecruitVacancy(id.Value);
-            if (CurUser.Is(AdGroup.RecruitManager) && model.PersonalManagerSid != CurUser.Sid)
+            var model = new RecruitVacancy(id.Value, viewerSid);
+            if ((CurUser.Is(AdGroup.RecruitManager) && model.PersonalManagerSid != CurUser.Sid) || (userIsViewer && model.Id <= 0))
                 return HttpNotFound();
             return View(model);
         }
@@ -294,18 +308,27 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetVacancyCandadateList(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            bool userIsViewer = !!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            //userIsViewer = true;
+            //viewerSid = "S-1-5-21-1970802976-3466419101-4042325969-1838";
+
             int totalCount;
-            var list = RecruitVacancy.GetCandidateList(out totalCount, id);
+            var list = RecruitVacancy.GetCandidateList(out totalCount, id, viewerSid);
+            
             return Json(new { list, totalCount });
         }
 
         [HttpPost]
         public JsonResult GetCandadateVacancyList(int id)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            bool userIsViewer = !!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
             int totalCount;
-            var list = RecruitCandidate.GetVacancyList(out totalCount, id);
+            var list = RecruitCandidate.GetVacancyList(out totalCount, id, viewerSid:viewerSid);
             return Json(new { list, totalCount });
         }
 

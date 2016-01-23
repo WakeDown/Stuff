@@ -225,9 +225,9 @@ namespace Stuff.Models
             return lst;
         }
 
-        public static IEnumerable<RecruitSelection> GetVacancyList(out int totalCount, int id)
+        public static IEnumerable<RecruitSelection> GetVacancyList(out int totalCount, int id, string viewerSid = null)
         {
-            return RecruitSelection.GetList(out totalCount, idCandidate:id);
+            return RecruitSelection.GetList(out totalCount, idCandidate:id, viewerSid: viewerSid);
         }
 
         public static int CheckClone(string surname, string name, string patronymic)

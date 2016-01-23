@@ -132,12 +132,13 @@ namespace Stuff.Models
             }
         }
 
-        public static IEnumerable<RecruitSelection> GetList(out int totalCount, int? idVacancy = null, int? idCandidate = null)
+        public static IEnumerable<RecruitSelection> GetList(out int totalCount, int? idVacancy = null, int? idCandidate = null, string viewerSid = null)
         {
             
             SqlParameter pidVacancy = new SqlParameter() { ParameterName = "id_vacancy", SqlValue = idVacancy, SqlDbType = SqlDbType.Int };
             SqlParameter pidCandidate = new SqlParameter() { ParameterName = "id_candidate", SqlValue = idCandidate, SqlDbType = SqlDbType.Int };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_list", pidVacancy, pidCandidate);
+            SqlParameter pviewerSid = new SqlParameter() { ParameterName = "viewer_sid", SqlValue = viewerSid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_list", pidVacancy, pidCandidate, pviewerSid);
 
             totalCount = 0;
             var lst = new List<RecruitSelection>();

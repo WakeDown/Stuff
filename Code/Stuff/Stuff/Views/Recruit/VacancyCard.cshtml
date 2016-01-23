@@ -13,13 +13,14 @@
 {
     Вакансия №@Model.Id
 
-
-    @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.StateIsActive)
-    {
-        <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
-        <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>
-    }
-
+@if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+{
+    if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.StateIsActive)
+     {
+         <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
+         <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>
+     }
+}
     @*<link rel="stylesheet" type="text/css" href="../../Content/tiny.editor.min.css"/>
     <script src="../../Scripts/tiny.editor.min.js"></script>*@
 <link rel="stylesheet" type="text/css" href="../../Content/bootstrap-wysiwyg.css" />
@@ -103,11 +104,14 @@
     <p>
         <h4>
             Список кандидатов <span id="candidatesCount" class="badge badge-info"></span>
-            @if (Model.StateIsActive)
-            {
-                <button id="addCandidate" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#candidateListModal"><i class="fa fa-plus-circle"></i> добавить из списка</button>
-                <a href="@Url.Action("CandidateNew")?vid=@Model.Id&returnUrl=@Request.Url" class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> новый кандидат</a>
-            }
+@if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+{
+    if (Model.StateIsActive)
+     {
+         <button id="addCandidate" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#candidateListModal"><i class="fa fa-plus-circle"></i> добавить из списка</button>
+         <a href="@Url.Action("CandidateNew")?vid=@Model.Id&returnUrl=@Request.Url" class="btn btn-primary btn-sm"><i class="fa fa-plus-circle"></i> новый кандидат</a>
+     }
+}
         </h4>
 
         <div id="candidatesList"></div>
@@ -430,14 +434,20 @@
                     '</div>' + 
                 '</div>' +
                 '</td>' +
-                '<td>' + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
+                '<td>' 
+                @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+                {
+                    <text>
+                + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
                     '<button name="selectionSetState" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning btn-sm btn-block">Изменить статус</button>' +
                     '<button name="changeVac" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>'
                     //+ '<button name="create-link" class="btn btn-info btn-sm btn-block pull-right" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">Приглашение</button>'
                     : '') +
                 (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' 
-                : '') +
-                '</td>' +
+                : '') 
+                </text>
+                }
+                + '</td>' +
                 '</tr>');
 
             $('[name="sel-history"]', $row).click(showSelectionHistory);
