@@ -57,7 +57,7 @@
                 </div>
                 <div class="row pad-t-sm-sm">
                     <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Файлы:</div>
-                    <div class="col-lg-4 col-sm-12 text-center-sm">
+                    <div class="col-lg-8 col-sm-12 text-center-sm">
                         @if (Model.Files != null && Model.Files.Count > 0)
                         {
                             foreach (DbFile file in Model.Files)
@@ -247,7 +247,7 @@
             });
 
             $('[name="del-file"]').click(function() {
-                if (!confirm('Вы уверены что хотите удалить файл резме?'))return;
+                if (!confirm('Вы уверены что хотите удалить файл резюме?'))return;
                 var fsid = $(this).attr('fsid');
                 
                 $.ajax({
