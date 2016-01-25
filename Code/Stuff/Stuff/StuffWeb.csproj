@@ -208,6 +208,7 @@
     <Compile Include="Models\Ad.cs" />
     <Compile Include="Models\BranchOffice.cs" />
     <Compile Include="Models\Budget.cs" />
+    <Compile Include="Models\DbFile.cs" />
     <Compile Include="Models\DocMeetLink.cs" />
     <Compile Include="Models\DocMeetLinkList.cs" />
     <Compile Include="Models\Document.cs" />

@@ -1,4 +1,5 @@
-﻿@using Stuff.Objects
+﻿@using Stuff.Models
+@using Stuff.Objects
 @model Stuff.Models.RecruitCandidate
 
 @{
@@ -13,7 +14,7 @@
 {
     <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
 }
-    <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>
+    <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
 }
 
 @section PanelBody
@@ -55,21 +56,30 @@
                     <div class="col-lg-4 col-sm-12 text-center-sm" id="emailContainer">@Html.LabelFor(m => m, Model.Email)</div>
                 </div>
                 <div class="row pad-t-sm-sm">
-                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Файл:</div>
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Файлы:</div>
                     <div class="col-lg-4 col-sm-12 text-center-sm">
-                        @if (String.IsNullOrEmpty(Model.FileSid))
+                        @if (Model.Files != null && Model.Files.Count > 0)
                         {
+                            foreach (DbFile file in Model.Files)
+                            {
+                                if (String.IsNullOrEmpty(file.Sid))
+                                {
 
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("GetCandidateFile", new {sid = Model.FileSid})" target="_blank">@Model.FileName</a>
+                                }
+                                else
+                                {
+                                    <div id="fcont-@file.Sid">
+                                        @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler))
+                                        {
+                                            <a class="btn btn-link btn-xs" name="del-file" fsid="@file.Sid"><i class="fa fa-trash"></i></a>
+                                        }
+                                        <a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile", new {sid = file.Sid})" target="_blank">@file.Name</a>
+                                    </div>
+                                }
+                            }
                         }
                         <div id="fileContainer" style="display: none">
-
-
-                            <input id="fileResume" type="file" name="fileResume"/>
-
+                            <input id="fileResume" type="file" name="fileResume" multiple="multiple"/>
                         </div>
                     </div>
                 </div>
@@ -234,6 +244,24 @@
                 var $birthDateContainer = $('#birthDateContainer');
                 $birthDateContainer.html('<input id="birthDate" type="text" class="form-control input-xs" value="@(Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy") : String.Empty)" name="BirthDate" placeholder="" />');
                 $("#birthDate").mask('00.00.0000');
+            });
+
+            $('[name="del-file"]').click(function() {
+                if (!confirm('Вы уверены что хотите удалить файл резме?'))return;
+                var fsid = $(this).attr('fsid');
+                
+                $.ajax({
+                    url:'@Url.Action("DeleteFile")',
+                    method:'POST',
+                    data:{sid:fsid},
+                    success:function() {
+                        var $cont = $('#fcont-' + fsid);
+                        $cont.remove();
+                    },
+                    error:function() {
+                        alert('Ошибка при удалении файла!');
+                    }
+                });
             });
         });
 

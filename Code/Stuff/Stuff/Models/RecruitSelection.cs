@@ -94,8 +94,8 @@ namespace Stuff.Models
                 Surname = Db.DbHelper.GetValueString(row, "candidate_surname"),
                 Name = Db.DbHelper.GetValueString(row, "candidate_name"),
                 Patronymic = Db.DbHelper.GetValueString(row, "candidate_patronymic"),
-                FileName = Db.DbHelper.GetValueString(row, "candidate_file_name"),
-                FileSid = Db.DbHelper.GetValueString(row, "candidate_file_sid")
+                //FileName = Db.DbHelper.GetValueString(row, "candidate_file_name"),
+                //FileSid = Db.DbHelper.GetValueString(row, "candidate_file_sid")
             };
 
             Vacancy = new RecruitVacancy()
@@ -162,6 +162,15 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_close", pId, pDeleterSid);
         }
 
+        public static void Restore(int id, string creatorSid, string descr = null)
+        {
+            SqlParameter pid = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
+            SqlParameter pdescr = new SqlParameter() { ParameterName = "descr", SqlValue = descr, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_restore", pid, pCreatorAdSid, pdescr);
+        }
+
         public static void SetState(int id, string stateSysName, string creatorSid, string descr = null)
         {
             SqlParameter pid = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
@@ -182,10 +191,11 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_set_state", pid, pidState, pCreatorAdSid, pdescr);
         }
 
-        public static IEnumerable<HistoryItem> GetHistory(int id)
+        public static IEnumerable<HistoryItem> GetHistory(int id, string viewerSid = null)
         {
             SqlParameter pid = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_history", pid);
+            SqlParameter pViewerSid = new SqlParameter() { ParameterName = "viewer_sid", SqlValue = viewerSid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_selection_get_history", pid, pViewerSid);
 
             var lst = new List<HistoryItem>();
 

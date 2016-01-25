@@ -18,7 +18,7 @@
     if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.StateIsActive)
      {
          <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
-         <button id="change" class="btn btn-warning btn-xs pull-right"><i class="fa fa-edit"></i> изменить</button>
+         <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
      }
 }
     @*<link rel="stylesheet" type="text/css" href="../../Content/tiny.editor.min.css"/>
@@ -136,7 +136,7 @@
                         <div class="col-lg-4">
                             <button id="selectionSetNextState" class="btn btn-success btn-block">Перевести на следущюий этап</button>
                             <button id="selectionSetCurrentState" class="btn btn-warning btn-block">Оставить на текущем этапе</button>
-                            <button id="selectionSetCancelState" class="btn btn-danger btn-block">Непригоден для вакансии</button>
+                            <button id="selectionSetCancelState" class="btn btn-danger btn-block">Отклонить</button>
                             <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Отмена</button>
                             <button id="selectionSetAcceptState" class="btn btn-primary btn-block">Утвердить кандидата</button>
                         </div>
@@ -160,7 +160,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">История кандидата для вакансии №@Model.Id</h4>
-                    <div>@Model.CityName<br/>@Model.PositionName<br/><small>@Model.DepartmentName</small>
+                    <div>@Model.BranchOfficeName<br/>@Model.PositionName<br/><small>@Model.DepartmentName</small>
                     </div>
                     <div>Кандидат - <strong id="historyCandidateName"></strong>
                     </div>
@@ -409,13 +409,39 @@
             });
         }
 
+        function fillFileList(id, slid, $row) {
+            //$row.find('#sel-files-' + id);// $('#sel-files-' + id);
+            var $cont = $row.find('#sel-files-' + slid);
+            $.ajax({
+                url: '@Url.Action("GetCandidateFileList")',
+                method: 'POST',
+                data: { id: id },
+                success: function(data) {
+                    if (data.length > 0) {
+                        var showNum = data.length > 1;
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            if (item.Sid) {
+                                var elem = '<div><a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Sid + '" target="_blank">файл резюме ' + (showNum ? + i+1 : '') + '</a></div>';
+                                $cont.append(elem);
+                            }
+                        }
+                    }
+                },
+                error: function() {
+                    alert('Ошибка при загрузке файлов резюме!');
+                }
+            });
+        }
+
         function getCandidateListRow(item) {
             var $row = $('<tr id="sel-' + item.Id + '" slid="' + item.Id + '" class="' + (item.StateIsAccept == true ? ' selected' : '') + '">' +
                 '<th>' + item.Candidate.Id + '</th>' +
                 '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null ? '' : item.Candidate.Patronymic) + '</a>' +
-                (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName + '</small>')
-                +
-                (item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br /><a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>') +
+                (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName + '</small>') +
+                @*(item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br />' +
+                    '<a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>')+*@ 
+                    '<div id="sel-files-' + item.Id + '"></div>' +
                 '</td>' +
                 '<td>' + (item.Candidate.MaleStr == null ? '' : item.Candidate.MaleStr) + '</td>' +
                 '<td>' + (item.Candidate.Age == null ? '' : item.Candidate.Age) + '</td>' +
@@ -423,34 +449,61 @@
                 '<td>' + (item.Candidate.Email == null ? '' : item.Candidate.Email) + '</td>' +
                 '<td>' +
                 '<div class="row">' +
-                    '<div class="col-lg-8">' +
-                        '<strong>' + item.StateName + '</strong>' + 
-                        '<br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small>' +
-                        '<br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small>' +
-                    '</div>' + 
-                    '<div class="col-lg-4">' +
-                        '<div class="pull-right">' + getstateIndicate(item.FullStateCount, item.StateIsCancel) + '</div>' +
-                        '<div><button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button></div>' +
-                    '</div>' + 
+                '<div class="col-lg-8">' +
+                '<strong>' + item.StateName + '</strong>' +
+                '<br /><small>' + item.StateChangeDateStr + ' - ' + item.StateChangerName + '</small>' +
+                '<br /><small>' + (item.StateDescr != null ? item.StateDescr : '') + '</small>' +
+                '</div>' +
+                '<div class="col-lg-4">' +
+                '<div class="pull-right">' + getstateIndicate(item.FullStateCount, item.StateIsCancel) + '</div>' +
+                '<div><button name="sel-history" slid="' + item.Id + '" cname="' + item.Candidate.DisplayName + '" class="btn btn-link pull-right">показать историю</button></div>' +
+                '</div>' +
                 '</div>' +
                 '</td>' +
-                '<td>' 
+                '<td>'
                 @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
                 {
                     <text>
-                + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
-                    '<button name="selectionSetState" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning btn-sm btn-block">Изменить статус</button>' +
-                    '<button name="changeVac" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>'
-                    //+ '<button name="create-link" class="btn btn-info btn-sm btn-block pull-right" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">Приглашение</button>'
-                    : '') +
-                (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' 
-                : '') 
-                </text>
+                    + (item.IdNextState != null && item.IdNextState > 0 && item.ShowNextStateButton == true ?
+                        '<button name="selectionSetState" nstnm="' + item.NextStateButtonName + '" cstid="' + item.IdState + '" slid="' + item.Id + '" nstid="' + item.IdNextState + '" class="btn btn-warning btn-sm btn-block">Изменить статус</button>' +
+                        '<button name="changeVac" slid="' + item.Id + '" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>'
+                        //+ '<button name="create-link" class="btn btn-info btn-sm btn-block pull-right" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">Приглашение</button>'
+                        : '') +
+                    (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '')
+                     +
+                    (item.StateIsAccept == false && item.StateIsCancel == true ?
+                    '<button name="restoreSel" slid="' + item.Id + '" class="btn btn-success btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">Восстановить</button>'
+                    : '')
+                    </text>
                 }
                 + '</td>' +
                 '</tr>');
 
+            fillFileList(item.Candidate.Id, item.Id, $row);
+
             $('[name="sel-history"]', $row).click(showSelectionHistory);
+
+            $row.find('[name="restoreSel"]').click(function() {
+                if (!confirm('Вы дествительно хотите восстановить кандидата?')) return;
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
+
+                var slid = $this.attr('slid');
+                $.ajax({
+                    url: '@Url.Action("SelectionRestore")',
+                    method: 'POST',
+                    data: { id: slid },
+                    success: function(data) {
+                        var $row = $('#sel-' + slid);
+                        $row.replaceWith(getCandidateListRow(data));
+                        hideSpinnerAndEnabled($this);
+                    },
+                    error: function() {
+                        alert('Ошибка при восстановлении кандидата!');
+                        hideSpinnerAndEnabled($this);
+                    }
+                });
+            });
 
             $row.find('[name="changeVac"]').click(function() {
                 var $this = $(this);
@@ -501,16 +554,17 @@
                         $('#questionFormSubject').val('Приглашение на собеседование');
                         $('#questionFormEmail').val(email);
                         $('#questionFormMessageModal').modal('show');
-                        
+
                     },
                     error: function() {
                         alert('Ошибка при генерации анкеты!');
                     }
                 });
             });
+
             return $row;
         }
-        
+
         function getstateIndicate(curStateNum, isCancel) {
             var stateCount = @stateCount;
             var result = '<div class="stateIndicateContainer">';
@@ -783,23 +837,23 @@
             });
 
             $('#sendCameMail').click(function() {
-                
+
                 var mail = $('#questionFormEmail').val();
                 var subj = $('#questionFormSubject').val();
                 var text = $('#questionFormMessageContainer').val();
-                
+
                 $.ajax({
-                    url:'@Url.Action("SendCameMail")',
-                    method:'POST',
-                    data: {mail:mail,text:text, subj:subj},
-                    success:function(data) {
+                    url: '@Url.Action("SendCameMail")',
+                    method: 'POST',
+                    data: { mail: mail, text: text, subj: subj },
+                    success: function(data) {
                         if (data.error) {
                             alert('Возможно письмо не было отправлено! Ошибка - ' + data.error);
                         } else {
                             $('#questionFormMessageModal').modal('hide');
                         }
                     },
-                    error:function(xhr, ajaxOptions, thrownError) {
+                    error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.responseText);
                     }
                 });

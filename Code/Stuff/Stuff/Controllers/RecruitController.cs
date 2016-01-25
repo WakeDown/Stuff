@@ -181,14 +181,13 @@ namespace Stuff.Controllers
             return Json(new {list, totalCount});
         }
 
-        
-
         [HttpGet]
         public ActionResult CandidateNew()
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             return View();
         }
+
         [HttpPost]
         public ActionResult CandidateNew(RecruitCandidate model)
         {
@@ -209,23 +208,31 @@ namespace Stuff.Controllers
                 }
                 else
                 {
+                    model.Create(CurUser.Sid);
+
                     if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
                     {
-                        var file = Request.Files[0];
-
-                        string ext = Path.GetExtension(file.FileName).ToLower();
-
-                        //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
-
-                        byte[] data = null;
-                        using (var br = new BinaryReader(file.InputStream))
+                        for(int i = 0; i<Request.Files.Count;i++)
                         {
-                            data = br.ReadBytes(file.ContentLength);
+                            var file = Request.Files[i];
+
+                            string ext = Path.GetExtension(file.FileName).ToLower();
+
+                            //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
+
+                            byte[] data = null;
+                            using (var br = new BinaryReader(file.InputStream))
+                            {
+                                data = br.ReadBytes(file.ContentLength);
+                            }
+                            RecruitCandidate.SaveFile(CurUser.Sid, model.Id, file.FileName, data);
+
+                            //model.File = data;
+                            //model.FileName = file.FileName; 
                         }
-                        model.File = data;
-                        model.FileName = file.FileName;
+
                     }
-                    model.Create(CurUser.Sid);
+                    
 
                     if (!String.IsNullOrEmpty(Request.Form["append2Vacancy"]) &&
                         !String.IsNullOrEmpty(Request.QueryString["vid"]))
@@ -308,7 +315,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetVacancyCandadateList(int id)
         {
-            bool userIsViewer = !!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
             string viewerSid = null;
             if (userIsViewer) viewerSid = CurUser.Sid;
 
@@ -324,7 +331,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult GetCandadateVacancyList(int id)
         {
-            bool userIsViewer = !!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
             string viewerSid = null;
             if (userIsViewer) viewerSid = CurUser.Sid;
             int totalCount;
@@ -361,6 +368,15 @@ namespace Stuff.Controllers
         }
 
         [HttpPost]
+        public JsonResult SelectionRestore(int id, string descr=null)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            RecruitSelection.Restore(id, CurUser.Sid, descr);
+            var sel = new RecruitSelection(id);
+            return Json(sel);
+        }
+
+        [HttpPost]
         public JsonResult SelectionSetAcceptState(int id, string descr)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
@@ -380,20 +396,30 @@ namespace Stuff.Controllers
 
         public PartialViewResult SelectionHistory(int? id)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            //userIsViewer = true;
+            //viewerSid = "S-1-5-21-1970802976-3466419101-4042325969-1838";
             if (!id.HasValue) return null;
 
-            var list = RecruitSelection.GetHistory(id.Value);
+            var list = RecruitSelection.GetHistory(id.Value, viewerSid);
 
             return PartialView(list);
         }
 
         public PartialViewResult SelectionTinyHistory(int? id)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            //userIsViewer = true;
+            //viewerSid = "S-1-5-21-1970802976-3466419101-4042325969-1838";
             if (!id.HasValue) return null;
 
-            var list = RecruitSelection.GetHistory(id.Value);
+            var list = RecruitSelection.GetHistory(id.Value, viewerSid);
 
             return PartialView(list);
         }
@@ -409,7 +435,7 @@ namespace Stuff.Controllers
         [HttpGet]
         public FileResult GetCandidateFile(string sid)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            //if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             string fileName;
             var data = RecruitCandidate.GetFileData(sid, out fileName);
             if (data != null && data.Length > 0)
@@ -426,28 +452,51 @@ namespace Stuff.Controllers
         }
 
         [HttpPost]
+        public JsonResult DeleteFile(string sid)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            RecruitCandidate.DeleteFile(sid, CurUser.Sid);
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult GetCandidateFileList(int id)
+        {
+            var list = RecruitCandidate.GetFiles(id);
+            return Json(list);
+        }
+
+        [HttpPost]
         public ActionResult CandidateChange(RecruitCandidate model)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             try
             {
+                model.Change(CurUser.Sid);
+
                 if (Request.Files.Count > 0 && Request.Files[0] != null && Request.Files[0].ContentLength > 0)
                 {
-                    var file = Request.Files[0];
-
-                    string ext = Path.GetExtension(file.FileName).ToLower();
-
-                    //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
-
-                    byte[] data = null;
-                    using (var br = new BinaryReader(file.InputStream))
+                    for (int i = 0; i < Request.Files.Count; i++)
                     {
-                        data = br.ReadBytes(file.ContentLength);
+                        var file = Request.Files[i];
+
+                        string ext = Path.GetExtension(file.FileName).ToLower();
+
+                        //if (ext != ".png" && ext != ".jpeg" && ext != ".jpg" && ext != ".gif") throw new Exception("Формат фотографии должен быть .png .jpeg .gif");
+
+                        byte[] data = null;
+                        using (var br = new BinaryReader(file.InputStream))
+                        {
+                            data = br.ReadBytes(file.ContentLength);
+                        }
+                        RecruitCandidate.SaveFile(CurUser.Sid, model.Id, file.FileName, data);
+
+                        //model.File = data;
+                        //model.FileName = file.FileName; 
                     }
-                    model.File = data;
-                    model.FileName = file.FileName;
+
                 }
-                model.Change(CurUser.Sid);
+
 
                 //if (!String.IsNullOrEmpty(Request.Form["append2Vacancy"]) && !String.IsNullOrEmpty(Request.QueryString["vid"]))
                 //{

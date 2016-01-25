@@ -27,9 +27,11 @@ namespace Stuff.Models
         public string Phone { get; set; }
         public string Email { get; set; }
 
-        public byte[] File { get; set; }
-        public string FileName {get; set; }
-        public string FileSid { get; set; }
+        //public byte[] File { get; set; }
+        //public string FileName { get; set; }
+        //public string FileSid { get; set; }
+
+        public List<DbFile> Files { get; set; }
 
         public int? Age
         {
@@ -55,10 +57,10 @@ namespace Stuff.Models
 
         public RecruitCandidate()
         {
-
+            Files = new List<DbFile>();
         }
 
-        public RecruitCandidate(int id)
+        public RecruitCandidate(int id):this()
         {
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get", pId);
@@ -66,13 +68,31 @@ namespace Stuff.Models
             {
                 var row = dt.Rows[0];
                 FillSelf(row);
+                Files=GetFiles(id);
             }
         }
 
-        public RecruitCandidate(DataRow row)
-            : this()
+        public RecruitCandidate(DataRow row): this()
         {
             FillSelf(row);
+        }
+
+        public static List<DbFile> GetFiles(int id)
+        {
+            SqlParameter pIdCandidate = new SqlParameter() { ParameterName = "id_candidate", SqlValue = id, SqlDbType = SqlDbType.Int };
+            var dtFiles = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_get_file_list", pIdCandidate);
+
+            var files = new List<DbFile>();
+            if (dtFiles.Rows.Count > 0)
+            {
+                files = new List<DbFile>();
+                foreach (DataRow dr in dtFiles.Rows)
+                {
+                    DbFile file = new DbFile() { Sid = Db.DbHelper.GetValueString(dr, "sid"), Name = Db.DbHelper.GetValueString(dr, "file_name") };
+                    files.Add(file);
+                }
+            }
+            return files;
         }
 
         private void FillSelf(DataRow row)
@@ -91,8 +111,8 @@ namespace Stuff.Models
             BirthDate = Db.DbHelper.GetValueDateTimeOrNull(row, "birth_date");
             Phone = Db.DbHelper.GetValueString(row, "phone");
             Email = Db.DbHelper.GetValueString(row, "email");
-            FileSid = Db.DbHelper.GetValueString(row, "file_sid");
-            FileName = Db.DbHelper.GetValueString(row, "file_name");
+            //FileSid = Db.DbHelper.GetValueString(row, "file_sid");
+            //FileName = Db.DbHelper.GetValueString(row, "file_name");
             LastSelectionStateName = Db.DbHelper.GetValueString(row, "selection_state_name");
             LastSelectionStateChangerName = Db.DbHelper.GetValueString(row, "selection_state_changer_name");
             LastSelectionStateDateChange = Db.DbHelper.GetValueDateTimeOrNull(row, "selection_state_change_date");
@@ -114,17 +134,34 @@ namespace Stuff.Models
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pPhone = new SqlParameter() { ParameterName = "phone", SqlValue = Phone, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = Email, SqlDbType = SqlDbType.NVarChar };
-            SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
-            SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
+            //SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
+            //SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pIdCameType = new SqlParameter() { ParameterName = "id_came_type", SqlValue = IdCameType, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_create", pSurname, pName, pPatronymic, pDisplayName, pMale, pIdCameResource, pBirthDate, pCreatorAdSid, pPhone, pEmail, pFile, pFileName, pIdCameType);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_create", pSurname, pName, pPatronymic, pDisplayName, pMale, pIdCameResource, pBirthDate, pCreatorAdSid, pPhone, pEmail, /*pFile, pFileName,*/ pIdCameType);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
                 int.TryParse(dt.Rows[0]["id"].ToString(), out id);
                 Id = id;
             }
+        }
+
+        public static void SaveFile(string creatorSid, int idCandidate, string fileName, byte[] file)
+        {
+            SqlParameter pidCandidate = new SqlParameter() { ParameterName = "id_candidate", SqlValue = idCandidate, SqlDbType = SqlDbType.Int };
+            SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = file, SqlDbType = SqlDbType.VarBinary };
+            SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = fileName, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
+
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_save_file", pFile, pFileName, pCreatorAdSid, pidCandidate);
+            //int id = 0;
+            //if (dt.Rows.Count > 0)
+            //{
+            //    int.TryParse(dt.Rows[0]["sid"].ToString(), out id);
+                
+            //}
+            //return id;
         }
 
         public static IEnumerable<RecruitCandidate> GetList(out int totalCount, int? topRows = null, int? pageNum = null, string idStr = null, string fio = null, string age = null, string phone = null, string email = null, string added = null, bool? sex=null, string changed = null)
@@ -183,6 +220,13 @@ namespace Stuff.Models
             return data;
         }
 
+        public static void DeleteFile(string sid, string deleterSid)
+        {
+            SqlParameter pSid = new SqlParameter() { ParameterName = "sid", SqlValue = sid, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pDeleterSid = new SqlParameter() { ParameterName = "deleter_sid", SqlValue = deleterSid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_close_file", pSid, pDeleterSid);
+        }
+
         public void Change(string creatorSid)
         {
             DisplayName = Employee.ShortName($"{Surname} {Name} {Patronymic}").Trim();
@@ -198,10 +242,10 @@ namespace Stuff.Models
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pPhone = new SqlParameter() { ParameterName = "phone", SqlValue = Phone, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pEmail = new SqlParameter() { ParameterName = "email", SqlValue = Email, SqlDbType = SqlDbType.NVarChar };
-            SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
-            SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
+            //SqlParameter pFile = new SqlParameter() { ParameterName = "file", SqlValue = File, SqlDbType = SqlDbType.VarBinary };
+            //SqlParameter pFileName = new SqlParameter() { ParameterName = "file_name", SqlValue = FileName, SqlDbType = SqlDbType.NVarChar };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_change", pId, pSurname, pName, pPatronymic, pDisplayName,  pBirthDate, pCreatorAdSid, pPhone, pEmail, pFile, pFileName);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_candidate_change", pId, pSurname, pName, pPatronymic, pDisplayName,  pBirthDate, pCreatorAdSid, pPhone, pEmail/*, pFile, pFileName*/);
         }
 
         public static IEnumerable<HistoryItem> GetHistory(out int totalCount, int id, bool fullList = false)
