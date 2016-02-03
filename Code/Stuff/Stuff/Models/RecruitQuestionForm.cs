@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Web;
 using DataProvider.Helpers;
@@ -16,6 +17,7 @@ namespace Stuff.Models
         public class Relative
         {
              public int Id { get; set; }
+            public int IdQuestionForm { get; set; }
             public string RelationDegree { get; set; }
             public string Name { get; set; }
             public DateTime? BirthDate { get; set; }
@@ -29,12 +31,61 @@ namespace Stuff.Models
         public class Education
         {
             public int Id { get; set; }
+            public int IdQuestionForm { get; set; }
             public int YearStart { get; set; }
             public int YearEnd { get; set; }
             public string Place { get; set; }//Учебное заведение
             public string StudyType { get; set; }//Форма обучения
             public string Faculty { get; set; }
             public string Speciality { get; set; }
+        }
+
+        /// <summary>
+        /// Доплонительное образование
+        /// </summary>
+        public class FurtherEducation
+        {
+            public int Id { get; set; }
+            public int IdQuestionForm { get; set; }
+            public string DateStart { get; set; }
+            public string Duration { get; set; }
+            public string Place { get; set; }
+            public string CourceName { get; set; }
+        }
+
+        public class Language
+        {
+            public int Id { get; set; }
+            public int IdQuestionForm { get; set; }
+            public string Name { get; set; }
+            public int Expirence { get; set; }
+            public string Comment { get; set; }
+        }
+
+        public class Work
+        {
+            public int Id { get; set; }
+            public int IdQuestionForm { get; set; }
+            public DateTime DateStart { get; set; }
+            public DateTime DateEnd { get; set; }
+            public string Address { get; set; }
+            public string Phone { get; set; }
+            public string OrganizationName { get; set; }
+            public string BusinessType { get; set; }
+            public string Position { get; set; }
+            public string Salary { get; set; }
+            public string Subordinates { get; set; }
+            public string Duties { get; set; }//Обязанности
+            public string Achivements { get; set; }//Достижения
+            public string SearchCause { get; set; }//Причина поиска
+        }
+
+        public class Fact
+        {
+            public int Id { get; set; }
+            public int IdQuestionForm { get; set; }
+            public string Name { get; set; }
+            public int Rate { get; set; }
         }
 
         public int Id { get; set; }
@@ -53,12 +104,12 @@ namespace Stuff.Models
         public string Email { get; set; }
         public string Nationality { get; set; }
         public string Address { get; set; }
-        public int IdQuestionHaмуConviction { get; set; }//Имеете ли судимость или увольнение по статье
-        public int IdQuestionOrganizationOwner { get; set; }//Являетесь ли владельцем предприятий
-        public string OwnedOrganization { get; set; }//Каких предприятий организатор
+        public bool HaveConviction { get; set; }//Имеете ли судимость или увольнение по статье
+        public bool OrganizationOwner { get; set; }//Являетесь ли владельцем предприятий
+        public string HaveOwnedOrganization { get; set; }//Каких предприятий организатор
         public int IdQuestionWhenWork { get; set; }//Когда могли бы приступить к работе
-        public int IdQuestionDriverLicense { get; set; }//Имеете ли водительское удостоверение
-        public int IdQuestionHaveCar { get; set; }//Наличие автомобиля
+        public bool HaveDriverLicense { get; set; }//Имеете ли водительское удостоверение
+        public bool HaveCar { get; set; }//Наличие автомобиля
         public string CarModel { get; set; }//Марка автомобиля
         public int DriverExpirence { get; set; }//Водительский стаж
         public int IdQuestionMaritalStatus { get; set; }//Семейное положение
@@ -70,6 +121,20 @@ namespace Stuff.Models
         public int IdEducation { get; set; }//Образование
         public string ScienceDegree { get; set; }//Научная степень
         public IEnumerable<Education> EducationList { get; set; }//Основное образование
+        public IEnumerable<FurtherEducation> FurtherEducationList { get; set; }//Доплонительное образование
+        public IEnumerable<Language> LanguageList { get; set; }
+        public IEnumerable<Work> WorkList { get; set; }
+        public string ComputerSkills { get; set; }//Навыки работы на компьютере
+        public bool HaveTripLimit { get; set; }//Есть ли ограничения по командировкам
+        public bool HaveHealthLimit { get; set; }//Есть ли ограничения по здоровью
+        public string FreeTimeRest { get; set; }//Как проводите свободное время
+        public string LifeAttainment { get; set; }//Самое больоше достижение в жизни
+        public string LongTermGoal { get; set; }//Долгосрочная цель в профессии
+        public string Advantage { get; set; }//Преимущество перед другими
+        public IEnumerable<Fact> FactRate { get; set; } //Рейтинг обстоятельств
+        public DateTime DateCreate { get; set; }
+        public string ClientIp { get; set; }
+        public string ClientUserAgent { get; set; }
 
 
         public RecruitQuestionForm()

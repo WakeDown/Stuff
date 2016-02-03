@@ -163,7 +163,7 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_set_state", pid, pstateSysName, pCreatorAdSid, pdescr);
         }
 
-        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null,string persManagerSid = null, string viewerSid = null)
+        public static IEnumerable<RecruitVacancy> GetList(out int totalCount, int? topRows = null, int? pageNum = null, int? idVacancy = null, string vacancyName = null, string deadlineDate = null, string personalManagerName = null, string dateCreate = null, string state = null, bool? activeOnly = null,string persManagerSid = null, string viewerSid = null, string branchOffice = null)
         {
             if (!topRows.HasValue) topRows = 30;
             if (!pageNum.HasValue) pageNum = 1;
@@ -179,7 +179,8 @@ namespace Stuff.Models
             SqlParameter pstate = new SqlParameter() { ParameterName = "state", SqlValue = state, SqlDbType = SqlDbType.NVarChar };
             SqlParameter pactiveOnly = new SqlParameter() { ParameterName = "active_only", SqlValue = activeOnly, SqlDbType = SqlDbType.Bit };
             SqlParameter pViewerSid = new SqlParameter() { ParameterName = "viewer_sid", SqlValue = viewerSid, SqlDbType = SqlDbType.VarChar };//Пользователь который зашел на страничку
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly, ppersonalManagerSid, pViewerSid);
+            SqlParameter pbranchOffice = new SqlParameter() { ParameterName = "branch_office", SqlValue = branchOffice, SqlDbType = SqlDbType.NVarChar }; 
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_get_list", ptopRows, ppageNum, pidVacancy, pvacancyName, pdeadlineDate, ppersonalManagerName, pdateCreate, pstate, pactiveOnly, ppersonalManagerSid, pViewerSid, pbranchOffice);
 
             totalCount = 0;
             var lst = new List<RecruitVacancy>();

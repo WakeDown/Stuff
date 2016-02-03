@@ -80,10 +80,13 @@
                 <input id="vid" class="form-control input-xs" placeholder="ID" value="@Request.QueryString["vid"]" style="width: 50px;" />
             </th>
             <th>
-                <input id="vnm" class="form-control input-xs" placeholder="Вакансия" value="@Request.QueryString["vnm"]" />
+                <input id="vnm" class="form-control input-xs" placeholder="Вакансия" value="@Request.QueryString["vnm"]"/>
+            </th>
+            <th>
+                <input id="bro" class="form-control input-xs" placeholder="Филиал" value="@Request.QueryString["bro"]" />
             </th>
             @*<th>Дата открытия</th>*@
-            <th>Кандидатов (всего / отклонено)</th>
+            <th>Кандидатов</th>
             <th>
                 <input id="dtdl" class="form-control input-xs" placeholder="Дата закрытия" value="@Request.QueryString["dtdl"]" />
             </th>
@@ -93,9 +96,10 @@
             <th>
                 <input id="stt" class="form-control input-xs" placeholder="Статус" value="@Request.QueryString["stt"]" />
             </th>
-            <th>
+            @*<th>
                 <input id="dtcr" class="form-control input-xs" placeholder="Добавлена" value="@Request.QueryString["dtcr"]"/>
-            </th>
+            </th>*@
+            
             <th class="min-width">
                 <a href="@Url.Action("Index")" class="btn btn-default btn-xs" title="очистить фильтр"><i class="fa fa-refresh"></i></a>
             </th>
@@ -113,6 +117,9 @@
                          <div><small>@rv.DepartmentName</small>
                          </div>
                      </td>
+                     <td>
+                         @rv.BranchOfficeName
+                     </td>
                      @*<td>@rv.DateCreate.ToString("dd.MM.yyyy")</td>*@
                      <td class="text-nowrap bold text-center">@rv.CandidateTotalCount / <span class="text-danger">@rv.CandidateCancelCount</span></td>
                      <td>
@@ -124,17 +131,17 @@
                          </small><br/><small class="text-danger">
                              @(rv.ClaimEndDate.HasValue ? rv.ClaimEndDate.Value.ToString("dd.MM.yyyy") : "не указана") - Заявка
                          </small>
-
                      </td>
                      <td>@rv.PersonalManagerName</td>
                      <td>
                          <strong>@rv.StateName</strong>
-                         <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.StateChangerName</small>
+                         <div><small class="text-nowrap">@(rv.StateChangeDate.HasValue ? rv.StateChangeDate.Value.ToString("dd.MM.yyyy") : null) - @rv.StateChangerName</small>
                          </div>
                      </td>
-                     <td><strong>Добавлена</strong>
+                     @*<td><strong>Добавлена</strong>
                         <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
-                     </td>
+                     </td>*@
+                     
                      @*<td>
                          <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
                      </td>*@
@@ -217,8 +224,10 @@
             url = updateQueryStringParameter(url, 'dtdl', dtdl);
             var pmgr = $('#pmgr').val();
             url = updateQueryStringParameter(url, 'pmgr', pmgr);
-            var dtcr = $('#dtcr').val();
-            url = updateQueryStringParameter(url, 'dtcr', dtcr);
+            //var dtcr = $('#dtcr').val();
+            //url = updateQueryStringParameter(url, 'dtcr', dtcr);
+            var bro = $('#bro').val();
+            url = updateQueryStringParameter(url, 'bro', bro);
             var stt = $('#stt').val();
             url = updateQueryStringParameter(url, 'stt', stt);
             var aon = $('[name=activeOnly]:checked').val();

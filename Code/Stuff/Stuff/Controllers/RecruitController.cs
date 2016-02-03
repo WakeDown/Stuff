@@ -16,7 +16,7 @@ namespace Stuff.Controllers
     public class RecruitController : BaseController
     {
         // GET: Recruit
-        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, int? aon)
+        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, int? aon, string bro)
         {
             bool? activeOnly = null;
             if (aon.HasValue)
@@ -36,7 +36,7 @@ namespace Stuff.Controllers
             }
             else
             {
-                return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon = 1 });
+                return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon = 1, bro });
             }
 
             bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
@@ -51,7 +51,7 @@ namespace Stuff.Controllers
             int.TryParse(vid, out id);
             string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
 
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid, viewerSid);
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid, viewerSid, bro);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }

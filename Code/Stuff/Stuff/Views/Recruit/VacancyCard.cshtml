@@ -569,7 +569,7 @@
             var stateCount = @stateCount;
             var result = '<div class="stateIndicateContainer">';
 
-            for (var i = 1; i < stateCount; i++) {
+            for (var i = 1; i <= stateCount; i++) {
                 result += '<div class="state-indicate-item ' + (i <= curStateNum ? 'full' : 'empty') + '' + (isCancel == true && i == curStateNum ? ' cancel' : '') + '">&nbsp;&nbsp;</div>';
             }
             result += '</div>';
