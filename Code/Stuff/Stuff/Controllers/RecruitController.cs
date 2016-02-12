@@ -394,6 +394,15 @@ namespace Stuff.Controllers
             return Json(sel);
         }
 
+        [HttpPost]
+        public JsonResult SelectionSetChiefAcceptState(int id, string descr)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            RecruitSelection.SetState(id, "SECCHIEFACCEPT", CurUser.Sid, descr);
+            var sel = new RecruitSelection(id);
+            return Json(sel);
+        }
+
         public PartialViewResult SelectionHistory(int? id)
         {
             bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);

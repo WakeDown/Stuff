@@ -440,7 +440,7 @@
                 '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null ? '' : item.Candidate.Patronymic) + '</a>' +
                 (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName + '</small>') +
                 @*(item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br />' +
-                    '<a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>')+*@ 
+                    '<a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>')+*@
                     '<div id="sel-files-' + item.Id + '"></div>' +
                 '</td>' +
                 '<td>' + (item.Candidate.MaleStr == null ? '' : item.Candidate.MaleStr) + '</td>' +
@@ -617,7 +617,29 @@
             var slid = $modal.attr('slid');
             var descr = $('#stateComment').val();
 
-            if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите принять утвердить данного кандидата?')) return;
+            if (!confirm('Вы уверены что хотите утвердить данного кандидата?')) return;
+
+            $.ajax({
+                url: '@Url.Action("SelectionSetChiefAcceptState")',
+                method: 'POST',
+                data: { id: slid, descr: descr },
+                success: function(data) {
+                    var $row = $('#sel-' + slid);
+                    $row.replaceWith(getCandidateListRow(data));
+                    $modal.modal('hide');
+                    hideSpinnerAndEnabled($this);
+                    //var $row = $('#sel-' + slid);
+                    //$row.replaceWith(getCandidateListRow(data));
+                    //$modal.modal('hide');
+
+                },
+                error: function() {
+                    alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                    hideSpinnerAndEnabled($this);
+                }
+            });
+
+            @*if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите утвердить данного кандидата?')) return;
 
 
             $.ajax({
@@ -635,7 +657,7 @@
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
                     hideSpinnerAndEnabled($this);
                 }
-            });
+            });*@
         }
 
         function selectionSetCancelState(e) {
