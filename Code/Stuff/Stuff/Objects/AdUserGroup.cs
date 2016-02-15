@@ -21,6 +21,7 @@ namespace Stuff.Objects
         {
             var list = new List<AdUserGroup>();
             list.Add(new AdUserGroup(AdGroup.SuperAdmin, "S-1-5-21-1970802976-3466419101-4042325969-4031"));//Суперадмин
+            list.Add(new AdUserGroup(AdGroup.SuperAdmin, "S-1-5-21-1970802976-3466419101-4042325969-6761"));//Суперадмин m.verhoturcev@unitgroup.ru
             list.Add(new AdUserGroup(AdGroup.PersonalManager, "S-1-5-21-1970802976-3466419101-4042325969-4030"));//Менеджер по персоналу
             list.Add(new AdUserGroup(AdGroup.SystemUser, "S-1-5-21-1970802976-3466419101-4042325969-4033"));//Системный
             list.Add(new AdUserGroup(AdGroup.VendorStateDelivery, "S-1-5-21-1970802976-3466419101-4042325969-4555"));
