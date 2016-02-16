@@ -1,7 +1,6 @@
 ﻿--Документы для согласования
 CREATE TABLE [dbo].[Documents] (
-    [Id]          INT IDENTITY(1,1)  NOT NULL,
-	[RefDocId]	  VARCHAR (50) NULL,
+    [Id]          VARCHAR (50)  NOT NULL,
     [Name]        VARCHAR (200) NOT NULL,
     [TypeId]      INT           NOT NULL,
     [ExecutionId] INT           NULL,
@@ -10,4 +9,6 @@ CREATE TABLE [dbo].[Documents] (
     CONSTRAINT [FK_Documents_ExecutionId] FOREIGN KEY ([ExecutionId]) REFERENCES [dbo].[WfwDocumentExecutions] ([Id]),
     CONSTRAINT [FK_Documents_TypeId] FOREIGN KEY ([TypeId]) REFERENCES [dbo].[DocumentTypes] ([Id])
 );
+
+
 
