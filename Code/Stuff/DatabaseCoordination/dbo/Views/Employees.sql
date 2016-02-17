@@ -1,4 +1,5 @@
-﻿CREATE VIEW [dbo].[Employees] 
+﻿
+CREATE VIEW [dbo].[Employees] 
 AS
 SELECT 	
 	[id],
@@ -22,9 +23,9 @@ SELECT
 	[dattim2],
 	[date_came],
 	[birth_date],
-	[male] [bit],
+	[male],
 	[id_position_org],
-	[has_ad_account],
+	[hAS_ad_account],
 	[creator_sid],
 	[ad_login],
 	[date_fired],
@@ -32,4 +33,4 @@ SELECT
 	[full_name_rod],
 	[newvbie_delivery],
 	[id_budget]
-	FROM [Stuff].[dbo].[employees]
+	FROM [$(StuffDB)].[dbo].[employees]

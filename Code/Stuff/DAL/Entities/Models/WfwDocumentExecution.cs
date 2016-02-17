@@ -15,7 +15,7 @@ namespace DAL.Entities.Models
         public int CreaterId { get; set; }
         public System.DateTime EndDate { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
-        public virtual employee employee { get; set; }
+        public virtual Employee employee { get; set; }
         public virtual ICollection<WfwExecutionEvent> WfwExecutionEvents { get; set; }
     }
 }

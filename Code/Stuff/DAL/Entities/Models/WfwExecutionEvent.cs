@@ -7,7 +7,7 @@ namespace DAL.Entities.Models
         public int CreaterId { get; set; }
         public int ResultId { get; set; }
         public string Comment { get; set; }
-        public virtual employee employee { get; set; }
+        public virtual Employee employee { get; set; }
         public virtual WfwDocumentExecution WfwDocumentExecution { get; set; }
         public virtual WfwEventResult WfwEventResult { get; set; }
     }

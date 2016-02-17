@@ -13,10 +13,10 @@ namespace DAL.Entities.Models
         /// <summary>
         /// Заместитель
         /// </summary>
-        public virtual employee Alternate { get; set; }
+        public virtual Employee Alternate { get; set; }
         /// <summary>
         /// Кого замещают
         /// </summary>
-        public virtual employee Replaced { get; set; }
+        public virtual Employee Replaced { get; set; }
     }
 }

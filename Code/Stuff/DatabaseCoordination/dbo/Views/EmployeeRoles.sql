@@ -3,6 +3,6 @@ AS
 SELECT
 	[Id],
 	[Name],
-	[EmployeeId]
-	FROM [Stuff].[dbo].[EmployeeRoles]
-	WHERE [Enabled] = 1
+	[EmployeeId],
+	[Enabled]
+	FROM [$(StuffDB)].[dbo].[EmployeeRoles]

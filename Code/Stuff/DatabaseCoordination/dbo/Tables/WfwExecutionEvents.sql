@@ -2,7 +2,7 @@
 CREATE TABLE [dbo].[WfwExecutionEvents] (
     [Id]          INT           IDENTITY (1, 1) NOT NULL,
     [ExecutionId] INT           NOT NULL,
-    [Date]        DATETIME      CONSTRAINT [DK_WfwExecutionEvents_CreateDate] DEFAULT (getdate()) NOT NULL,
+    [Date]        DATETIME      CONSTRAINT [DK_WfwExecutionEvents_CREATEDate] DEFAULT (getdate()) NOT NULL,
     [CreaterId]   INT           NOT NULL,
     [ResultId]    INT           NOT NULL,
     [Comment]     VARCHAR (MAX) NULL,
@@ -15,12 +15,15 @@ CREATE TABLE [dbo].[WfwExecutionEvents] (
 
 
 
+
+
 GO
-Create Trigger [dbo].[WfwExecutionEventsCreaterIdTrigger] ON [dbo].[WfwExecutionEvents] After Insert, Update
-As
-Begin
-   If NOT Exists(select Id from [Stuff].[dbo].[employees] where Id in (Select CreaterId from inserted)) BEGIN
+
+CREATE Trigger [dbo].[WfwExecutionEventsCreaterIdTrigger] ON [dbo].[WfwExecutionEvents] After Insert, Update
+AS
+BEGIN
+   If NOT Exists(SELECT Id FROM [Stuff].[dbo].[employees] WHERE Id in (SELECT CreaterId FROM inserted)) BEGIN
       -- Handle the Referential Error Here
-	  RAISERROR (-1,-1,-1, 'Cannot insert [WfwDocumentExecutions] - no [CreaterId]');
+	  RAISERROR ('Cannot insert [WfwDocumentExecutions] - no [CreaterId]',16,1)
    END
 END

@@ -385,6 +385,7 @@
     <Build Include="tSQLt\User Defined Types\Private.sql" />
     <Build Include="Security\SQLCop.sql" />
     <Build Include="Security\tSQLt.sql" />
+    <Build Include="User1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assemblies\tSQLtCLR.dll" />
@@ -398,5 +399,12 @@
       <SqlOwnerName>dbo</SqlOwnerName>
       <SqlPermissionSet>EXTERNAL_ACCESS</SqlPermissionSet>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
+    </ArtifactReference>
   </ItemGroup>
 </Project>

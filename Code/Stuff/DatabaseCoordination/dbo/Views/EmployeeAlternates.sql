@@ -7,6 +7,6 @@ SELECT
 	[StartDate],
 	[EndDate],
 	[Notify],
-	[Unlimited]
-	FROM [Stuff].[dbo].[EmployeeAlternates]
-	WHERE [Enabled] = 1
+	[Unlimited],
+	[Enabled]
+	FROM [$(StuffDB)].[dbo].[EmployeeAlternates]

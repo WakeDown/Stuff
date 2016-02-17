@@ -64,9 +64,7 @@
     <Folder Include="dbo\Views\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\employees.sql" />
     <Build Include="dbo\Tables\WfwScheme.sql" />
-    <Build Include="dbo\Tables\EmployeeRoles.sql" />
     <Build Include="dbo\Tables\WfwSchemeStage.sql" />
     <Build Include="dbo\Tables\WfwDocumentExecutions.sql" />
     <Build Include="dbo\Tables\DocumentTypes.sql" />
@@ -74,11 +72,28 @@
     <Build Include="dbo\Tables\WfwEventsResults.sql" />
     <Build Include="dbo\Tables\WfwExecutionEvents.sql" />
     <Build Include="dbo\Tables\WfwDocumentTypesSchems.sql" />
-    <Build Include="dbo\Tables\EmployeeAlternates.sql" />
-    <Build Include="dbo\Tables\Requests.sql" />
-    <Build Include="dbo\Tables\Positions.sql" />
     <Build Include="dbo\Views\Employees.sql" />
     <Build Include="dbo\Views\EmployeeRoles.sql" />
     <Build Include="dbo\Views\EmployeeAlternates.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StuffDB\StuffDB.sqlproj">
+      <Name>StuffDB</Name>
+      <Project>{288c2ab9-cc2c-4d34-9337-d79d984d8e1e}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>True</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>StuffDB</DatabaseSqlCmdVariable>
+    </ProjectReference>
+    <ProjectReference Include="..\StuffDB\StuffDB.sqlproj">
+      <Name>StuffDB</Name>
+      <Project>{288c2ab9-cc2c-4d34-9337-d79d984d8e1e}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="StuffDB">
+      <DefaultValue>StuffDB</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
   </ItemGroup>
 </Project>

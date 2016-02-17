@@ -66,13 +66,13 @@
     <Compile Include="Entities\Models\BaseEntity.cs" />
     <Compile Include="Entities\Models\Document.cs" />
     <Compile Include="Entities\Models\DocumentType.cs" />
-    <Compile Include="Entities\Models\employee.cs" />
+    <Compile Include="Entities\Models\Employee.cs" />
     <Compile Include="Entities\Models\EmployeeAlternate.cs" />
     <Compile Include="Entities\Models\EmployeeRole.cs" />
     <Compile Include="Entities\Mapping\DocumentMap.cs" />
     <Compile Include="Entities\Mapping\DocumentTypeMap.cs" />
     <Compile Include="Entities\Mapping\EmployeeAlternateMap.cs" />
-    <Compile Include="Entities\Mapping\employeeMap.cs" />
+    <Compile Include="Entities\Mapping\EmployeeMap.cs" />
     <Compile Include="Entities\Mapping\EmployeeRoleMap.cs" />
     <Compile Include="Entities\Mapping\WfwDocumentExecutionMap.cs" />
     <Compile Include="Entities\Mapping\WfwDocumentTypeSchemMap.cs" />

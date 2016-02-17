@@ -1,2 +1,8 @@
-﻿CREATE USER [sqlUnit_prog];
+﻿CREATE USER [sqlUnit_prog]
+	WITHOUT LOGIN
+	WITH DEFAULT_SCHEMA = dbo
+
+GO
+
+--GRANT CONNECT TO [sqlUnit_report]
 

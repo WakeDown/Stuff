@@ -31,7 +31,7 @@ SELECT        s.*
 	, v.candidate_cancel_count AS vacancy_candidate_cancel_count,
 	v.personal_manager_name AS vacancy_personal_manager_name, v.dattim1 AS vacancy_date_create, v.state_name AS vacancy_state_name,
 	v.state_change_date AS vacancy_state_change_date, v.state_changer_name AS vacancy_state_changer_name, v.cause_name AS vacancy_cause_name,
-	v.creator_name AS vacancy_creator_name, c.file_name AS candidate_file_name, c.file_sid AS candidate_file_sid,
+	v.creator_name AS vacancy_creator_name, /*c.file_name AS candidate_file_name, c.file_sid AS candidate_file_sid,*/
 	c.came_type_name as candidate_came_type_name, ct.name as came_type_name, v.id_city as vacancy_id_city, v.city_name as vacancy_city_name,
 	c.came_resource_name as candidate_came_resource_name, v.id_branch_office as vacancy_id_branch_office, v.branch_office_name as branch_office_name
 FROM            dbo.recruit_selections AS s INNER JOIN

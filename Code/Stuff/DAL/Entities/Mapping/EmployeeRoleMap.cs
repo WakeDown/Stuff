@@ -24,7 +24,7 @@ namespace DAL.Entities.Mapping
             this.Property(t => t.Enabled).HasColumnName("Enabled");
 
             // Relationships
-            this.HasRequired(t => t.employee)
+            this.HasRequired(t => t.Employee)
                 .WithMany(t => t.EmployeeRoles)
                 .HasForeignKey(d => d.EmployeeId);
 

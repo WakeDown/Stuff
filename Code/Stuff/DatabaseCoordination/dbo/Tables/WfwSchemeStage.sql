@@ -15,12 +15,15 @@ CREATE TABLE [dbo].[WfwSchemeStage] (
 
 
 
+
+
 GO
-Create Trigger [dbo].[WfwSchemeStageEmployeeRolesTrigger] ON [dbo].[WfwSchemeStage] After Insert, Update
-As
-Begin
-   If NOT Exists(select Id from [Stuff].[dbo].[EmployeeRoles] where Id in (Select RoleId from inserted)) BEGIN
+CREATE Trigger [dbo].[WfwSchemeStageEmployeeRolesTrigger] ON [dbo].[WfwSchemeStage] After Insert, Update
+AS
+BEGIN
+   If ( NOT EXISTS(SELECT [Id] FROM [Stuff].[dbo].[EmployeeRoles] WHERE Id in (SELECT [RoleId] FROM inserted WHERE [RoleId] is not NULL)) ) AND
+	  ( NOT Exists(SELECT [Id] FROM [Stuff].[dbo].[employees] WHERE Id in (SELECT [CoordinatorId] FROM inserted WHERE [CoordinatorId] is not NULL)) ) BEGIN
       -- Handle the Referential Error Here
-	  RAISERROR (-1,-1,-1, 'Cannot insert [WfwSchemeStage] - no [EmployeeRoles]');
+		RAISERROR ('Cannot insert [WfwSchemeStage] - no [EmployeeRoles] or [CoordinatorId]',16,1)
    END
 END
