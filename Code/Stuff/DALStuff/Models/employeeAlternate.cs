@@ -1,19 +1,18 @@
 using System;
-using System.Collections.Generic;
 
 namespace DALStuff.Models
 {
-    public partial class employeeAlternate
+    public partial class EmployeeAlternate
     {
-        public int id { get; set; }
-        public int employeeId { get; set; }
-        public int alternateEmployeeId { get; set; }
-        public Nullable<System.DateTime> startDate { get; set; }
-        public Nullable<System.DateTime> endDate { get; set; }
-        public bool notify { get; set; }
-        public Nullable<bool> unlimited { get; set; }
-        public bool enabled { get; set; }
-        public virtual employee employee { get; set; }
-        public virtual employee employee1 { get; set; }
+        public int Id { get; set; }
+        public int EmployeeId { get; set; }
+        public int AlternateEmployeeId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool Notify { get; set; }
+        public bool? Unlimited { get; set; }
+        public bool Enabled { get; set; }
+        public virtual employee Alternate { get; set; }
+        public virtual employee Replaced { get; set; }
     }
 }

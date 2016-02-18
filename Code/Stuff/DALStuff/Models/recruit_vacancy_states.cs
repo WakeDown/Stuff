@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace DALStuff.Models
 {
     public partial class recruit_vacancy_states

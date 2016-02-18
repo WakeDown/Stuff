@@ -1,5 +1,4 @@
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using DALStuff.Models.Mapping;
 
 namespace DALStuff.Models
@@ -29,7 +28,7 @@ namespace DALStuff.Models
         public DbSet<document> documents { get; set; }
         public DbSet<employee_import> employee_import { get; set; }
         public DbSet<employee_states> employee_states { get; set; }
-        public DbSet<employeeAlternate> employeeAlternates { get; set; }
+        public DbSet<EmployeeAlternate> employeeAlternates { get; set; }
         public DbSet<employeeRole> employeeRoles { get; set; }
         public DbSet<employee> employees { get; set; }
         public DbSet<engeneer_states> engeneer_states { get; set; }
@@ -60,7 +59,7 @@ namespace DALStuff.Models
         public DbSet<recruit_vacancy_causes> recruit_vacancy_causes { get; set; }
         public DbSet<recruit_vacancy_state_history> recruit_vacancy_state_history { get; set; }
         public DbSet<recruit_vacancy_states> recruit_vacancy_states { get; set; }
-        public DbSet<request_reason> request_reasons { get; set; }
+        public DbSet<RequestReason> request_reasons { get; set; }
         public DbSet<request> requests { get; set; }
         public DbSet<rest_holiday_transfer_days> rest_holiday_transfer_days { get; set; }
         public DbSet<rest_holidays> rest_holidays { get; set; }

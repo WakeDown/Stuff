@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace DALStuff.Models
 {
-    public partial class employee
+    public class employee
     {
         public employee()
         {
-            this.employeeAlternates = new List<employeeAlternate>();
-            this.employeeAlternates1 = new List<employeeAlternate>();
-            this.employeeRoles = new List<employeeRole>();
-            this.requestsFromContactPersonRole = new List<request>();
-            this.requestsFromManagerRole = new List<request>();
-            this.requestsFromResponsibleRole = new List<request>();
-            this.requestsFromTeacherRole = new List<request>();
+            EmployeeReplaceds = new List<EmployeeAlternate>();
+            EmployeeAlternates = new List<EmployeeAlternate>();
+            EmployeeRoles = new List<employeeRole>();
+            RequestsFromContactPersonRole = new List<request>();
+            RequestsFromManagerRole = new List<request>();
+            RequestsFromResponsibleRole = new List<request>();
+            RequestsFromTeacherRole = new List<request>();
         }
 
         public int id { get; set; }
@@ -33,26 +33,26 @@ namespace DALStuff.Models
         public int id_department { get; set; }
         public int id_city { get; set; }
         public bool enabled { get; set; }
-        public System.DateTime dattim1 { get; set; }
-        public System.DateTime dattim2 { get; set; }
-        public Nullable<System.DateTime> date_came { get; set; }
-        public Nullable<System.DateTime> birth_date { get; set; }
+        public DateTime dattim1 { get; set; }
+        public DateTime dattim2 { get; set; }
+        public DateTime? date_came { get; set; }
+        public DateTime? birth_date { get; set; }
         public bool male { get; set; }
         public int id_position_org { get; set; }
         public bool has_ad_account { get; set; }
         public string creator_sid { get; set; }
         public string ad_login { get; set; }
-        public Nullable<System.DateTime> date_fired { get; set; }
+        public DateTime? date_fired { get; set; }
         public string full_name_dat { get; set; }
         public string full_name_rod { get; set; }
         public bool newvbie_delivery { get; set; }
-        public Nullable<int> id_budget { get; set; }
-        public virtual ICollection<employeeAlternate> employeeAlternates { get; set; }
-        public virtual ICollection<employeeAlternate> employeeAlternates1 { get; set; }
-        public virtual ICollection<employeeRole> employeeRoles { get; set; }
-        public virtual ICollection<request> requestsFromContactPersonRole { get; set; }
-        public virtual ICollection<request> requestsFromManagerRole { get; set; }
-        public virtual ICollection<request> requestsFromResponsibleRole { get; set; }
-        public virtual ICollection<request> requestsFromTeacherRole { get; set; }
+        public int? id_budget { get; set; }
+        public virtual ICollection<EmployeeAlternate> EmployeeReplaceds { get; set; }
+        public virtual ICollection<EmployeeAlternate> EmployeeAlternates { get; set; }
+        public virtual ICollection<employeeRole> EmployeeRoles { get; set; }
+        public virtual ICollection<request> RequestsFromContactPersonRole { get; set; }
+        public virtual ICollection<request> RequestsFromManagerRole { get; set; }
+        public virtual ICollection<request> RequestsFromResponsibleRole { get; set; }
+        public virtual ICollection<request> RequestsFromTeacherRole { get; set; }
     }
 }

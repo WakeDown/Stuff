@@ -6,6 +6,7 @@ using DAL.Entities.Models;
 using DALStuff.Models;
 using NUnit.Framework;
 using employee = DALStuff.Models.employee;
+using EmployeeAlternate = DALStuff.Models.EmployeeAlternate;
 
 //using Employee = DAL.Entities.Models.Employee;
 
@@ -49,7 +50,7 @@ namespace CoordinationTests
                     //int initCnt = .Count();
                     //int initCnt = .Count();
 
-                    var requestReason = new request_reason
+                    var requestReason = new RequestReason
                     {
                         Name = "Нет нормальных сотрудников",
                         Description = "Поувольнять всех и набрать четких работников",
@@ -165,10 +166,10 @@ namespace CoordinationTests
 
                     #region Связи замещения
 
-                    var empAlter = new employeeAlternate
+                    var empAlter = new EmployeeAlternate
                     {
-                        alternateEmployeeId = empl2.id,
-                        employeeId = empl3.id,
+                        AlternateEmployeeId = empl2.id,
+                        EmployeeId = empl3.id,
                     };
                     employeesAlternats.Add(empAlter);
                     bool checkConstraintWork = false;
@@ -181,9 +182,9 @@ namespace CoordinationTests
                         checkConstraintWork = true;
                     }
                     Assert.True(checkConstraintWork);
-                    empAlter.startDate = DateTime.Now;
-                    empAlter.endDate = DateTime.Now.AddDays(31);
-                    empAlter.unlimited = true;
+                    empAlter.StartDate = DateTime.Now;
+                    empAlter.EndDate = DateTime.Now.AddDays(31);
+                    empAlter.Unlimited = true;
                     checkConstraintWork = false;
                     try
                     {
@@ -194,9 +195,9 @@ namespace CoordinationTests
                         checkConstraintWork = true;
                     }
                     Assert.True(checkConstraintWork);
-                    empAlter.startDate = DateTime.Now;
-                    empAlter.endDate = DateTime.Now.AddDays(31);
-                    empAlter.unlimited = null;
+                    empAlter.StartDate = DateTime.Now;
+                    empAlter.EndDate = DateTime.Now.AddDays(31);
+                    empAlter.Unlimited = null;
                     checkConstraintWork = false;
                     try
                     {
@@ -207,45 +208,45 @@ namespace CoordinationTests
                         checkConstraintWork = true;
                     }
                     Assert.False(checkConstraintWork);
-                    var empAlter2 = new employeeAlternate
+                    var empAlter2 = new EmployeeAlternate
                     {
-                        alternateEmployeeId = empl1.id,
-                        employeeId = empl3.id,
-                        unlimited = true
+                        AlternateEmployeeId = empl1.id,
+                        EmployeeId = empl3.id,
+                        Unlimited = true
                     };
-                    var empAlter3 = new employeeAlternate
+                    var empAlter3 = new EmployeeAlternate
                     {
-                        alternateEmployeeId = empl1.id,
-                        employeeId = empl2.id,
-                        unlimited = true
+                        AlternateEmployeeId = empl1.id,
+                        EmployeeId = empl2.id,
+                        Unlimited = true
                     };
                     employeesAlternats.Add(empAlter2);
                     employeesAlternats.Add(empAlter3);
                     stuffDb.SaveChanges();
                     //Max 2 зама и никого не замещает его
-                    Assert.AreEqual(empl3.employeeAlternates.Count, 0);
-                    Assert.AreEqual(empl3.employeeAlternates1.Count, 2);
+                    Assert.AreEqual(empl3.EmployeeReplaceds.Count, 0);
+                    Assert.AreEqual(empl3.EmployeeAlternates.Count, 2);
                     //Boxs замещает Maxа и его замещает SuperBoxs
-                    Assert.AreEqual(empl2.employeeAlternates.Count, 1);
-                    Assert.AreEqual(empl2.employeeAlternates1.Count, 1);
+                    Assert.AreEqual(empl2.EmployeeReplaceds.Count, 1);
+                    Assert.AreEqual(empl2.EmployeeAlternates.Count, 1);
                     //SuperBoxs замещает 2 а его никто
-                    Assert.AreEqual(empl1.employeeAlternates.Count, 2);
-                    Assert.AreEqual(empl1.employeeAlternates1.Count, 0);
+                    Assert.AreEqual(empl1.EmployeeReplaceds.Count, 2);
+                    Assert.AreEqual(empl1.EmployeeAlternates.Count, 0);
 
-                    Assert.AreEqual(empAlter.employee.id, empl2.id);
-                    Assert.AreEqual(empAlter.employee1.id, empl3.id);
-                    Assert.AreEqual(empAlter2.employee.id, empl1.id);
-                    Assert.AreEqual(empAlter2.employee1.id, empl3.id);
-                    Assert.AreEqual(empAlter3.employee.id, empl1.id);
-                    Assert.AreEqual(empAlter3.employee1.id, empl2.id);
+                    Assert.AreEqual(empAlter.Alternate.id, empl2.id);
+                    Assert.AreEqual(empAlter.Replaced.id, empl3.id);
+                    Assert.AreEqual(empAlter2.Alternate.id, empl1.id);
+                    Assert.AreEqual(empAlter2.Replaced.id, empl3.id);
+                    Assert.AreEqual(empAlter3.Alternate.id, empl1.id);
+                    Assert.AreEqual(empAlter3.Replaced.id, empl2.id);
 
                     //проверка Views
                     var em1 = employeesView.First(it => it.id == empl1.id);
                     var em2 = employeesView.First(it => it.id == empl2.id);
                     var em3 = employeesView.First(it => it.id == empl3.id);
-                    var emA1 = employeesAlternatsView.First(it => it.Id == empAlter.id);
-                    var emA2 = employeesAlternatsView.First(it => it.Id == empAlter2.id);
-                    var emA3 = employeesAlternatsView.First(it => it.Id == empAlter3.id);
+                    var emA1 = employeesAlternatsView.First(it => it.Id == empAlter.Id);
+                    var emA2 = employeesAlternatsView.First(it => it.Id == empAlter2.Id);
+                    var emA3 = employeesAlternatsView.First(it => it.Id == empAlter3.Id);
 
                     //Max 2 зама и никого не замещает его
                     Assert.AreEqual(em3.EmployeeReplaceds.Count, 0);
@@ -276,20 +277,20 @@ namespace CoordinationTests
 
                     request request = new request
                     {
-                        contact_person = empl1,
-                        manager_persom = empl2,
-                        responsible_person = empl3,
-                        teacher_person = empl1,
-                        id_department = 17, // ИТ отдел
-                        id_position = 25, // Инженер
+                        ContactPerson = empl1,
+                        ManagerPersom = empl2,
+                        ResponsiblePerson = empl3,
+                        TeacherPerson = empl1,
+                        IdDepartment = 17, // ИТ отдел
+                        IdPosition = 25, // Инженер
                     };
-                    requestReason.requests.Add(request);
+                    requestReason.Requests.Add(request);
                     stuffDb.SaveChanges();
 
-                    Assert.AreEqual(request.id_contact_person, empl1.id);
-                    Assert.AreEqual(request.id_manager, empl2.id);
-                    Assert.AreEqual(request.id_responsible_person, empl3.id);
-                    Assert.AreEqual(request.id_teacher, empl1.id);
+                    Assert.AreEqual(request.IdContactPerson, empl1.id);
+                    Assert.AreEqual(request.IdManager, empl2.id);
+                    Assert.AreEqual(request.IdResponsiblePerson, empl3.id);
+                    Assert.AreEqual(request.IdTeacher, empl1.id);
 
                     int newEmployeeCnt = employees.Count();
                     int newEmployeeCntView = employeesView.Count();

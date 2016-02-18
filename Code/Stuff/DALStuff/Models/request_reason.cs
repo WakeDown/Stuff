@@ -1,19 +1,18 @@
-using System;
 using System.Collections.Generic;
 
 namespace DALStuff.Models
 {
-    public partial class request_reason
+    public partial class RequestReason
     {
-        public request_reason()
+        public RequestReason()
         {
-            this.requests = new List<request>();
+            this.Requests = new List<request>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Enabled { get; set; }
-        public virtual ICollection<request> requests { get; set; }
+        public virtual ICollection<request> Requests { get; set; }
     }
 }

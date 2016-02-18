@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.ModelConfiguration;
 
 namespace DALStuff.Models.Mapping
@@ -16,7 +15,7 @@ namespace DALStuff.Models.Mapping
                 .HasMaxLength(200);
 
             // Table & Column Mappings
-            this.ToTable("employeeRoles");
+            this.ToTable("EmployeeRoles");
             this.Property(t => t.id).HasColumnName("id");
             this.Property(t => t.name).HasColumnName("name");
             this.Property(t => t.employeeId).HasColumnName("employeeId");
@@ -24,7 +23,7 @@ namespace DALStuff.Models.Mapping
 
             // Relationships
             this.HasRequired(t => t.employee)
-                .WithMany(t => t.employeeRoles)
+                .WithMany(t => t.EmployeeRoles)
                 .HasForeignKey(d => d.employeeId);
 
         }

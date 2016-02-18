@@ -130,6 +130,29 @@ namespace Stuff.Controllers
             return Json(new {});
         }
 
+        public ActionResult Requests(int? topRows, int? page, string cid, string fio, string age, string phone,
+            string email, string added, byte? sex, string changed)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            if (!topRows.HasValue)
+                topRows = 30;
+            if (!page.HasValue) page = 1;
+            bool? sexBool = null;
+            if (sex.HasValue)
+            {
+                if (sex.Value == 1)
+                    sexBool = true;
+                else if (sex.Value == 0)
+                    sexBool = false;
+            }
+
+            int totalCount = 0;
+
+            var 
+            ViewBag.TotalCount = totalCount;
+            return View();
+        }
+
         public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;

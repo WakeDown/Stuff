@@ -1,9 +1,8 @@
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.ModelConfiguration;
 
 namespace DALStuff.Models.Mapping
 {
-    public class request_reasonsMap : EntityTypeConfiguration<request_reason>
+    public class request_reasonsMap : EntityTypeConfiguration<RequestReason>
     {
         public request_reasonsMap()
         {
