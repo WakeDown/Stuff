@@ -15,31 +15,25 @@ namespace CoordinationTests
     public class CoordinationTest
     {
         [Test]
-        public void TestCoordinationScheme()
+        public void TestEmployeesAndRequests()
         {
             var originalConnectionString = ConfigurationManager.ConnectionStrings["CoordinationDbContext"].ConnectionString;
             var stuffConnectionString = ConfigurationManager.ConnectionStrings["StuffConnectionString"].ConnectionString;
-
-
             using (StuffContext stuffDb = new StuffContext(stuffConnectionString + ";Password=sa"))
             {
                 using (CoordinationContext db = new CoordinationContext(originalConnectionString + ";Password=sa"))
                 {
-                    var documentTypes = db.DocumentTypes;
                     var employees = stuffDb.employees;
                     var employeesAlternats = stuffDb.employeeAlternates;
                     var employeesView = db.Employees;
                     var employeesAlternatsView = db.EmployeeAlternates;
                     var requests = stuffDb.requests;
-                    var request_reasons = stuffDb.request_reasons;
+                    var requestReasons = stuffDb.request_reasons;
 
-                    //var rs = requests.Include(e=>e.request_reasons).Include(r=>r.contact_person).Include(r => r.manager).Include(r => r.responsible_person).ToList();
-
-                    int initDocTypeCnt = documentTypes.Count();
                     int initEmployeeCnt = employees.Count();
                     int initEmployeeAlternatsCnt = employeesAlternats.Count();
                     int initCntrequests = requests.Count();
-                    int initCntrequest_reasons = request_reasons.Count();
+                    int initCntrequestReasons = requestReasons.Count();
                     //int initCnt = .Count();
                     //int initCnt = .Count();
                     //int initCnt = .Count();
@@ -55,23 +49,12 @@ namespace CoordinationTests
                     //int initCnt = .Count();
                     //int initCnt = .Count();
 
-
-
-
-                    var docType1 = new DocumentType
-                    {
-                        Description = "Только в сартир.",
-                        Name = "Писулька",
-                    };
-                    documentTypes.Add(docType1);
-                    db.SaveChanges();
-
-                    var requestReason = new request_reasons
+                    var requestReason = new request_reason
                     {
                         Name = "Нет нормальных сотрудников",
                         Description = "Поувольнять всех и набрать четких работников",
                     };
-                    request_reasons.Add(requestReason);
+                    requestReasons.Add(requestReason);
                     stuffDb.SaveChanges();
 
                     #region new employees
@@ -182,7 +165,7 @@ namespace CoordinationTests
 
                     #region Связи замещения
 
-                    var empAlter = new DALStuff.Models.employeeAlternate
+                    var empAlter = new employeeAlternate
                     {
                         alternateEmployeeId = empl2.id,
                         employeeId = empl3.id,
@@ -293,22 +276,27 @@ namespace CoordinationTests
 
                     request request = new request
                     {
-                        manager = empl3,
-                        responsible_person = empl2,
-                        employee3 = empl3,
+                        contact_person = empl1,
+                        manager_persom = empl2,
+                        responsible_person = empl3,
+                        teacher_person = empl1,
                         id_department = 17, // ИТ отдел
                         id_position = 25, // Инженер
                     };
                     requestReason.requests.Add(request);
                     stuffDb.SaveChanges();
 
-                    int newDocTypeCnt = documentTypes.Count();
+                    Assert.AreEqual(request.id_contact_person, empl1.id);
+                    Assert.AreEqual(request.id_manager, empl2.id);
+                    Assert.AreEqual(request.id_responsible_person, empl3.id);
+                    Assert.AreEqual(request.id_teacher, empl1.id);
+
                     int newEmployeeCnt = employees.Count();
                     int newEmployeeCntView = employeesView.Count();
                     int newEmployeeAlternatsCnt = employeesAlternats.Count();
                     int newEmployeeAlternatsCntView = employeesAlternatsView.Count();
                     int newCntrequests = requests.Count();
-                    int newCntrequest_reasons = request_reasons.Count();
+                    int newCntrequestReasons = requestReasons.Count();
                     //int newCnt = .Count();
                     //int newCnt = .Count();
                     //int newCnt = .Count();
@@ -325,12 +313,11 @@ namespace CoordinationTests
                     Assert.AreEqual(newEmployeeCnt, newEmployeeCntView);
                     Assert.AreEqual(newEmployeeAlternatsCnt, newEmployeeAlternatsCntView);
 
-                    Assert.AreEqual(newDocTypeCnt, initDocTypeCnt + 1);
                     Assert.AreEqual(newEmployeeCnt, initEmployeeCnt + 3);
                     Assert.AreEqual(newEmployeeAlternatsCnt, initEmployeeAlternatsCnt + 3);
 
                     Assert.AreEqual(newCntrequests, initCntrequests + 1);
-                    Assert.AreEqual(newCntrequest_reasons, initCntrequest_reasons + 1);
+                    Assert.AreEqual(newCntrequestReasons, initCntrequestReasons + 1);
                     //Assert.AreEqual(newCnt , initCnt);
                     //Assert.AreEqual(newCnt , initCnt);
                     //Assert.AreEqual(newCnt , initCnt);
@@ -347,7 +334,6 @@ namespace CoordinationTests
                     //Assert.AreEqual(newCnt , initCnt);
                     //Assert.AreEqual(newCnt , initCnt);
 
-                    documentTypes.Remove(docType1);
                     employees.Remove(empl3);
                     employees.Remove(empl2);
                     employees.Remove(empl1);
@@ -355,7 +341,7 @@ namespace CoordinationTests
                     employeesAlternats.Remove(empAlter2);
                     employeesAlternats.Remove(empAlter3);
                     requests.Remove(request);
-                    request_reasons.Remove(requestReason);
+                    requestReasons.Remove(requestReason);
                     //.Remove();
                     //.Remove();
                     //.Remove();
@@ -373,18 +359,12 @@ namespace CoordinationTests
                     db.SaveChanges();
                     stuffDb.SaveChanges();
 
-
-
-
-
-
-                    int actualDocTypeCnt = documentTypes.Count();
                     int actualEmploueeCnt = employees.Count();
                     int actualEmployeeAlternatsCnt = employeesAlternats.Count();
                     int actualEmploueeCntView = employeesView.Count();
                     int actualEmployeeAlternatsCntView = employeesAlternatsView.Count();
                     int actualCntrequests = requests.Count();
-                    int actualCntrequest_reasons = request_reasons.Count();
+                    int actualCntrequestReasons = requestReasons.Count();
                     //int actualCnt = .Count();
                     //int actualCnt = .Count();
                     //int actualCnt = .Count();
@@ -396,13 +376,12 @@ namespace CoordinationTests
                     //int actualCnt = .Count();
                     //int actualCnt = .Count();
 
-                    Assert.AreEqual(actualDocTypeCnt, initDocTypeCnt);
                     Assert.AreEqual(actualEmploueeCnt, initEmployeeCnt);
                     Assert.AreEqual(actualEmployeeAlternatsCnt, initEmployeeAlternatsCnt);
                     Assert.AreEqual(actualEmploueeCntView, initEmployeeCnt);
                     Assert.AreEqual(actualEmployeeAlternatsCntView, initEmployeeAlternatsCnt);
                     Assert.AreEqual(actualCntrequests , initCntrequests);
-                    Assert.AreEqual(actualCntrequest_reasons , initCntrequest_reasons);
+                    Assert.AreEqual(actualCntrequestReasons , initCntrequestReasons);
                     //Assert.AreEqual(actualCnt , initCnt);
                     //Assert.AreEqual(actualCnt , initCnt);
                     //Assert.AreEqual(actualCnt , initCnt);
@@ -419,14 +398,120 @@ namespace CoordinationTests
                     //Assert.AreEqual(actualCnt , initCnt);
                     //Assert.AreEqual(actualCnt , initCnt);
                     //Assert.AreEqual(actualCnt , initCnt);
-
-
-
-
-
-
-
                 }
+            }
+        }
+        [Test]
+        public void TestCoordinations()
+        {
+            var originalConnectionString = ConfigurationManager.ConnectionStrings["CoordinationDbContext"].ConnectionString;
+            using (CoordinationContext db = new CoordinationContext(originalConnectionString + ";Password=sa"))
+            {
+                var documentTypes = db.DocumentTypes;
+
+                int initDocTypeCnt = documentTypes.Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+                //int initCnt = .Count();
+
+                var docType1 = new DocumentType
+                {
+                    Description = "Только в сартир.",
+                    Name = "Писулька",
+                };
+                documentTypes.Add(docType1);
+                db.SaveChanges();
+
+                int newDocTypeCnt = documentTypes.Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+                //int newCnt = .Count();
+
+                Assert.AreEqual(newDocTypeCnt, initDocTypeCnt + 1);
+
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+                //Assert.AreEqual(newCnt , initCnt);
+
+                documentTypes.Remove(docType1);
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+                //.Remove();
+
+                db.SaveChanges();
+
+                int actualDocTypeCnt = documentTypes.Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+                //int actualCnt = .Count();
+
+                Assert.AreEqual(actualDocTypeCnt, initDocTypeCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
+                //Assert.AreEqual(actualCnt , initCnt);
             }
         }
     }

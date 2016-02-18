@@ -177,7 +177,7 @@
     <Compile Include="Models\recruit_vacancy_states.cs" />
     <Compile Include="Models\recruit_vacancy_state_history.cs" />
     <Compile Include="Models\request.cs" />
-    <Compile Include="Models\request_reasons.cs" />
+    <Compile Include="Models\request_reason.cs" />
     <Compile Include="Models\rest_holidays.cs" />
     <Compile Include="Models\rest_holiday_transfer_days.cs" />
     <Compile Include="Models\statement_printed.cs" />

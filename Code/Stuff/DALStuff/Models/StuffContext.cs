@@ -60,7 +60,7 @@ namespace DALStuff.Models
         public DbSet<recruit_vacancy_causes> recruit_vacancy_causes { get; set; }
         public DbSet<recruit_vacancy_state_history> recruit_vacancy_state_history { get; set; }
         public DbSet<recruit_vacancy_states> recruit_vacancy_states { get; set; }
-        public DbSet<request_reasons> request_reasons { get; set; }
+        public DbSet<request_reason> request_reasons { get; set; }
         public DbSet<request> requests { get; set; }
         public DbSet<rest_holiday_transfer_days> rest_holiday_transfer_days { get; set; }
         public DbSet<rest_holidays> rest_holidays { get; set; }

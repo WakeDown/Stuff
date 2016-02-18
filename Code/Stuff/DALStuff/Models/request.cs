@@ -51,10 +51,10 @@ namespace DALStuff.Models
         public bool Enabled { get; set; }
         public virtual department department { get; set; }
         public virtual employee contact_person { get; set; }
-        public virtual employee manager { get; set; }
+        public virtual employee manager_persom { get; set; }
         public virtual employee responsible_person { get; set; }
-        public virtual employee employee3 { get; set; }
+        public virtual employee teacher_person { get; set; }
         public virtual position position { get; set; }
-        public virtual request_reasons request_reasons { get; set; }
+        public virtual request_reason request_reason { get; set; }
     }
 }

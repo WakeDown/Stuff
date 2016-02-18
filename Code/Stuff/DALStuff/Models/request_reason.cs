@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace DALStuff.Models
 {
-    public partial class request_reasons
+    public partial class request_reason
     {
-        public request_reasons()
+        public request_reason()
         {
             this.requests = new List<request>();
         }

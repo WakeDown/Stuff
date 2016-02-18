@@ -3,7 +3,7 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace DALStuff.Models.Mapping
 {
-    public class request_reasonsMap : EntityTypeConfiguration<request_reasons>
+    public class request_reasonsMap : EntityTypeConfiguration<request_reason>
     {
         public request_reasonsMap()
         {
