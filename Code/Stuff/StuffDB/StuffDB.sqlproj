@@ -132,8 +132,8 @@
     <Build Include="dbo\Tables\vendor_states.sql" />
     <Build Include="dbo\Tables\statement_printed.sql" />
     <Build Include="dbo\Tables\vendors.sql" />
-    <Build Include="dbo\Tables\EmployeeAlternates.sql" />
-    <Build Include="dbo\Tables\EmployeeRoles.sql" />
+    <Build Include="dbo\Tables\employeeAlternates.sql" />
+    <Build Include="dbo\Tables\employeeRoles.sql" />
     <Build Include="dbo\Tables\employees.sql" />
     <Build Include="dbo\Tables\recruit_selection_states.sql" />
     <Build Include="dbo\Tables\cities.sql" />
@@ -386,6 +386,8 @@
     <Build Include="Security\SQLCop.sql" />
     <Build Include="Security\tSQLt.sql" />
     <Build Include="User1.sql" />
+    <Build Include="dbo\Tables\requests.sql" />
+    <Build Include="dbo\Tables\request_reasons.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assemblies\tSQLtCLR.dll" />
@@ -406,5 +408,8 @@
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
     </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="StuffDB.refactorlog" />
   </ItemGroup>
 </Project>

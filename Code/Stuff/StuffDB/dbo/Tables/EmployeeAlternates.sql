@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[EmployeeAlternates] (
+﻿CREATE TABLE [dbo].[employeeAlternates] (
     [Id]                  INT      IDENTITY (1000, 1) NOT NULL,
     [EmployeeId]          INT      NOT NULL,
     [AlternateEmployeeId] INT      NOT NULL,

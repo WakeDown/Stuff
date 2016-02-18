@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[EmployeeRoles] (
+﻿CREATE TABLE [dbo].[employeeRoles] (
     [Id]         INT           IDENTITY (1000, 1) NOT NULL,
     [Name]       VARCHAR (200) NOT NULL,
     [EmployeeId] INT           NOT NULL,
