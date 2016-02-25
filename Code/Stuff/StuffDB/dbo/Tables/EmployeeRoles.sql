@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[employeeRoles] (
     [Id]         INT           IDENTITY (1000, 1) NOT NULL,
-    [Name]       VARCHAR (200) NOT NULL,
+    [Name]       NVARCHAR(200) NOT NULL,
     [EmployeeId] INT           NOT NULL,
     [Enabled]    BIT           CONSTRAINT [DK_EmployeeRoles_Enabled] DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_EmployeeRoles] PRIMARY KEY CLUSTERED ([Id] ASC),

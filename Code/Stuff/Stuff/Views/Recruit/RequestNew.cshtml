@@ -1,0 +1,735 @@
+﻿@using Stuff.Services
+@using Stuff.Models
+@using Stuff.Objects
+@model Stuff.Models.Request
+
+@{
+    ViewBag.Title = "Новая заявка";
+    Layout = "~/Views/Shared/_Editor.cshtml";
+    //var empList =Employee.GetEmployeeListSid();
+}
+
+@section PanelHead
+{
+    Новая заявка
+}
+
+@section PanelBody
+{
+    @using (Html.BeginForm("RequestNew", "Recruit", FormMethod.Post, new {@id = "posForm", @class = "form-horizontal", role = "form"}))
+    {
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="position">Вакантная должность</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.id_position,
+                    new SelectList(RequestService.GetReguestPositionList(),
+                        "id", "name"), "--выберите--",
+                    new
+                    {
+                        ////@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "position",
+                        required = "required",
+                        data_error = "Заполните поле Вакантная должность"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="reason">Причина открытия</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.id_reason,
+                    new SelectList(RequestService.GetReguestReasonList(),
+                        "id", "name"), "--выберите--",
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "reason",
+                        required = "required",
+                        data_error = "Заполните поле Причина открытия"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="aim">Цель</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.aim,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "aim",
+                        required = "required",
+                        data_error = "Заполните Цель"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="manager">Непосредственный руководитель</label>
+            <div class="col-lg-5">
+                <select id="manager" required="required" data_error="Заполните поле Непосредственный руководитель"
+                        class="form-control required-mark" name="id_manager" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="teacher">Наставник</label>
+            <div class="col-lg-5">
+                <select id="teacher" required="required" data_error="Заполните поле Наставник"
+                        class="form-control required-mark" name="id_teacher" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="department">Подразделение</label>
+            <div class="col-lg-5">
+                @Html.DropDownListFor(m => m.id_department,
+                    new SelectList(RequestService.GetDepartmentList(),
+                        "id", "name"), "--выберите--",
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "department",
+                        required = "required",
+                        data_error = "Заполните поле Подразделение"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        @*<div class="form-group">
+            <label class="col-lg-2 control-label" for="is_subordinates">Есть подчиненные</label>
+            <div class="col-lg-5">
+                @Html.CheckBoxFor(m => m.is_subordinates.Value,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "is_subordinates",
+                        //required = "required",
+                        data_error = "Заполните поле Есть подчиненные"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>*@
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="is_subordinates">Есть подчиненные</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.is_subordinates, true, new { required = "required" })
+                        @:&nbsp;"Да"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.is_subordinates, false, new { required = "required" })
+                        @:&nbsp;"Нет"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="subordinates">Подчиненные</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.subordinates,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "subordinates",
+                        required = "required",
+                        data_error = "Заполните поле Подчиненные"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="functions">Выполняемые функции</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.functions,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "functions",
+                        required = "required",
+                        data_error = "Заполните поле Выполняемые функции",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="interactions">Взаимодействия</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.interactions,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "interactions",
+                        required = "required",
+                        data_error = "Заполните поле Взаимодействия",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        @*<div class="form-group">
+            <label class="col-lg-2 control-label" for="is_instructions">Есть должностные инструкции</label>
+            <div class="col-lg-5">
+                @Html.CheckBoxFor(m => m.is_instructions.Value,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "is_instructions",
+                        required = "required",
+                        data_error = "Заполните поле Есть должностные инструкции"
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>*@
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="is_instructions">Есть должностные инструкции</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.is_instructions, true, new { required = "required" })
+                        @:&nbsp;"Да"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.is_instructions, false, new { required = "required" })
+                        @:&nbsp;"Нет"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="success_rates">Показатели успешности</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.success_rates,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "success_rates",
+                        required = "required",
+                        data_error = "Заполните поле Показатели успешности",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="plan_to_test">План на испытательный срок</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.plan_to_test,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "plan_to_test",
+                        required = "required",
+                        data_error = "Заполните поле План на испытательный срок",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="plan_after_test">План после испытательного срока</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.plan_after_test,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "plan_after_test",
+                        required = "required",
+                        data_error = "Заполните поле План после испытательного срока",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <hr>
+        <!--****************************************************************************************-->
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="work_place">Место работы</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.work_place,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "work_place",
+                        required = "required",
+                        data_error = "Заполните поле Место работы",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="work_mode">Режим работы</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.work_mode,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "work_mode",
+                        required = "required",
+                        data_error = "Заполните поле Режим работы",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="holiday">Отпуск</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.holiday,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "holiday",
+                        required = "required",
+                        data_error = "Заполните поле Отпуск",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="hospital">Больничные</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.hospital,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "hospital",
+                        required = "required",
+                        data_error = "Заполните поле Больничные",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="business_trip">Командировки</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.business_trip,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "business_trip",
+                        required = "required",
+                        data_error = "Заполните поле Командировки",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="overtime_work">Сверхурочная работа</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.overtime_work,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "overtime_work",
+                        required = "required",
+                        data_error = "Заполните поле Сверхурочная работа",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="compensations">Компенсации</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.compensations,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "compensations",
+                        required = "required",
+                        data_error = "Заполните поле Компенсации",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="probation">Испытательный срок</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.probation, 3, new { required = "required" })
+                        @:&nbsp;"3 мес"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.probation, 6, new { required = "required" })
+                        @:&nbsp;"6 мес"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="salary_to_test">Зарплата на испытательный срок</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.salary_to_test,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "salary_to_test",
+                        required = "required",
+                        data_error = "Заполните поле Зарплата на испытательный срок",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="salary_after_test">Зарплата после испытательного срока</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.salary_after_test,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "salary_after_test",
+                        required = "required",
+                        data_error = "Заполните поле Зарплата после испытательного срока",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="bonuses">Бонусы</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.bonuses,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "bonuses",
+                        required = "required",
+                        data_error = "Заполните поле Бонусы",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <hr>
+        <!--****************************************************************************************-->
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="sex">Пол</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.sex, true, new { required = "required" })
+                        @:&nbsp;"М"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.sex, false, new { required = "required" })
+                        @:&nbsp;"Ж"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="age">Возраст: от</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.age_from,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "age_from",
+                        @type = "number",
+                        required = "required",
+                        data_error = "Заполните поле Возраст от",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="age">Возраст: до</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.age_to,
+                new
+                {
+                    //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                    @class = "form-control required-mark",
+                    @id = "age_to",
+                    @type = "number",
+                    required = "required",
+                    data_error = "Заполните поле Возраст до",
+                })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="education">Образование</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.education,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "education",
+                        required = "required",
+                        data_error = "Заполните поле Образование",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="last_work">Предыдущий опыт работы</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.last_work,
+                new
+                {
+                    //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                    @class = "form-control required-mark",
+                    @id = "last_work",
+                    required = "required",
+                    data_error = "Заполните поле Предыдущий опыт работы",
+                })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="requirements">Обязательные требования</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.requirements,
+                new
+                {
+                    //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                    @class = "form-control required-mark",
+                    @id = "requirements",
+                    required = "required",
+                    data_error = "Заполните поле Обязательные требования",
+                })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="knowledge">Знания умения навыки</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.knowledge,
+                new
+                {
+                    //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                    @class = "form-control required-mark",
+                    @id = "knowledge",
+                    required = "required",
+                    data_error = "Заполните поле Знания умения навыки",
+                })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="is_furniture">Нужна мебель</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.is_furniture, true, new { required = "required" })
+                        @:&nbsp;"Да"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.is_furniture, false, new { required = "required" })
+                        @:&nbsp;"Нет"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="furniture">Мебель</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.furniture,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "furniture",
+                        required = "required",
+                        data_error = "Заполните поле Мебель",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="is_pc">Нужен ПК</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.is_pc, true, new { required = "required" })
+                        @:&nbsp;"Да"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.is_pc, false, new { required = "required" })
+                        @:&nbsp;"Нет"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>    
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="is_telephone">Нужен телефон</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.is_telephone, true, new { required = "required" })
+                        @:&nbsp;"Да"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.is_telephone, false, new { required = "required" })
+                        @:&nbsp;"Нет"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>       
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="is_ethalon">Нужен "эталон"</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @{
+                        @Html.RadioButtonFor(m => m.is_ethalon, true, new { required = "required" })
+                        @:&nbsp;"Да"
+                    }
+                    @{
+                        @Html.RadioButtonFor(m => m.is_ethalon, false, new { required = "required" })
+                        @:&nbsp;"Нет"
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>         
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="suggestions">Доп. пожелания</label>
+            <div class="col-lg-5">
+                @Html.TextBoxFor(m => m.suggestions,
+                    new
+                    {
+                        //@disabled = (ViewBag.Editable == true) ? "" : "disabled",
+                        @class = "form-control required-mark",
+                        @id = "suggestions",
+                        required = "required",
+                        data_error = "Заполните поле Доп. пожелания",
+                    })
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>        
+        <hr>
+        <!--****************************************************************************************-->
+		<div class="form-group">
+			<label class="col-lg-2 control-label" for="appearance">Дата выхода на работу</label>
+			<div class="col-lg-2">
+				@Html.TextBoxFor(
+					m => m.appearance,
+					new
+					{
+						@class = "form-control text-right required-mark",
+						@id = "appearance",
+						required = "required",
+						data_mask = "00.00.0000"
+					})
+				<span class="help-block with-errors"></span>
+			</div>
+		</div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="contact_person">Контактное лицо от фирмы</label>
+            <div class="col-lg-5">
+                <select id="contact_person" required="required" data_error="Заполните поле Контактное лицо от фирмы"
+                        class="form-control required-mark" name="id_contact_person" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="responsible_person">Лицо принимающее решение</label>
+            <div class="col-lg-5">
+                <select id="responsible_person" required="required" data_error="Заполните поле Лицо принимающее решение"
+                        class="form-control required-mark" name="id_responsible_person" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <hr>
+        <!--****************************************************************************************-->
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-5">
+                <button type="submit" class="btn btn-success"><i class="fa fa-save" visible=@{if (ViewBag.Editable == true){@Html.Raw("true")}else{@Html.Raw("false")}}></i>&nbsp;сохранить</button>
+                <a href="@Url.Action("Requests")" class="btn btn-default"><i class="fa fa-mail-reply"></i> назад</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-push-2 col-lg-6">
+                <span class="text-danger">@TempData["error"]</span>
+            </div>
+        </div>
+                    }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $("#appearance").datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+
+            fillLists();
+        });
+
+        function fillLists() {
+            var $selectManager = $('#manager');
+            var $selectTeacher = $('#teacher');
+            var $selectContact = $('#contact_person');
+            var $selectResponsible = $('#responsible_person');
+
+            showSpinner($selectManager, true);
+            showSpinner($selectTeacher, true);
+            showSpinner($selectContact, true);
+            showSpinner($selectResponsible, true);
+            $.ajax({
+                url: '@Url.Action("GetEmployeeList")',
+                method: 'POST',
+                success: function(data) {
+                    if (data.length > 0) {
+                        var nullOpt = '<option value="">--выберите--</option>';
+                        $selectManager.append(nullOpt);
+                        $selectTeacher.append(nullOpt);
+                        $selectContact.append(nullOpt);
+                        $selectResponsible.append(nullOpt);
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            if (item.id != null && item.id != 0) {
+                                var opt = '<option value="' + item.id + '">' + item.name + '</option>';
+                                $selectManager.append(opt);
+                                $selectTeacher.append(opt);
+                                $selectContact.append(opt);
+                                $selectResponsible.append(opt);
+                            }
+                        }
+                    }
+                    hideSpinner($selectManager);
+                    hideSpinner($selectTeacher);
+                    hideSpinner($selectContact);
+                    hideSpinner($selectResponsible);
+                },
+                error: function() {
+                    hideSpinner($selectManager);
+                    hideSpinner($selectTeacher);
+                    hideSpinner($selectContact);
+                    hideSpinner($selectResponsible);
+                }
+            });
+        }
+    </script>
+}

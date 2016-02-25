@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core.Common.EntitySql;
 using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Helpers;
+using System.Linq.Expressions;
 using System.Web.Mvc;
+using DALStuff.Models;
+using Infrustructer;
 using Stuff.Helpers;
 using Stuff.Models;
 using Stuff.Objects;
+using Stuff.Services;
 
 namespace Stuff.Controllers
 {
@@ -83,7 +82,6 @@ namespace Stuff.Controllers
         [HttpGet]
         public ActionResult VacancyNew()
         {
-
             return View();
         }
         [HttpPost]
@@ -100,7 +98,6 @@ namespace Stuff.Controllers
                 return View("VacancyNew", model);
             }
             
-
             return RedirectToAction("VacancyCard",new {id=model.Id});
         }
 
@@ -130,27 +127,86 @@ namespace Stuff.Controllers
             return Json(new {});
         }
 
-        public ActionResult Requests(int? topRows, int? page, string cid, string fio, string age, string phone,
-            string email, string added, byte? sex, string changed)
+        public ActionResult Requests(int? topRows, int? page, string cid, string pos, string cDat, string stat,
+            string added, string changed)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!topRows.HasValue)
                 topRows = 30;
             if (!page.HasValue) page = 1;
-            bool? sexBool = null;
-            if (sex.HasValue)
-            {
-                if (sex.Value == 1)
-                    sexBool = true;
-                else if (sex.Value == 0)
-                    sexBool = false;
-            }
 
             int totalCount = 0;
+            DateTime appearDat;
+            DateTime createDat;
+            DateTime changeDat;
+            Expression<Func<request, bool>> filter = it => it.Enabled;
+            int id;
+            if (int.TryParse(cid, out id))
+                filter = PredicateExtensions.And(filter, it => it.Id == id);
+            if (!string.IsNullOrWhiteSpace(pos))
+                filter = PredicateExtensions.And(filter, it => it.Position != null && it.Position.name.ToLower().StartsWith(pos.ToLower()));
+            if (DateTime.TryParse(cDat, out appearDat) && appearDat.CompareTo(DateTime.MinValue) > 0)
+            {
+                DateTime datPlusDay = appearDat.AddDays(1);
+                filter = PredicateExtensions.And(filter, it => it.Appearance != null
+                    && it.Appearance.Value.CompareTo(appearDat.Date) >= 0
+                    && it.Appearance.Value.CompareTo(datPlusDay.Date) < 0);
+            }
+            if (DateTime.TryParse(added, out createDat) && createDat.CompareTo(DateTime.MinValue) > 0)
+            {
+                DateTime datPlusDay = createDat.AddDays(1);
+                filter = PredicateExtensions.And(filter, it => it.CreateDatetime != null
+                    && it.CreateDatetime.Value.CompareTo(createDat.Date) >= 0
+                    && it.CreateDatetime.Value.CompareTo(datPlusDay.Date) < 0);
+            }
+            if (DateTime.TryParse(changed, out changeDat) && changeDat.CompareTo(DateTime.MinValue) > 0)
+            {
+                DateTime datPlusDay = changeDat.AddDays(1);
+                filter = PredicateExtensions.And(filter, it => it.LastChangeDatetime != null
+                    && it.LastChangeDatetime.Value.CompareTo(changeDat.Date) >= 0
+                    && it.LastChangeDatetime.Value.CompareTo(datPlusDay.Date) < 0);
+            }
+            if (!string.IsNullOrWhiteSpace(stat))
+                filter = PredicateExtensions.And(filter, it => it.RequestStatus.Name.ToLower().Contains(stat.ToLower()));
 
-            var 
+
+            var requests = RequestService.GetReguestsList(out totalCount, filter, page.Value, topRows.Value);
             ViewBag.TotalCount = totalCount;
+            return View(requests);
+        }
+
+        [HttpGet]
+        public ActionResult RequestNew()
+        {
+            ViewBag.Editable = true;
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult RequestNew(Request model)
+        {
+            int newId = 0;
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            try
+            {
+                newId = RequestService.CreateRequest(model, CurUser.Sid);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.ToString();
+                ViewBag.Editable = true;
+                return View("RequestNew", model);
+            }
+            ViewBag.Editable = false;
+            return RedirectToAction("RequestCard", new { id = newId });
+        }
+
+        [HttpPost]
+        public JsonResult RequestDelete(int id)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler)) return null;
+            RequestService.DeleteRequest(id, CurUser.Sid);
+            return Json(new { });
         }
 
         public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
@@ -546,7 +602,12 @@ namespace Stuff.Controllers
             var list = Employee.GetList();
             return Json(list);
         }
-
+        [HttpPost]
+        public JsonResult GetEmployeeList()
+        {
+            var list = RequestService.GetEmployeeList();
+            return Json(list);
+        }
         [HttpPost]
         public JsonResult GetPersonalManagerListSid()
         {

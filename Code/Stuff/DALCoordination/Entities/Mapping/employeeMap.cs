@@ -9,86 +9,86 @@ namespace DAL.Entities.Mapping
         public EmployeeMap()
         {
             // Primary Key
-            this.HasKey(t => t.id);
+            this.HasKey(t => t.Id);
 
             // Properties
-            this.Property(t => t.ad_sid)
+            this.Property(t => t.AdSid)
                 .IsRequired()
                 .HasMaxLength(46);
 
-            this.Property(t => t.surname)
+            this.Property(t => t.Surname)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            this.Property(t => t.name)
+            this.Property(t => t.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            this.Property(t => t.patronymic)
+            this.Property(t => t.Patronymic)
                 .HasMaxLength(50);
 
-            this.Property(t => t.full_name)
+            this.Property(t => t.FullName)
                 .IsRequired()
                 .HasMaxLength(150);
 
-            this.Property(t => t.display_name)
+            this.Property(t => t.DisplayName)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            this.Property(t => t.email)
+            this.Property(t => t.Email)
                 .HasMaxLength(150);
 
-            this.Property(t => t.work_num)
+            this.Property(t => t.WorkNum)
                 .HasMaxLength(50);
 
-            this.Property(t => t.mobil_num)
+            this.Property(t => t.MobilNum)
                 .HasMaxLength(50);
 
-            this.Property(t => t.creator_sid)
+            this.Property(t => t.CreatorSid)
                 .HasMaxLength(46);
 
-            this.Property(t => t.ad_login)
+            this.Property(t => t.AdLogin)
                 .HasMaxLength(50);
 
-            this.Property(t => t.full_name_dat)
+            this.Property(t => t.FullNameDat)
                 .HasMaxLength(150);
 
-            this.Property(t => t.full_name_rod)
+            this.Property(t => t.FullNameRod)
                 .HasMaxLength(150);
 
             // Table & Column Mappings
             this.ToTable("Employees");
-            this.Property(t => t.id).HasColumnName("id");
-            this.Property(t => t.ad_sid).HasColumnName("ad_sid");
-            this.Property(t => t.id_manager).HasColumnName("id_manager");
-            this.Property(t => t.surname).HasColumnName("surname");
-            this.Property(t => t.name).HasColumnName("name");
-            this.Property(t => t.patronymic).HasColumnName("patronymic");
-            this.Property(t => t.full_name).HasColumnName("full_name");
-            this.Property(t => t.display_name).HasColumnName("display_name");
-            this.Property(t => t.id_position).HasColumnName("id_position");
-            this.Property(t => t.id_organization).HasColumnName("id_organization");
-            this.Property(t => t.email).HasColumnName("email");
-            this.Property(t => t.work_num).HasColumnName("work_num");
-            this.Property(t => t.mobil_num).HasColumnName("mobil_num");
-            this.Property(t => t.id_emp_state).HasColumnName("id_emp_state");
-            this.Property(t => t.id_department).HasColumnName("id_department");
-            this.Property(t => t.id_city).HasColumnName("id_city");
-            this.Property(t => t.enabled).HasColumnName("enabled");
-            this.Property(t => t.dattim1).HasColumnName("dattim1");
-            this.Property(t => t.dattim2).HasColumnName("dattim2");
-            this.Property(t => t.date_came).HasColumnName("date_came");
-            this.Property(t => t.birth_date).HasColumnName("birth_date");
-            this.Property(t => t.male).HasColumnName("male");
-            this.Property(t => t.id_position_org).HasColumnName("id_position_org");
-            this.Property(t => t.has_ad_account).HasColumnName("has_ad_account");
-            this.Property(t => t.creator_sid).HasColumnName("creator_sid");
-            this.Property(t => t.ad_login).HasColumnName("ad_login");
-            this.Property(t => t.date_fired).HasColumnName("date_fired");
-            this.Property(t => t.full_name_dat).HasColumnName("full_name_dat");
-            this.Property(t => t.full_name_rod).HasColumnName("full_name_rod");
-            this.Property(t => t.newvbie_delivery).HasColumnName("newvbie_delivery");
-            this.Property(t => t.id_budget).HasColumnName("id_budget");
+            this.Property(t => t.Id).HasColumnName("id");
+            this.Property(t => t.AdSid).HasColumnName("ad_sid");
+            this.Property(t => t.IdManager).HasColumnName("id_manager");
+            this.Property(t => t.Surname).HasColumnName("surname");
+            this.Property(t => t.Name).HasColumnName("name");
+            this.Property(t => t.Patronymic).HasColumnName("patronymic");
+            this.Property(t => t.FullName).HasColumnName("full_name");
+            this.Property(t => t.DisplayName).HasColumnName("display_name");
+            this.Property(t => t.IdPosition).HasColumnName("id_position");
+            this.Property(t => t.IdOrganization).HasColumnName("id_organization");
+            this.Property(t => t.Email).HasColumnName("email");
+            this.Property(t => t.WorkNum).HasColumnName("work_num");
+            this.Property(t => t.MobilNum).HasColumnName("mobil_num");
+            this.Property(t => t.IdEmpState).HasColumnName("id_emp_state");
+            this.Property(t => t.IdDepartment).HasColumnName("id_department");
+            this.Property(t => t.IdCity).HasColumnName("id_city");
+            this.Property(t => t.Enabled).HasColumnName("enabled");
+            this.Property(t => t.Dattim1).HasColumnName("dattim1");
+            this.Property(t => t.Dattim2).HasColumnName("dattim2");
+            this.Property(t => t.DateCame).HasColumnName("date_came");
+            this.Property(t => t.BirthDate).HasColumnName("birth_date");
+            this.Property(t => t.Male).HasColumnName("male");
+            this.Property(t => t.IdPositionOrg).HasColumnName("id_position_org");
+            this.Property(t => t.HasAdAccount).HasColumnName("has_ad_account");
+            this.Property(t => t.CreatorSid).HasColumnName("creator_sid");
+            this.Property(t => t.AdLogin).HasColumnName("ad_login");
+            this.Property(t => t.DateFired).HasColumnName("date_fired");
+            this.Property(t => t.FullNameDat).HasColumnName("full_name_dat");
+            this.Property(t => t.FullNameRod).HasColumnName("full_name_rod");
+            this.Property(t => t.NewvbieDelivery).HasColumnName("newvbie_delivery");
+            this.Property(t => t.IdBudget).HasColumnName("id_budget");
         }
     }
 }

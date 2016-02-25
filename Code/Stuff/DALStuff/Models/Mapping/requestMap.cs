@@ -46,13 +46,17 @@ namespace DALStuff.Models.Mapping
             this.Property(t => t.Requirements).HasColumnName("requirements");
             this.Property(t => t.Knowledge).HasColumnName("knowledge");
             this.Property(t => t.Suggestions).HasColumnName("suggestions");
-            this.Property(t => t.Workplace).HasColumnName("workplace");
+            //this.Property(t => t.Workplace).HasColumnName("workplace");
             this.Property(t => t.IsFurniture).HasColumnName("is_furniture");
             this.Property(t => t.Furniture).HasColumnName("furniture");
             this.Property(t => t.IsPc).HasColumnName("is_pc");
             this.Property(t => t.IsTelephone).HasColumnName("is_telephone");
             this.Property(t => t.IsEthalon).HasColumnName("is_ethalon");
-            this.Property(t => t.Appearance).HasColumnName("appearance");
+            this.Property(t => t.CreateDatetime).HasColumnName("create_datetime");
+            this.Property(t => t.LastChangeDatetime).HasColumnName("last_change_datetime");
+            this.Property(t => t.IdContactPerson).HasColumnName("id_contact_person");
+            this.Property(t => t.IdResponsiblePerson).HasColumnName("id_responsible_person");
+            this.Property(t => t.IdStatus).HasColumnName("id_status");
             this.Property(t => t.IdContactPerson).HasColumnName("id_contact_person");
             this.Property(t => t.IdResponsiblePerson).HasColumnName("id_responsible_person");
             this.Property(t => t.Enabled).HasColumnName("Enabled");
@@ -79,7 +83,9 @@ namespace DALStuff.Models.Mapping
             this.HasOptional(t => t.RequestReason)
                 .WithMany(t => t.Requests)
                 .HasForeignKey(d => d.IdReason);
-
+            this.HasRequired(t => t.RequestStatus)
+                .WithMany(t => t.requests)
+                .HasForeignKey(d => d.IdStatus);
         }
     }
 }

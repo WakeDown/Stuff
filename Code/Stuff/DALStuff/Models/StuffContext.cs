@@ -60,6 +60,7 @@ namespace DALStuff.Models
         public DbSet<recruit_vacancy_state_history> recruit_vacancy_state_history { get; set; }
         public DbSet<recruit_vacancy_states> recruit_vacancy_states { get; set; }
         public DbSet<RequestReason> request_reasons { get; set; }
+        public DbSet<RequestStatus> request_statuses { get; set; }
         public DbSet<request> requests { get; set; }
         public DbSet<rest_holiday_transfer_days> rest_holiday_transfer_days { get; set; }
         public DbSet<rest_holidays> rest_holidays { get; set; }
@@ -134,6 +135,7 @@ namespace DALStuff.Models
             modelBuilder.Configurations.Add(new recruit_vacancy_state_historyMap());
             modelBuilder.Configurations.Add(new recruit_vacancy_statesMap());
             modelBuilder.Configurations.Add(new request_reasonsMap());
+            modelBuilder.Configurations.Add(new request_statusesMap());
             modelBuilder.Configurations.Add(new requestMap());
             modelBuilder.Configurations.Add(new rest_holiday_transfer_daysMap());
             modelBuilder.Configurations.Add(new rest_holidaysMap());

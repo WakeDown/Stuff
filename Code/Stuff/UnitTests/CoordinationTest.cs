@@ -30,12 +30,13 @@ namespace CoordinationTests
                     var employeesAlternatsView = db.EmployeeAlternates;
                     var requests = stuffDb.requests;
                     var requestReasons = stuffDb.request_reasons;
+                    var requestStatuses = stuffDb.request_statuses;
 
                     int initEmployeeCnt = employees.Count();
                     int initEmployeeAlternatsCnt = employeesAlternats.Count();
                     int initCntrequests = requests.Count();
                     int initCntrequestReasons = requestReasons.Count();
-                    //int initCnt = .Count();
+                    int initCntrequestStatuses = requestStatuses.Count();
                     //int initCnt = .Count();
                     //int initCnt = .Count();
                     //int initCnt = .Count();
@@ -241,9 +242,9 @@ namespace CoordinationTests
                     Assert.AreEqual(empAlter3.Replaced.id, empl2.id);
 
                     //проверка Views
-                    var em1 = employeesView.First(it => it.id == empl1.id);
-                    var em2 = employeesView.First(it => it.id == empl2.id);
-                    var em3 = employeesView.First(it => it.id == empl3.id);
+                    var em1 = employeesView.First(it => it.Id == empl1.id);
+                    var em2 = employeesView.First(it => it.Id == empl2.id);
+                    var em3 = employeesView.First(it => it.Id == empl3.id);
                     var emA1 = employeesAlternatsView.First(it => it.Id == empAlter.Id);
                     var emA2 = employeesAlternatsView.First(it => it.Id == empAlter2.Id);
                     var emA3 = employeesAlternatsView.First(it => it.Id == empAlter3.Id);
@@ -258,12 +259,12 @@ namespace CoordinationTests
                     Assert.AreEqual(em1.EmployeeReplaceds.Count, 2);
                     Assert.AreEqual(em1.EmployeeAlternates.Count, 0);
 
-                    Assert.AreEqual(emA1.Alternate.id, empl2.id);
-                    Assert.AreEqual(emA1.Replaced.id, empl3.id);
-                    Assert.AreEqual(emA2.Alternate.id, empl1.id);
-                    Assert.AreEqual(emA2.Replaced.id, empl3.id);
-                    Assert.AreEqual(emA3.Alternate.id, empl1.id);
-                    Assert.AreEqual(emA3.Replaced.id, empl2.id);
+                    Assert.AreEqual(emA1.Alternate.Id, empl2.id);
+                    Assert.AreEqual(emA1.Replaced.Id, empl3.id);
+                    Assert.AreEqual(emA2.Alternate.Id, empl1.id);
+                    Assert.AreEqual(emA2.Replaced.Id, empl3.id);
+                    Assert.AreEqual(emA3.Alternate.Id, empl1.id);
+                    Assert.AreEqual(emA3.Replaced.Id, empl2.id);
 
                     //проверка на NavigationProperty
                     //Assert.AreEqual(empl3.EmployeesReplaced.Count(), 0);
@@ -275,6 +276,11 @@ namespace CoordinationTests
 
                     #endregion
 
+                    RequestStatus status = new RequestStatus
+                    {
+                        Name = "Новая",
+                        Description = "Снова надо каких то обормотов нанимать"
+                    };
                     request request = new request
                     {
                         ContactPerson = empl1,
@@ -283,6 +289,7 @@ namespace CoordinationTests
                         TeacherPerson = empl1,
                         IdDepartment = 17, // ИТ отдел
                         IdPosition = 25, // Инженер
+                        RequestStatus = status
                     };
                     requestReason.Requests.Add(request);
                     stuffDb.SaveChanges();
@@ -298,7 +305,7 @@ namespace CoordinationTests
                     int newEmployeeAlternatsCntView = employeesAlternatsView.Count();
                     int newCntrequests = requests.Count();
                     int newCntrequestReasons = requestReasons.Count();
-                    //int newCnt = .Count();
+                    int newCntrequestStatuses = requestStatuses.Count();
                     //int newCnt = .Count();
                     //int newCnt = .Count();
                     //int newCnt = .Count();
@@ -319,7 +326,7 @@ namespace CoordinationTests
 
                     Assert.AreEqual(newCntrequests, initCntrequests + 1);
                     Assert.AreEqual(newCntrequestReasons, initCntrequestReasons + 1);
-                    //Assert.AreEqual(newCnt , initCnt);
+                    Assert.AreEqual(newCntrequestStatuses , initCntrequestStatuses + 1);
                     //Assert.AreEqual(newCnt , initCnt);
                     //Assert.AreEqual(newCnt , initCnt);
                     //Assert.AreEqual(newCnt , initCnt);
@@ -343,7 +350,8 @@ namespace CoordinationTests
                     employeesAlternats.Remove(empAlter3);
                     requests.Remove(request);
                     requestReasons.Remove(requestReason);
-                    //.Remove();
+
+                    requestStatuses.Remove(status);
                     //.Remove();
                     //.Remove();
                     //.Remove();
@@ -366,7 +374,7 @@ namespace CoordinationTests
                     int actualEmployeeAlternatsCntView = employeesAlternatsView.Count();
                     int actualCntrequests = requests.Count();
                     int actualCntrequestReasons = requestReasons.Count();
-                    //int actualCnt = .Count();
+                    int actualCntrequestStatuses = requestStatuses.Count();
                     //int actualCnt = .Count();
                     //int actualCnt = .Count();
                     //int actualCnt = .Count();
@@ -383,7 +391,7 @@ namespace CoordinationTests
                     Assert.AreEqual(actualEmployeeAlternatsCntView, initEmployeeAlternatsCnt);
                     Assert.AreEqual(actualCntrequests , initCntrequests);
                     Assert.AreEqual(actualCntrequestReasons , initCntrequestReasons);
-                    //Assert.AreEqual(actualCnt , initCnt);
+                    Assert.AreEqual(actualCntrequestStatuses , initCntrequestStatuses);
                     //Assert.AreEqual(actualCnt , initCnt);
                     //Assert.AreEqual(actualCnt , initCnt);
                     //Assert.AreEqual(actualCnt , initCnt);

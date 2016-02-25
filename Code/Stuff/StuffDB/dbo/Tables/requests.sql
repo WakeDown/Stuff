@@ -6,7 +6,7 @@
     -- причина поиска
 	[id_reason] INT NULL, 
     -- цель
-	[aim] VARCHAR(MAX) NULL, 
+	[aim] NVARCHAR(MAX) NULL, 
     -- руководитель
 	[id_manager] INT NULL, 
     -- наставник
@@ -16,42 +16,42 @@
     -- есть ли подчиненные
 	[is_subordinates] BIT NULL, 
     -- перечисление подчиненных
-	[subordinates] VARCHAR(MAX) NULL, 
+	[subordinates] NVARCHAR(MAX) NULL, 
     -- возлагаемые функции
-	[functions] VARCHAR(MAX) NULL, 
+	[functions] NVARCHAR(MAX) NULL, 
 	-- взаимодействия
-	[interactions] VARCHAR(MAX) NULL,
+	[interactions] NVARCHAR(MAX) NULL,
 	-- есть ли должностные инструкции
 	[is_instructions] BIT NULL,
 	-- показатели успешности
-	[success_rates] VARCHAR(MAX) NULL,
+	[success_rates] NVARCHAR(MAX) NULL,
 	-- план на испытательном сроке
-	[plan_to_test] VARCHAR(MAX) NULL,
+	[plan_to_test] NVARCHAR(MAX) NULL,
 	-- план после испытательного срока
-	[plan_after_test] VARCHAR(MAX) NULL,
+	[plan_after_test] NVARCHAR(MAX) NULL,
 ---------------------------------------------------------------------
 	-- место работы
-	[work_place] VARCHAR(MAX) NULL,
+	[work_place] NVARCHAR(MAX) NULL,
 	-- режим работы
-	[work_mode] VARCHAR(MAX) NULL,
+	[work_mode] NVARCHAR(MAX) NULL,
 	-- отпуск
-	[holiday] VARCHAR(MAX) NULL,
+	[holiday] NVARCHAR(MAX) NULL,
 	-- больничные 
-	[hospital] VARCHAR(MAX) NULL,
+	[hospital] NVARCHAR(MAX) NULL,
 	-- командировки
-	[business_trip] VARCHAR(MAX) NULL,
+	[business_trip] NVARCHAR(MAX) NULL,
 	-- сверхурочная работа
-	[overtime_work] VARCHAR(MAX) NULL,
+	[overtime_work] NVARCHAR(MAX) NULL,
 	-- компенсации
-	[compensations] VARCHAR(MAX) NULL,
+	[compensations] NVARCHAR(MAX) NULL,
 	-- испытательный срок
 	[probation] INT NULL,
 	-- зп на испытательном
-	[salary_to_test] VARCHAR(MAX) NULL,
+	[salary_to_test] NVARCHAR(MAX) NULL,
 	-- зп после
-	[salary_after_test] VARCHAR(MAX) NULL,
+	[salary_after_test] NVARCHAR(MAX) NULL,
 	-- бонусы
-	[bonuses] VARCHAR(MAX) NULL,
+	[bonuses] NVARCHAR(MAX) NULL,
 ----------------------------------------------------------------------
 	-- пол
 	[sex] BIT NULL,
@@ -60,21 +60,21 @@
 	-- возраст до
 	[age_to] INT NULL,
 	-- образование
-	[education] VARCHAR(MAX) NULL,
+	[education] NVARCHAR(MAX) NULL,
 	-- предыдущие работы
-	[last_work] VARCHAR(MAX) NULL,
+	[last_work] NVARCHAR(MAX) NULL,
 	-- обязательные требования
-	[requirements] VARCHAR(MAX) NULL,
+	[requirements] NVARCHAR(MAX) NULL,
 	-- навыки и знания
-	[knowledge] VARCHAR(MAX) NULL,
+	[knowledge] NVARCHAR(MAX) NULL,
 	-- дополнительные пожелания
-	[suggestions] VARCHAR(MAX) NULL,
+	[suggestions] NVARCHAR(MAX) NULL,
 	-- рабочее место
-	[workplace] VARCHAR(MAX) NULL,
+	[workplace] NVARCHAR(MAX) NULL,
 	-- надо ли мебель
 	[is_furniture] BIT NULL,
 	-- мебель
-	[furniture] VARCHAR(MAX) NULL,
+	[furniture] NVARCHAR(MAX) NULL,
 	-- надо ли ПК
 	[is_pc] BIT NULL,
 	-- надо ли телефон
@@ -83,15 +83,22 @@
 	[is_ethalon] BIT NULL,
 	-- сроки выхода на рабору
 	[appearance] DATE NULL,
+	-- дата создания
+	[create_datetime] DATETIME NULL,
+	-- дата последнего изменения
+	[last_change_datetime] DATETIME NULL,
 	-- контактное лицо по собеседованию
 	[id_contact_person] INT NULL,
 	-- оценщик на итоговом собеседовании
 	[id_responsible_person] INT NULL,
+	-- статус заявки
+	[id_status] INT NOT NULL,
 
     [Enabled]        BIT CONSTRAINT [DK_requests_Enabled] DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_requests] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_requests_id_position] FOREIGN KEY ([id_position]) REFERENCES [dbo].[positions] ([id]),
     CONSTRAINT [FK_requests_id_reason] FOREIGN KEY ([id_reason]) REFERENCES [dbo].[request_reasons] ([id]),
+	CONSTRAINT [FK_requests_id_status] FOREIGN KEY ([id_status]) REFERENCES [dbo].[request_statuses] ([id]),
 	CONSTRAINT [FK_requests_id_manager] FOREIGN KEY ([id_manager]) REFERENCES [dbo].[employees] ([id]),
 	CONSTRAINT [FK_requests_id_teacher] FOREIGN KEY ([id_teacher]) REFERENCES [dbo].[employees] ([id]),
 	CONSTRAINT [FK_requests_id_department] FOREIGN KEY ([id_department]) REFERENCES [dbo].[departments] ([id]),

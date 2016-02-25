@@ -77,10 +77,19 @@
     <Build Include="dbo\Views\EmployeeAlternates.sql" />
   </ItemGroup>
   <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\StuffDB\StuffDB.sqlproj">
       <Name>StuffDB</Name>
       <Project>{288c2ab9-cc2c-4d34-9337-d79d984d8e1e}</Project>
       <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>StuffDB</DatabaseSqlCmdVariable>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -88,12 +97,5 @@
       <DefaultValue>StuffDB</DefaultValue>
       <Value>$(SqlCmdVar__1)</Value>
     </SqlCmdVariable>
-  </ItemGroup>
-  <ItemGroup>
-    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
-      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-      <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
-    </ArtifactReference>
   </ItemGroup>
 </Project>
