@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entities.Models
 {
@@ -10,7 +11,7 @@ namespace DAL.Entities.Models
         }
 
         public string Name { get; set; }
-        public int EmployeeId { get; set; }
+        public string EmployeeSid { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual ICollection<WfwSchemeStage> WfwSchemeStages { get; set; }
     }

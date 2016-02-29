@@ -9,6 +9,7 @@ namespace Stuff.Objects
 {
     public class AdUser
     {
+        public int id { get; set; }
         public string Sid { get; set; }
         public string Login { get; set; }
         public string FullName{get; set; }

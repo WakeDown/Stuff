@@ -201,6 +201,48 @@ namespace Stuff.Controllers
             return RedirectToAction("RequestCard", new { id = newId });
         }
 
+        [HttpGet]
+        public ActionResult RequestCard(int? id)
+        {
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+
+            ViewBag.UserCanBeginCoordination = !userIsViewer;
+            if (!id.HasValue)
+                return RedirectToAction("RequestNew");
+            return View(RequestService.GetReguest(id.Value));
+            //if (CurUser.Is(AdGroup.RecruitManager))
+            //    return HttpNotFound();
+            
+        }
+
+        [HttpPost]
+        public ActionResult RequestNewCoordination(int? id, Request model)
+        {
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            try
+            {
+                RequestService.CreateNewCoordination(CoordinationDocumentTypes.Request, id, CurUser.Sid);
+
+                //ViewBag.UserCanBeginCoordination = !userIsViewer;
+                //return RedirectToAction("RequestCard", new { id = id.Value });
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Не получилось начать согласование!\n";
+                TempData["error"] += ex.ToString();
+                throw new Exception(TempData["error"].ToString());
+                ViewBag.Editable = true;
+                return RedirectToAction("RequestCard", new { id = id.Value });
+            }
+        }
+
         [HttpPost]
         public JsonResult RequestDelete(int id)
         {

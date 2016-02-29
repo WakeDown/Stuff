@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
 using DAL.Entities.Models;
 
@@ -9,12 +10,15 @@ namespace DAL.Entities.Mapping
         public EmployeeMap()
         {
             // Primary Key
-            this.HasKey(t => t.Id);
+            this.HasKey(t => t.AdSid);
 
             // Properties
             this.Property(t => t.AdSid)
                 .IsRequired()
                 .HasMaxLength(46);
+
+            this.Property(t => t.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             this.Property(t => t.Surname)
                 .IsRequired()

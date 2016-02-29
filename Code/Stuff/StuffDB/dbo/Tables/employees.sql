@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[employees] (
     [id]               INT            IDENTITY (1, 1) NOT NULL,
-    [ad_sid]           VARCHAR (46)   DEFAULT ('') NOT NULL,
+    [ad_sid]           VARCHAR (46)   DEFAULT (NEWID()) NOT NULL,
     [id_manager]       INT            NOT NULL,
     [surname]          NVARCHAR (50)  NOT NULL,
     [name]             NVARCHAR (50)  NOT NULL,
@@ -30,7 +30,7 @@
     [full_name_rod]    NVARCHAR (150) NULL,
     [newvbie_delivery] BIT            DEFAULT ((0)) NOT NULL,
     [id_budget]        INT            NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC)
+    CONSTRAINT [PK_employees] PRIMARY KEY CLUSTERED ([ad_sid] ASC),
 );
 
 
@@ -42,11 +42,10 @@ CREATE NONCLUSTERED INDEX [IX_employee_id_department]
 GO
 CREATE NONCLUSTERED INDEX [IX_employee_id_manager]
     ON [dbo].[employees]([id_manager] ASC);
-
-
 GO
-CREATE NONCLUSTERED INDEX [IX_employee_ad_sid]
-    ON [dbo].[employees]([ad_sid] ASC);
+
+CREATE NONCLUSTERED INDEX [IX_employee_id]
+    ON [dbo].[employees]([id] ASC);
 
 
 GO

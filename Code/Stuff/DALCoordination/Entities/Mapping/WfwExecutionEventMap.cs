@@ -12,20 +12,24 @@ namespace DAL.Entities.Mapping
             this.HasKey(t => t.Id);
 
             // Properties
+            this.Property(t => t.CreaterSid)
+                .IsRequired()
+                .HasMaxLength(46);
+
             // Table & Column Mappings
             this.ToTable("WfwExecutionEvents");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.ExecutionId).HasColumnName("ExecutionId");
             this.Property(t => t.Date).HasColumnName("Date");
-            this.Property(t => t.CreaterId).HasColumnName("CreaterId");
+            this.Property(t => t.CreaterSid).HasColumnName("CreaterSid");
             this.Property(t => t.ResultId).HasColumnName("ResultId");
             this.Property(t => t.Comment).HasColumnName("Comment");
             this.Property(t => t.Enabled).HasColumnName("Enabled");
 
             // Relationships
-            this.HasRequired(t => t.employee)
+            this.HasRequired(t => t.Employee)
                 .WithMany(t => t.WfwExecutionEvents)
-                .HasForeignKey(d => d.CreaterId);
+                .HasForeignKey(d => d.CreaterSid);
             this.HasRequired(t => t.WfwDocumentExecution)
                 .WithMany(t => t.WfwExecutionEvents)
                 .HasForeignKey(d => d.ExecutionId);

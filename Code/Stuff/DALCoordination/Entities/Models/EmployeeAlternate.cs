@@ -4,8 +4,8 @@ namespace DAL.Entities.Models
 {
     public class EmployeeAlternate : EnabledEntity
     {
-        public int EmployeeId { get; set; }
-        public int AlternateEmployeeId { get; set; }
+        public string EmployeeSid { get; set; }
+        public string AlternateEmployeeSid { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool Notify { get; set; }

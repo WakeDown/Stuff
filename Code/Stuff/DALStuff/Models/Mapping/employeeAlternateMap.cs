@@ -10,11 +10,19 @@ namespace DALStuff.Models.Mapping
             this.HasKey(t => t.Id);
 
             // Properties
+            this.Property(t => t.EmployeeSid)
+                .IsRequired()
+                .HasMaxLength(46);
+
+            this.Property(t => t.AlternateEmployeeSid)
+                .IsRequired()
+                .HasMaxLength(46);
+
             // Table & Column Mappings
             this.ToTable("employeeAlternates");
             this.Property(t => t.Id).HasColumnName("id");
-            this.Property(t => t.EmployeeId).HasColumnName("employeeId");
-            this.Property(t => t.AlternateEmployeeId).HasColumnName("alternateEmployeeId");
+            this.Property(t => t.EmployeeSid).HasColumnName("employeeSid");
+            this.Property(t => t.AlternateEmployeeSid).HasColumnName("alternateEmployeeSid");
             this.Property(t => t.StartDate).HasColumnName("startDate");
             this.Property(t => t.EndDate).HasColumnName("endDate");
             this.Property(t => t.Notify).HasColumnName("notify");
@@ -24,10 +32,10 @@ namespace DALStuff.Models.Mapping
             // Relationships
             this.HasRequired(t => t.Alternate)
                 .WithMany(t => t.EmployeeReplaceds)
-                .HasForeignKey(d => d.AlternateEmployeeId);
+                .HasForeignKey(d => d.AlternateEmployeeSid);
             this.HasRequired(t => t.Replaced)
                 .WithMany(t => t.EmployeeAlternates)
-                .HasForeignKey(d => d.EmployeeId);
+                .HasForeignKey(d => d.EmployeeSid);
         }
     }
 }

@@ -1,17 +1,15 @@
 ﻿@using Stuff.Services
-@using Stuff.Models
-@using Stuff.Objects
 @model Stuff.Models.Request
 
 @{
-    ViewBag.Title = "Новая заявка";
+    ViewBag.Title = "Новая заявка на подбор персонала";
     Layout = "~/Views/Shared/_Editor.cshtml";
     //var empList =Employee.GetEmployeeListSid();
 }
 
 @section PanelHead
 {
-    Новая заявка
+    Новая заявкана подбор персонала 
 }
 
 @section PanelBody
@@ -71,7 +69,7 @@
             <label class="col-lg-2 control-label" for="manager">Непосредственный руководитель</label>
             <div class="col-lg-5">
                 <select id="manager" required="required" data_error="Заполните поле Непосредственный руководитель"
-                        class="form-control required-mark" name="id_manager" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                        class="form-control required-mark" name="sid_manager" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -79,7 +77,7 @@
             <label class="col-lg-2 control-label" for="teacher">Наставник</label>
             <div class="col-lg-5">
                 <select id="teacher" required="required" data_error="Заполните поле Наставник"
-                        class="form-control required-mark" name="id_teacher" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                        class="form-control required-mark" name="sid_teacher" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -147,7 +145,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-2 control-label" for="functions">Выполняемые функции</label>
+            <label class="col-lg-2 control-label" for="functions">Ожидаемые функции</label>
             <div class="col-lg-5">
                 @Html.TextBoxFor(m => m.functions,
                     new
@@ -156,7 +154,7 @@
                         @class = "form-control required-mark",
                         @id = "functions",
                         required = "required",
-                        data_error = "Заполните поле Выполняемые функции",
+                        data_error = "Заполните поле Ожидаемые функции",
                     })
                 <span class="help-block with-errors"></span>
             </div>
@@ -645,7 +643,7 @@
             <label class="col-lg-2 control-label" for="contact_person">Контактное лицо от фирмы</label>
             <div class="col-lg-5">
                 <select id="contact_person" required="required" data_error="Заполните поле Контактное лицо от фирмы"
-                        class="form-control required-mark" name="id_contact_person" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                        class="form-control required-mark" name="sid_contact_person" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -653,7 +651,7 @@
             <label class="col-lg-2 control-label" for="responsible_person">Лицо принимающее решение</label>
             <div class="col-lg-5">
                 <select id="responsible_person" required="required" data_error="Заполните поле Лицо принимающее решение"
-                        class="form-control required-mark" name="id_responsible_person" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
+                        class="form-control required-mark" name="sid_responsible_person" @{ if (ViewBag.Editable == true) { @Html.Raw("") } else { @Html.Raw("disabled")} }></select>
                 <span class="help-block with-errors"></span>
             </div>
         </div>
@@ -670,7 +668,7 @@
                 <span class="text-danger">@TempData["error"]</span>
             </div>
         </div>
-                    }
+    }
 }
 
 @section scripts

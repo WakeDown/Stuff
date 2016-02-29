@@ -9,7 +9,7 @@ namespace DALStuff.Models
         {
             EmployeeReplaceds = new List<EmployeeAlternate>();
             EmployeeAlternates = new List<EmployeeAlternate>();
-            EmployeeRoles = new List<employeeRole>();
+            EmployeeRoles = new List<EmployeeRole>();
             RequestsFromContactPersonRole = new List<request>();
             RequestsFromManagerRole = new List<request>();
             RequestsFromResponsibleRole = new List<request>();
@@ -49,7 +49,7 @@ namespace DALStuff.Models
         public int? id_budget { get; set; }
         public virtual ICollection<EmployeeAlternate> EmployeeReplaceds { get; set; }
         public virtual ICollection<EmployeeAlternate> EmployeeAlternates { get; set; }
-        public virtual ICollection<employeeRole> EmployeeRoles { get; set; }
+        public virtual ICollection<EmployeeRole> EmployeeRoles { get; set; }
         public virtual ICollection<request> RequestsFromContactPersonRole { get; set; }
         public virtual ICollection<request> RequestsFromManagerRole { get; set; }
         public virtual ICollection<request> RequestsFromResponsibleRole { get; set; }

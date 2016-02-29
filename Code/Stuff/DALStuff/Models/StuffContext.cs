@@ -29,7 +29,7 @@ namespace DALStuff.Models
         public DbSet<employee_import> employee_import { get; set; }
         public DbSet<employee_states> employee_states { get; set; }
         public DbSet<EmployeeAlternate> employeeAlternates { get; set; }
-        public DbSet<employeeRole> employeeRoles { get; set; }
+        public DbSet<EmployeeRole> employeeRoles { get; set; }
         public DbSet<employee> employees { get; set; }
         public DbSet<engeneer_states> engeneer_states { get; set; }
         public DbSet<holiday_work_confirms> holiday_work_confirms { get; set; }

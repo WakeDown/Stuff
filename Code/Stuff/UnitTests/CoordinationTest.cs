@@ -169,8 +169,8 @@ namespace CoordinationTests
 
                     var empAlter = new EmployeeAlternate
                     {
-                        AlternateEmployeeId = empl2.id,
-                        EmployeeId = empl3.id,
+                        AlternateEmployeeSid = empl2.ad_sid,
+                        EmployeeSid = empl3.ad_sid,
                     };
                     employeesAlternats.Add(empAlter);
                     bool checkConstraintWork = false;
@@ -211,14 +211,14 @@ namespace CoordinationTests
                     Assert.False(checkConstraintWork);
                     var empAlter2 = new EmployeeAlternate
                     {
-                        AlternateEmployeeId = empl1.id,
-                        EmployeeId = empl3.id,
+                        AlternateEmployeeSid = empl1.ad_sid,
+                        EmployeeSid = empl3.ad_sid,
                         Unlimited = true
                     };
                     var empAlter3 = new EmployeeAlternate
                     {
-                        AlternateEmployeeId = empl1.id,
-                        EmployeeId = empl2.id,
+                        AlternateEmployeeSid = empl1.ad_sid,
+                        EmployeeSid = empl2.ad_sid,
                         Unlimited = true
                     };
                     employeesAlternats.Add(empAlter2);
@@ -294,10 +294,10 @@ namespace CoordinationTests
                     requestReason.Requests.Add(request);
                     stuffDb.SaveChanges();
 
-                    Assert.AreEqual(request.IdContactPerson, empl1.id);
-                    Assert.AreEqual(request.IdManager, empl2.id);
-                    Assert.AreEqual(request.IdResponsiblePerson, empl3.id);
-                    Assert.AreEqual(request.IdTeacher, empl1.id);
+                    Assert.AreEqual(request.SidContactPerson, empl1.id);
+                    Assert.AreEqual(request.SidManager, empl2.id);
+                    Assert.AreEqual(request.SidResponsiblePerson, empl3.id);
+                    Assert.AreEqual(request.SidTeacher, empl1.id);
 
                     int newEmployeeCnt = employees.Count();
                     int newEmployeeCntView = employeesView.Count();
@@ -417,8 +417,10 @@ namespace CoordinationTests
             using (CoordinationContext db = new CoordinationContext(originalConnectionString + ";Password=sa"))
             {
                 var documentTypes = db.DocumentTypes;
+                var schemes = db.WfwSchemes;
 
                 int initDocTypeCnt = documentTypes.Count();
+                int initCntschemes = schemes.Count();
                 //int initCnt = .Count();
                 //int initCnt = .Count();
                 //int initCnt = .Count();
@@ -432,18 +434,25 @@ namespace CoordinationTests
                 //int initCnt = .Count();
                 //int initCnt = .Count();
                 //int initCnt = .Count();
-                //int initCnt = .Count();
+
+                var scheme = new WfwScheme
+                {
+                    Action = 1,
+                    ContinueLastStage = true,
+                    Name = "Да согласуйте это вы уже!",
+                };
 
                 var docType1 = new DocumentType
                 {
                     Description = "Только в сартир.",
                     Name = "Писулька",
+                    WfwScheme = scheme,
                 };
                 documentTypes.Add(docType1);
                 db.SaveChanges();
 
                 int newDocTypeCnt = documentTypes.Count();
-                //int newCnt = .Count();
+                int newCntschemes = schemes.Count();
                 //int newCnt = .Count();
                 //int newCnt = .Count();
                 //int newCnt = .Count();
@@ -458,8 +467,7 @@ namespace CoordinationTests
                 //int newCnt = .Count();
 
                 Assert.AreEqual(newDocTypeCnt, initDocTypeCnt + 1);
-
-                //Assert.AreEqual(newCnt , initCnt);
+                Assert.AreEqual(newCntschemes , initCntschemes + 1);
                 //Assert.AreEqual(newCnt , initCnt);
                 //Assert.AreEqual(newCnt , initCnt);
                 //Assert.AreEqual(newCnt , initCnt);
@@ -476,7 +484,7 @@ namespace CoordinationTests
                 //Assert.AreEqual(newCnt , initCnt);
 
                 documentTypes.Remove(docType1);
-                //.Remove();
+                schemes.Remove(scheme);
                 //.Remove();
                 //.Remove();
                 //.Remove();
@@ -493,7 +501,7 @@ namespace CoordinationTests
                 db.SaveChanges();
 
                 int actualDocTypeCnt = documentTypes.Count();
-                //int actualCnt = .Count();
+                int actualCntschemes = schemes.Count();
                 //int actualCnt = .Count();
                 //int actualCnt = .Count();
                 //int actualCnt = .Count();
@@ -505,7 +513,7 @@ namespace CoordinationTests
                 //int actualCnt = .Count();
 
                 Assert.AreEqual(actualDocTypeCnt, initDocTypeCnt);
-                //Assert.AreEqual(actualCnt , initCnt);
+                Assert.AreEqual(actualCntschemes , initCntschemes);
                 //Assert.AreEqual(actualCnt , initCnt);
                 //Assert.AreEqual(actualCnt , initCnt);
                 //Assert.AreEqual(actualCnt , initCnt);

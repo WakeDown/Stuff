@@ -3,6 +3,6 @@ AS
 SELECT
 	[Id],
 	[Name],
-	[EmployeeId],
+	[EmployeeSid],
 	[Enabled]
-	FROM [$(StuffDB)].[dbo].[EmployeeRoles]
+	FROM [$(StuffDB)].[dbo].[employeeRoles]

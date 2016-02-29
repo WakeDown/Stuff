@@ -31,7 +31,7 @@ namespace Stuff.Models
         /// <summary>
         /// руководитель
         /// </summary>
-        public int? id_manager { get; set; }
+        public string sid_manager { get; set; }
         /// <summary>
         /// руководитель
         /// </summary>
@@ -39,7 +39,7 @@ namespace Stuff.Models
         /// <summary>
         /// наставник
         /// </summary>
-        public int? id_teacher { get; set; }
+        public string sid_teacher { get; set; }
         /// <summary>
         /// наставник
         /// </summary>
@@ -199,7 +199,7 @@ namespace Stuff.Models
         /// <summary>
         /// контактное лицо по собеседованию
         /// </summary>
-        public int? id_contact_person { get; set; }
+        public string sid_contact_person { get; set; }
         /// <summary>
         /// контактное лицо по собеседованию
         /// </summary>
@@ -207,9 +207,9 @@ namespace Stuff.Models
         /// <summary>
         /// оценщик на итоговом собеседовании
         /// </summary>
-        public int? id_responsible_person { get; set; }
+        public string sid_responsible_person { get; set; }
         /// <summary>
-        /// оценщик на итоговом собеседовании
+        /// руководитель принимающий окончательное решение
         /// </summary>
         public string responsible_person { get; set; }
         /// <summary>
@@ -222,5 +222,10 @@ namespace Stuff.Models
         public string status { get; set; }
 
         public bool enabled { get; set; }
+        
+        /// <summary>
+        /// Флаг начатого согласования
+        /// </summary>
+        public bool IsCoordinationStarted { get; set; }
     }
 }

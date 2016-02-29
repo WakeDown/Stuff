@@ -9,8 +9,8 @@ namespace DALStuff.Models
         public int? IdPosition { get; set; }
         public int? IdReason { get; set; }
         public string Aim { get; set; }
-        public int? IdManager { get; set; }
-        public int? IdTeacher { get; set; }
+        public string SidManager { get; set; }
+        public string SidTeacher { get; set; }
         public int? IdDepartment { get; set; }
         public bool? IsSubordinates { get; set; }
         public string Subordinates { get; set; }
@@ -48,9 +48,11 @@ namespace DALStuff.Models
         public DateTime? Appearance { get; set; }
         public DateTime? CreateDatetime { get; set; }
         public DateTime? LastChangeDatetime { get; set; }
-        public int? IdContactPerson { get; set; }
-        public int? IdResponsiblePerson { get; set; }
+        public string SidContactPerson { get; set; }
+        public string SidResponsiblePerson { get; set; }
         public int IdStatus { get; set; }
+        public bool HaveCoordination { get; set; }
+
         public bool Enabled { get; set; }
         public virtual department Department { get; set; }
         public virtual employee ContactPerson { get; set; }

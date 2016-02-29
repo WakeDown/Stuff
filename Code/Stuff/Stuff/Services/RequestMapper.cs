@@ -4,7 +4,7 @@ namespace Stuff.Services
 {
     public class RequestMapper
     {
-        public static Models.Request MapRequestToModel(request src, Models.Request dst)
+        public static Models.Request MapRequestToModel(request src, Models.Request dst = null)
         {
             if (src == null)
                 return null;
@@ -18,9 +18,9 @@ namespace Stuff.Services
             dst.id_reason = src.IdReason;
             dst.reason = src.RequestReason != null ? src.RequestReason.Name : "";
             dst.aim = src.Aim;
-            dst.id_manager = src.IdManager;
+            dst.sid_manager = src.SidManager;
             dst.manager = src.ManagerPersom != null ? src.ManagerPersom.full_name : "";
-            dst.id_teacher = src.IdTeacher;
+            dst.sid_teacher = src.SidTeacher;
             dst.teacher = src.TeacherPerson != null ? src.TeacherPerson.full_name : "";
             dst.id_department = src.IdDepartment;
             dst.department = src.Department != null ? src.Department.name : "";
@@ -60,18 +60,19 @@ namespace Stuff.Services
             dst.appearance = src.Appearance;
             dst.create_datetime = src.CreateDatetime;
             dst.last_change_datetime = src.LastChangeDatetime;
-            dst.id_contact_person = src.IdContactPerson;
+            dst.sid_contact_person = src.SidContactPerson;
             dst.contact_person = src.ContactPerson != null ? src.ContactPerson.full_name : "";
             dst.id_status = src.IdStatus;
             dst.status = src.RequestStatus != null ? src.RequestStatus.Name : "";
-            dst.id_responsible_person = src.IdResponsiblePerson;
+            dst.sid_responsible_person = src.SidResponsiblePerson;
             dst.responsible_person = src.ResponsiblePerson != null ? src.ResponsiblePerson.full_name : "";
+            dst.IsCoordinationStarted = src.HaveCoordination;
             dst.enabled = src.Enabled;
 
             return dst;
         }
 
-        public static request MapRequestToEntity(Models.Request src, request dst)
+        public static request MapRequestToEntity(Models.Request src, request dst = null)
         {
             if (src == null)
                 return null;
@@ -83,8 +84,8 @@ namespace Stuff.Services
             dst.IdPosition  = src.id_position;
             dst.IdReason  = src.id_reason;
             dst.Aim  = src.aim;
-            dst.IdManager  = src.id_manager;
-            dst.IdTeacher  = src.id_teacher;
+            dst.SidManager  = src.sid_manager;
+            dst.SidTeacher  = src.sid_teacher;
             dst.IdDepartment  = src.id_department;
             dst.IsSubordinates  = src.is_subordinates;
             dst.Subordinates  = src.subordinates;
@@ -121,9 +122,10 @@ namespace Stuff.Services
             dst.Appearance  = src.appearance;
             dst.CreateDatetime  = src.create_datetime;
             dst.LastChangeDatetime  = src.last_change_datetime;
-            dst.IdContactPerson  = src.id_contact_person;
+            dst.SidContactPerson  = src.sid_contact_person;
             dst.IdStatus  = src.id_status;
-            dst.IdResponsiblePerson  = src.id_responsible_person;
+            dst.SidResponsiblePerson  = src.sid_responsible_person;
+            dst.HaveCoordination = src.IsCoordinationStarted;
             dst.Enabled  = src.enabled;
 
             return dst;

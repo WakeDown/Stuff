@@ -13,7 +13,8 @@ namespace DAL.Entities.Mapping
 
             // Properties
             this.Property(t => t.Id)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(50);
 
             this.Property(t => t.Name)
                 .IsRequired()
@@ -23,6 +24,8 @@ namespace DAL.Entities.Mapping
             this.ToTable("Documents");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.Name).HasColumnName("Name");
+            this.Property(t => t.LinkToDoc).HasColumnName("LinkToDoc");
+            this.Property(t => t.LinkToDocId).HasColumnName("LinkToDocId");
             this.Property(t => t.TypeId).HasColumnName("TypeId");
             this.Property(t => t.ExecutionId).HasColumnName("ExecutionId");
             this.Property(t => t.Enabled).HasColumnName("Enabled");

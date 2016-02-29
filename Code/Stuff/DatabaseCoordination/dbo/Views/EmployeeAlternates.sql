@@ -2,11 +2,11 @@
 AS
 SELECT 
 	[Id],
-	[EmployeeId],
-	[AlternateEmployeeId],
+	[EmployeeSid],
+	[AlternateEmployeeSid],
 	[StartDate],
 	[EndDate],
 	[Notify],
 	[Unlimited],
 	[Enabled]
-	FROM [$(StuffDB)].[dbo].[EmployeeAlternates]
+	FROM [$(StuffDB)].[dbo].[employeeAlternates]

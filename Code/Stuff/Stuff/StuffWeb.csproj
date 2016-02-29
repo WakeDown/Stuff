@@ -224,6 +224,7 @@
     <Compile Include="Models\BranchOffice.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BaseDictionary.cs" />
+    <Compile Include="Models\CoordinationDocumentTypes.cs" />
     <Compile Include="Models\DbFile.cs" />
     <Compile Include="Models\DocMeetLink.cs" />
     <Compile Include="Models\DocMeetLinkList.cs" />
@@ -519,6 +520,7 @@
     <Content Include="Scripts\jquery-2.2.0.min.map" />
     <Content Include="Views\Recruit\Requests.cshtml" />
     <Content Include="Views\Recruit\RequestNew.cshtml" />
+    <Content Include="Views\Recruit\RequestCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -16,8 +16,8 @@ namespace DALStuff.Models.Mapping
             this.Property(t => t.IdPosition).HasColumnName("id_position");
             this.Property(t => t.IdReason).HasColumnName("id_reason");
             this.Property(t => t.Aim).HasColumnName("aim");
-            this.Property(t => t.IdManager).HasColumnName("id_manager");
-            this.Property(t => t.IdTeacher).HasColumnName("id_teacher");
+            this.Property(t => t.SidManager).HasColumnName("sid_manager");
+            this.Property(t => t.SidTeacher).HasColumnName("sid_teacher");
             this.Property(t => t.IdDepartment).HasColumnName("id_department");
             this.Property(t => t.IsSubordinates).HasColumnName("is_subordinates");
             this.Property(t => t.Subordinates).HasColumnName("subordinates");
@@ -54,11 +54,10 @@ namespace DALStuff.Models.Mapping
             this.Property(t => t.IsEthalon).HasColumnName("is_ethalon");
             this.Property(t => t.CreateDatetime).HasColumnName("create_datetime");
             this.Property(t => t.LastChangeDatetime).HasColumnName("last_change_datetime");
-            this.Property(t => t.IdContactPerson).HasColumnName("id_contact_person");
-            this.Property(t => t.IdResponsiblePerson).HasColumnName("id_responsible_person");
-            this.Property(t => t.IdStatus).HasColumnName("id_status");
-            this.Property(t => t.IdContactPerson).HasColumnName("id_contact_person");
-            this.Property(t => t.IdResponsiblePerson).HasColumnName("id_responsible_person");
+            this.Property(t => t.SidContactPerson).HasColumnName("sid_contact_person");
+            this.Property(t => t.SidResponsiblePerson).HasColumnName("sid_responsible_person");
+            this.Property(t => t.IdStatus).HasColumnName("id_status").IsRequired();
+            this.Property(t => t.HaveCoordination).HasColumnName("HaveCoordination");
             this.Property(t => t.Enabled).HasColumnName("Enabled");
 
             // Relationships
@@ -67,16 +66,16 @@ namespace DALStuff.Models.Mapping
                 .HasForeignKey(d => d.IdDepartment);
             this.HasOptional(t => t.ContactPerson)
                 .WithMany(t => t.RequestsFromContactPersonRole)
-                .HasForeignKey(d => d.IdContactPerson);
+                .HasForeignKey(d => d.SidContactPerson);
             this.HasOptional(t => t.ManagerPersom)
                 .WithMany(t => t.RequestsFromManagerRole)
-                .HasForeignKey(d => d.IdManager);
+                .HasForeignKey(d => d.SidManager);
             this.HasOptional(t => t.ResponsiblePerson)
                 .WithMany(t => t.RequestsFromResponsibleRole)
-                .HasForeignKey(d => d.IdResponsiblePerson);
+                .HasForeignKey(d => d.SidResponsiblePerson);
             this.HasOptional(t => t.TeacherPerson)
                 .WithMany(t => t.RequestsFromTeacherRole)
-                .HasForeignKey(d => d.IdTeacher);
+                .HasForeignKey(d => d.SidTeacher);
             this.HasOptional(t => t.Position)
                 .WithMany(t => t.requests)
                 .HasForeignKey(d => d.IdPosition);

@@ -4,7 +4,7 @@
 @model IEnumerable<Request>
 
 @{
-    ViewBag.Title = "Кандидаты";
+    ViewBag.Title = "Заявки на подбор персонала ";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int topRows = Request.QueryString["topRows"] != null ? Convert.ToInt32(Request.QueryString["topRows"]) : 30;
     int currPage = Request.QueryString["page"] != null ? Convert.ToInt32(Request.QueryString["page"]) : 1;
@@ -43,7 +43,7 @@
             </nav>
         </div>
         <div class="pull-left pad-l-sm">
-            <a class="btn btn-primary" href="@Url.Action("RequestNew")"><i class="fa fa-plus-circle"></i> новый запрос</a>
+            <a class="btn btn-primary" href="@Url.Action("RequestNew")"><i class="fa fa-plus-circle"></i>новая заявка</a>
         </div>
     </div>
     <div class="col-lg-5 col-sm-12 col-xs-12">
@@ -151,11 +151,11 @@
         $(function() {
             $('tr[cndid]').click(function() {
                 var id = $(this).attr('cndid');
-                window.location = '@Url.Action("CandidateCard")?id=' + id;
+                window.location = '@Url.Action("RequestCard")?id=' + id;
             });
             $('tr[cndid]').on('contextmenu', function() {
                 var id = $(this).attr('cndid');
-                window.open('@Url.Action("CandidateCard")?id=' + id);
+                window.open('@Url.Action("RequestCard")?id=' + id);
             });
             $('#candidateList thead tr input').keypress(function(e) {
                 if (e.keyCode != 13) return;

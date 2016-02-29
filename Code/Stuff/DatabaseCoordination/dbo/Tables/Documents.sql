@@ -2,6 +2,7 @@
 CREATE TABLE [dbo].[Documents] (
     [Id]          VARCHAR (50)  NOT NULL,
     [LinkToDoc]   VARCHAR (MAX) NULL,
+	[LinkToDocId]   INT NOT NULL,
     [Name]        VARCHAR (200) NOT NULL,
     [TypeId]      INT           NOT NULL,
     [ExecutionId] INT           NULL,

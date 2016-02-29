@@ -1,11 +1,11 @@
 namespace DALStuff.Models
 {
-    public partial class employeeRole
+    public partial class EmployeeRole
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public int employeeId { get; set; }
-        public bool enabled { get; set; }
-        public virtual employee employee { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string EmployeeSid { get; set; }
+        public bool Enabled { get; set; }
+        public virtual employee Employee { get; set; }
     }
 }

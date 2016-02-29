@@ -8,9 +8,9 @@
     -- цель
 	[aim] NVARCHAR(MAX) NULL, 
     -- руководитель
-	[id_manager] INT NULL, 
+	[sid_manager] VARCHAR(46) NULL, 
     -- наставник
-	[id_teacher] INT NULL, 
+	[sid_teacher] VARCHAR(46) NULL, 
     -- отдел
 	[id_department] INT NULL, 
     -- есть ли подчиненные
@@ -88,20 +88,64 @@
 	-- дата последнего изменения
 	[last_change_datetime] DATETIME NULL,
 	-- контактное лицо по собеседованию
-	[id_contact_person] INT NULL,
+	[sid_contact_person] VARCHAR(46) NULL, 
 	-- оценщик на итоговом собеседовании
-	[id_responsible_person] INT NULL,
+	[sid_responsible_person] VARCHAR(46) NULL, 
 	-- статус заявки
 	[id_status] INT NOT NULL,
-
+    [HaveCoordination]        BIT CONSTRAINT [DK_requests_HaveCoordination] DEFAULT ((0)) NOT NULL,
     [Enabled]        BIT CONSTRAINT [DK_requests_Enabled] DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_requests] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_requests_id_position] FOREIGN KEY ([id_position]) REFERENCES [dbo].[positions] ([id]),
     CONSTRAINT [FK_requests_id_reason] FOREIGN KEY ([id_reason]) REFERENCES [dbo].[request_reasons] ([id]),
 	CONSTRAINT [FK_requests_id_status] FOREIGN KEY ([id_status]) REFERENCES [dbo].[request_statuses] ([id]),
-	CONSTRAINT [FK_requests_id_manager] FOREIGN KEY ([id_manager]) REFERENCES [dbo].[employees] ([id]),
-	CONSTRAINT [FK_requests_id_teacher] FOREIGN KEY ([id_teacher]) REFERENCES [dbo].[employees] ([id]),
+	CONSTRAINT [FK_requests_id_manager] FOREIGN KEY ([sid_manager]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_id_teacher] FOREIGN KEY ([sid_teacher]) REFERENCES [dbo].[employees] ([ad_sid]),
 	CONSTRAINT [FK_requests_id_department] FOREIGN KEY ([id_department]) REFERENCES [dbo].[departments] ([id]),
-	CONSTRAINT [FK_requests_id_contact_person] FOREIGN KEY ([id_contact_person]) REFERENCES [dbo].[employees] ([id]),
-	CONSTRAINT [FK_requests_id_responsible_person] FOREIGN KEY ([id_responsible_person]) REFERENCES [dbo].[employees] ([id]),
+	CONSTRAINT [FK_requests_id_contact_person] FOREIGN KEY ([sid_contact_person]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_id_responsible_person] FOREIGN KEY ([sid_responsible_person]) REFERENCES [dbo].[employees] ([ad_sid]),
 );
+/*GO
+
+CREATE Trigger [dbo].[requestssid_managerTrigger] ON [dbo].[requests] After Insert, Update
+AS
+BEGIN
+   If NOT Exists(SELECT ad_sid FROM [Stuff].[dbo].[employees] WHERE ad_sid in (SELECT [sid_manager] FROM inserted)) BEGIN
+      -- Handle the Referential Error Here
+	  RAISERROR ('Cannot insert [requests] - no [sid_manager]',16,1)
+   END
+END
+
+GO
+
+CREATE Trigger [dbo].[requestssid_teacherTrigger] ON [dbo].[requests] After Insert, Update
+AS
+BEGIN
+   If NOT Exists(SELECT ad_sid FROM [Stuff].[dbo].[employees] WHERE ad_sid in (SELECT [sid_teacher] FROM inserted)) BEGIN
+      -- Handle the Referential Error Here
+	  RAISERROR ('Cannot insert [requests] - no [sid_teacher]',16,1)
+   END
+END
+
+GO
+
+CREATE Trigger [dbo].[requestssid_contact_personTrigger] ON [dbo].[requests] After Insert, Update
+AS
+BEGIN
+   If NOT Exists(SELECT ad_sid FROM [Stuff].[dbo].[employees] WHERE ad_sid in (SELECT [sid_contact_person] FROM inserted)) BEGIN
+      -- Handle the Referential Error Here
+	  RAISERROR ('Cannot insert [requests] - no [sid_contact_person]',16,1)
+   END
+END
+
+GO
+
+CREATE Trigger [dbo].[requestssid_responsible_personTrigger] ON [dbo].[requests] After Insert, Update
+AS
+BEGIN
+   If NOT Exists(SELECT ad_sid FROM [Stuff].[dbo].[employees] WHERE ad_sid in (SELECT [sid_responsible_person] FROM inserted)) BEGIN
+      -- Handle the Referential Error Here
+	  RAISERROR ('Cannot insert [requests] - no [sid_responsible_person]',16,1)
+   END
+END
+*/
