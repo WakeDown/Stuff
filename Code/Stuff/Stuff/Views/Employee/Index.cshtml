@@ -124,13 +124,12 @@
             </table>*@
         </div>
     </div>
-
-    @if (Model.BirthDate.HasValue && Model.BirthDate.Value.Day == DateTime.Now.Day && Model.BirthDate.Value.Month == DateTime.Now.Month)
+    @*Шарики на день рождения - убрали 01.03.2016*@
+    @*@if (Model.BirthDate.HasValue && Model.BirthDate.Value.Day == DateTime.Now.Day && Model.BirthDate.Value.Month == DateTime.Now.Month)
     {
         <div class="clearfix"></div>
         <div>
             @Styles.Render("~/Content/birthday")
-            @*<div class="love-pop">go ahead, pop 'em!</div>*@
             <div class="love-container">
                 <div class="love-box">
                     <div class="balloon red"></div>
@@ -199,7 +198,7 @@
             </div>
 
         </div>
-    }
+    }*@
 
 
 }
@@ -207,13 +206,13 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $(".balloon").hover(function () {
-                $(this).next().show();
-                //$(this).hide();
-                $(this).hide("explode", { pieces: 6 }, 100);
-            });
-        });
+        //$(document).ready(function () {
+        //    $(".balloon").hover(function () {
+        //        $(this).next().show();
+        //        //$(this).hide();
+        //        $(this).hide("explode", { pieces: 6 }, 100);
+        //    });
+        //});
 
     </script>
 
