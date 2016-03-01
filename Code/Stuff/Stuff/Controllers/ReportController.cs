@@ -10,6 +10,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class ReportController : BaseController
     {
         public ActionResult GetItBudgetReport()

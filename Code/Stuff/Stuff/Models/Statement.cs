@@ -7,19 +7,20 @@ using Stuff.Models;
 
 namespace Stuff.Models
 {
-    enum StatementType
+    enum StatementTypes
     {
         FewHours,//несколько часов
         FewDays//несколько дней
     }
 
-    public class Statement:Document
+    public class Statement: Document
     {
         public Employee Employee { get; set; }
         public string Text { get; set; }
         public string Cause { get; set; }
         
         public List<Employee> Matchers { get; set; }
+        public bool ShowMatcherSecretaryRow { get; set; }
 
         private const string DefaultCause = "по семейным обстоятельствам";
 
@@ -57,7 +58,7 @@ namespace Stuff.Models
                 Organization = new Organization(organizationSysName);
             }
             //Organization.Name = Organization.Name.Replace("«", "\"").Replace("»", "\"");
-            Organization.Director = new Employee(Organization.Director.Id);
+            Organization.Director = new Employee(Organization.Director.Id, true);
             Organization.Director.Position = new Position(Organization.Director.Position.Id);
             Organization.Director.PositionOrg = new Position(Organization.Director.PositionOrg.Id);
         }
@@ -68,7 +69,7 @@ namespace Stuff.Models
             var depDir = new Employee().GetDepartmentDirector(empSid);
             if (depDir != null)
             {
-                if (Employee.Manager.Id != depDir.Id) Matchers.Add(depDir);
+                if (Employee.Manager.Id != depDir.Id && Employee.Id != depDir.Id) Matchers.Add(depDir);
             }
             else
             {

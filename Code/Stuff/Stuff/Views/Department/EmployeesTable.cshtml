@@ -1,0 +1,34 @@
+﻿@using Stuff.Models
+@model IEnumerable<Stuff.Models.Employee>
+@{
+    var stuff = Model;
+    var userCanEdit = ViewBag.UserCanEdit;
+    if (stuff.Any())
+    {
+        <table class="table table-bordered table-stuff">
+            @foreach (var emp in stuff)
+            {
+                <tr>
+                    @if (userCanEdit)
+                    {
+                        <td class="min-width">
+                            <a class=" btn btn-link" href="@Url.Action("Edit", "Employee", new {id = emp.Id})" data-toggle="tooltip" title="изменить">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </td>
+                    }
+                    <td class="width-20p">
+                        @emp.DisplayName
+                    </td>
+                    @if (userCanEdit)
+                    {
+                        <td class="min-width">
+                            <button name="delete-emp" class="btn btn-link" empid="@emp.Id" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></button>
+                        </td>
+                    }
+                    <td>@(@emp.Position != null ? emp.Position.Name : "--отсутствует--")</td>
+                </tr>
+            }
+        </table>
+    }
+}

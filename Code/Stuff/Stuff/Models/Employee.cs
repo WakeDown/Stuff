@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using DataProvider.Helpers;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -55,18 +58,23 @@ namespace Stuff.Models
             DateCame = DateTime.Now;
         }
 
-        public Employee(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="showHidden">Показать скрытых пользователей принудительно</param>
+        public Employee(int id, bool showHidden = false)
         {
-            Uri uri = new Uri(String.Format("{0}/Employee/Get?id={1}", OdataServiceUri, id));
+            Uri uri = new Uri(string.Format("{0}/Employee/Get?id={1}&showHidden={2}",OdataServiceUri,id,showHidden));
             string jsonString = GetJson(uri);
 
             Employee emp = JsonConvert.DeserializeObject<Employee>(jsonString);
             FillSelf(emp);
         }
 
-        public Employee(string sid)
+        public Employee(string sid, bool showHidden = false)
         {
-            Uri uri = new Uri(String.Format("{0}/Employee/Get?adSid={1}", OdataServiceUri, sid));
+            Uri uri = new Uri(string.Format("{0}/Employee/Get?adSid={1}&showHidden={2}",OdataServiceUri,sid,showHidden));
             string jsonString = GetJson(uri);
 
             Employee emp = JsonConvert.DeserializeObject<Employee>(jsonString);
@@ -195,8 +203,9 @@ namespace Stuff.Models
 
         public static SelectList GetEmployeeListSid()
         {
-            return new SelectList(Employee.GetSelectionList(), "AdSid", "DisplayName");
+            return new SelectList(Employee.GetList(), "AdSid", "DisplayName");
         }
+
 
         public Employee GetDirector()
         {
@@ -232,6 +241,50 @@ namespace Stuff.Models
         {
             Uri uri = new Uri(String.Format("{0}/Employee/GetCurrentUserName", OdataServiceUri));
             return GetJson(uri);
+        }
+
+        public static IEnumerable<Department> GetWorkingDepartmentList(string sid)
+        {
+            var url = new Uri(string.Format("{0}/Employee/GetWorkingDepartmentList?sid={1}", OdataServiceUri, sid));
+            var json = GetJson(url);
+            return JsonConvert.DeserializeObject<IEnumerable<Department>>(json);
+        }
+
+        public static string ShortName(string fullName)
+        {
+            string result = String.Empty;
+            string[] nameArr = fullName.Split(' ');
+            for (int i = 0; i < nameArr.Count(); i++)
+            {
+                //if (i > 2) break;
+                string name = nameArr[i];
+                if (String.IsNullOrEmpty(name)) continue;
+                if (i > 0) name = name[0] + ".";
+                if (i == 1) name = " " + name;
+                result += name;
+            }
+            return result;
+        }
+
+        public static IEnumerable<string> GetFullRecipientList(string citySysName = null)
+        {
+            Uri uri = new Uri(String.Format("{0}/Employee/GetFullRecipientList?citySysName={1}", OdataServiceUri, citySysName));
+            string jsonString = GetJson(uri);
+            var email = JsonConvert.DeserializeObject<IEnumerable<string>>(jsonString);
+            return email;
+        }
+
+        public static string GetEmailBySid(string sid)
+        {
+            if (String.IsNullOrEmpty(sid)) return String.Empty;
+            SqlParameter pSid = new SqlParameter() { ParameterName = "sid", SqlValue = sid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("get_email", pSid);
+            string email = String.Empty;
+            if (dt.Rows.Count > 0)
+            {
+                email = Db.DbHelper.GetValueString(dt.Rows[0], "email");
+            }
+            return email;
         }
     }
 }

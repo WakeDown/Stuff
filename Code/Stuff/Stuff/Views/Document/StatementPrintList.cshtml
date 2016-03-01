@@ -1,0 +1,121 @@
+﻿@using Stuff.Models
+@using System
+@using System.Collections.Generic;
+@using Microsoft.Ajax.Utilities
+@using Stuff.Objects
+@model IEnumerable<StatementPrint>
+@{
+    ViewBag.Title = "Список Служебок";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // bool userCanEdit = ViewBag.CurUser.UserCanEdit();
+    bool userCanEdit = true;//ViewBag.CurUser.HasAccess(AdGroup.PersonalManager);
+    var rp = new ResponseMessage();
+    int id=0;
+}
+@if (userCanEdit)
+{
+    <table class="table table-bordered" id="statementPrints">
+        <thead class="bg-primary">
+        <tr>
+            <th>
+                №
+            </th>
+            <th class="search">
+                Сотрудник
+            </th>
+            @*<th>
+                Тип службки
+            </th>
+            <th>
+                Причина отсутствия
+            </th>*@
+            <th class="search" id="datepicker">
+                Начало отсутствия
+            </th>
+            <th>
+                Выход на работу
+            </th>
+            <th>Дней отсутствия</th>
+            <th>Часов отсутствия</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var statementPrint in Model)
+{
+    <tr>
+        <td>
+            @statementPrint.Id
+        </td>
+        <td>
+            @statementPrint.Employee.DisplayName
+        </td>
+        @*<td>
+            @StatementType.GetList().First(t => t.Id == statementPrint.IdStatementType).Name
+        </td>
+        <td>
+            @statementPrint.Cause
+        </td>*@
+        <td>
+            @(statementPrint.IdStatementType == 1
+            ? statementPrint.DateBegin.Value.ToString("dd.MM.yyyy HH:mm")
+            : statementPrint.DateBegin.Value.ToShortDateString())
+        </td>
+        <td>
+            @(statementPrint.IdStatementType == 1
+                  ? statementPrint.DateEnd.Value.ToString("dd.MM.yyyy HH:mm")
+                  : statementPrint.DateEnd.Value.ToShortDateString())
+        </td>
+        <td>
+            @statementPrint.DurationDays
+        </td>
+        <td>
+            @statementPrint.DurationHours
+        </td>
+    </tr>
+}
+        </tbody>
+        <tfoot></tfoot>
+
+    </table>
+    using (Html.BeginForm("StatementPrintList", "Document", FormMethod.Post, new { @id = "bcForm", @class = "form-horizontal", role = "form" }))
+    {
+        @Html.HiddenFor(i=>id, new {id="idInput"});
+    }
+}
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#statementPrints thead .search').each(function() {
+                var cls = $(this)[0].id;
+                var title = $(this)[0].innerText;
+                $(this).html('<input type="text" style="color:black"  placeholder="' + title + '" class="' + cls + '">');
+            });
+            $(".datepicker").datepicker({
+                format: "dd.mm.yyyy",
+                autoclose: true,
+                todayBtn: "linked",
+                language: "ru"
+            });
+            // DataTable
+            var table = $('#statementPrints').DataTable({ "dom": '<"top"><"bottom">', "bJQueryUI": true,paging: false });
+
+            // Apply the search
+            table.columns().eq(0).each(function(colIdx) {
+                $('input', table.column(colIdx).header()).on('keyup change', function() {
+                    table
+                        .column(colIdx)
+                        .search(this.value)
+                        .draw();
+                });
+                $('input', table.column(colIdx).header()).on('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+        });
+        $("body").scannerDetection(function(data) {
+                $("#idInput").val(data);
+                $("#bcForm").submit();
+        });
+    </script>
+}

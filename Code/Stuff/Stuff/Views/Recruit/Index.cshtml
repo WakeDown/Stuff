@@ -1,0 +1,267 @@
+﻿@using Stuff.Helpers
+@using Stuff.Models
+@using Stuff.Objects
+@model IEnumerable<RecruitVacancy>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Вакансии";
+    int topRows = Request.QueryString["topRows"] != null ? Convert.ToInt32(Request.QueryString["topRows"]) : 30;
+    int currPage = Request.QueryString["page"] != null ? Convert.ToInt32(Request.QueryString["page"]) : 1;
+    int pageCount = (ViewBag.TotalCount / topRows);
+    if (ViewBag.TotalCount % topRows > 0)
+    {
+        pageCount++;
+    }
+}
+
+@*<p>
+    <a class="btn btn-primary" href="@Url.Action("VacancyNew")"><i class="fa fa-plus-circle"></i> новая вакансия</a>
+    <a class="btn btn-primary" href="@Url.Action("CandidateNew")?returnUrl=@Request.Url"><i class="fa fa-plus-circle"></i> новое резюме</a>
+</p>*@
+
+<div class="row">
+    <div class="col-lg-5 col-sm-12 col-xs-12 hidden-sm hidden-xs">
+        <div class="pull-left">
+            <nav>
+                <ul class="pagination no-marg pages">
+
+                    <li name="page" class="@(currPage == 1 ? "disabled" : String.Empty)"><a href="@Url.Current(new {page = Convert.ToInt32(Request.QueryString["page"]) - 1})"><</a></li>
+
+                    @for (int i = 1; i <= pageCount; i++)
+                    {
+                        if (i > 4)
+                        {
+                            <li name="page" class="@(i == currPage ? "active" : String.Empty)"><a href="@Url.Current(new {page = i})">...</a></li>
+                            break;
+
+                        }
+                        else
+                        {
+                            <li name="page" class="@(i == currPage ? "active" : String.Empty)"><a href="@Url.Current(new {page = i})">@i</a></li>
+                        }
+                    }
+
+                    <li name="page" class="@(currPage == pageCount ? "disabled" : String.Empty)"><a href="@Url.Current(new {page = Convert.ToInt32(Request.QueryString["page"]) + 1})">></a></li>
+
+                </ul>
+            </nav>
+        </div>
+        <div class="pull-left pad-l-sm">
+            @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+            {
+                <a class="btn btn-primary" href="@Url.Action("VacancyNew")"><i class="fa fa-plus-circle"></i> новая вакансия</a>
+            }
+            @*<a class="btn btn-primary" href="@Url.Action("CandidateNew")?returnUrl=@Request.Url"><i class="fa fa-plus-circle"></i> новое резюме</a>*@
+        </div>
+    </div>
+    <div class="col-lg-5 col-sm-12 col-xs-12">
+        <div id="stateFilterList"></div>
+        <input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("-1") ? "checked" : String.Empty) value="-1" />&nbsp;все&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("1") ? "checked" : String.Empty ) value="1" />&nbsp;только активные&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("0") ? "checked" : String.Empty ) value="0" />&nbsp;только неактивные
+        @*<input type="checkbox" id="activeOnly" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty) />&nbsp;только активные*@
+    </div>
+    <div class="col-lg-2 col-sm-6 col-xs-6">
+        <div>
+            <div class="text-right">
+                <nav>
+                    <ul class="pagination pagesize no-marg">
+                        <li><a name="pageSize" value="30" href="@Url.Current(new { topRows=30, page=1})" class="btn btn-default btn-sm selected">30</a></li>
+                        <li><a name="pageSize" value="100" href="@Url.Current(new { topRows=100, page=1})" class="btn btn-default btn-sm">100</a></li>
+                        <li><a name="pageSize" value="300" href="@Url.Current(new { topRows=300, page=1})" class="btn btn-default btn-sm">300</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+    <table id="vacancyList" class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr class="bg-primary">
+            <th class="min-width">
+                <input id="vid" class="form-control input-xs" placeholder="ID" value="@Request.QueryString["vid"]" style="width: 50px;" />
+            </th>
+            <th>
+                <input id="vnm" class="form-control input-xs" placeholder="Вакансия" value="@Request.QueryString["vnm"]"/>
+            </th>
+            <th>
+                <input id="bro" class="form-control input-xs" placeholder="Филиал" value="@Request.QueryString["bro"]" />
+            </th>
+            @*<th>Дата открытия</th>*@
+            <th>Кандидатов</th>
+            <th>
+                <input id="dtdl" class="form-control input-xs" placeholder="Дата закрытия" value="@Request.QueryString["dtdl"]" />
+            </th>
+            <th>
+                <input id="pmgr" class="form-control input-xs" placeholder="Менеджер" value="@Request.QueryString["pmgr"]"/>
+            </th>
+            <th>
+                <input id="stt" class="form-control input-xs" placeholder="Статус" value="@Request.QueryString["stt"]" />
+            </th>
+            @*<th>
+                <input id="dtcr" class="form-control input-xs" placeholder="Добавлена" value="@Request.QueryString["dtcr"]"/>
+            </th>*@
+            
+            <th class="min-width">
+                <a href="@Url.Action("Index")" class="btn btn-default btn-xs" title="очистить фильтр"><i class="fa fa-refresh"></i></a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (RecruitVacancy rv in Model)
+             {
+                 <tr id="vac-@rv.Id" vacid="@rv.Id" class="cursor-pointer" style="@(!String.IsNullOrEmpty(rv.StateBackgroundColor) ? "background-color: #" + rv.StateBackgroundColor : String.Empty)">
+                     <th class="text-center">@rv.Id</th>
+                     <td>
+                         <div>@rv.PositionName</div>
+                         <div><small>@rv.DepartmentName</small>
+                         </div>
+                     </td>
+                     <td>
+                         @rv.BranchOfficeName
+                     </td>
+                     @*<td>@rv.DateCreate.ToString("dd.MM.yyyy")</td>*@
+                     <td class="text-nowrap bold text-center">@rv.CandidateTotalCount / <span class="text-danger">@rv.CandidateCancelCount</span></td>
+                     <td>
+                         @*<small class="text-primary">
+                             @rv.DeadlineDate.ToString("dd.MM.yyyy") - План
+                         </small><br/>*@
+                         <small class="text-success">
+                             @(rv.OrderEndDate.HasValue ? rv.OrderEndDate.Value.ToString("dd.MM.yyyy") : "не указана") - Регламент
+                         </small><br/><small class="text-danger">
+                             @(rv.ClaimEndDate.HasValue ? rv.ClaimEndDate.Value.ToString("dd.MM.yyyy") : "не указана") - Заявка
+                         </small>
+                     </td>
+                     <td>@rv.PersonalManagerName</td>
+                     <td>
+                         <strong>@rv.StateName</strong>
+                         <div><small class="text-nowrap">@(rv.StateChangeDate.HasValue ? rv.StateChangeDate.Value.ToString("dd.MM.yyyy") : null) - @rv.StateChangerName</small>
+                         </div>
+                     </td>
+                     @*<td><strong>Добавлена</strong>
+                        <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
+                     </td>*@
+                     
+                     @*<td>
+                         <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
+                     </td>*@
+                     <td></td>
+                 </tr>
+             }
+        }
+        else
+        {
+            <tr>
+                <td>пусто</td>
+            </tr>
+}
+        </tbody>
+    </table>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $('tr[vacid]').click(function() {
+                var id = $(this).attr('vacid');
+                window.location = '@Url.Action("VacancyCard")?id=' + id;
+            });
+            $('tr[vacid]').on('contextmenu', function() {
+                var id = $(this).attr('vacid');
+                window.open('@Url.Action("VacancyCard")?id=' + id);
+            });
+            $('#vacancyList thead tr input').keypress(function(e) {
+                if (e.keyCode != 13) return;
+                search();
+            });
+
+            $('[name="activeOnly"]').click(search);
+
+            //loadStateFilterList();
+        });
+
+        function loadStateFilterList() {
+            var $cont = $('#stateFilterList');
+            $cont.empty();
+            $.ajax({
+                url: '@Url.Action("GetVacancyStateList")',
+                method: 'POST',
+                success: function (data) {
+                    var $ul = $('<ul class="list-inline"></ul>');
+                    $cont.append($ul);
+                    if (data.length > 0) {
+                        var requestStates = getParameterByName('state');
+                        var stArr = requestStates.split(',');
+                        //alert(requestStates);
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var elem = '<li><a name="stateFilterItem" class="btn state-filter-item' + (stArr.indexOf(item.Id) > -1 ? ' selected' : '') + '" stid="' + item.Id + '">' + item.Name + ' <span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.Count + '</span></a></li>';
+                            $ul.append(elem);
+                        }
+                        
+                            //var li = '<li><a name="stateGroupFilterItemAll" value="all" class="btn btn-block state-group-filter-item text-sm" style="background-color: #CFD8DC; color: #607D8B; border-color: #37474F; border-width: 1px; border-style: solid;"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge" style="background-color:#607D8B">' + totalCount + '</span>&nbsp;Все&nbsp;</a></div>';
+                            //$ul.append(li);
+                        $('[name="stateFilterItem"]').click(function () {
+                            $(this).toggleClass('selected');
+                            search();
+                        });
+                    }
+                },
+                error:function() {
+                    alert('Не удалось загрузить фильтр статусов!');
+                }
+            });
+        }
+
+        function search() {
+            var curUrl = '@Request.RawUrl.Replace("&amp;", "&")';
+            var url = curUrl;
+            var vid = $('#vid').val();
+            url = updateQueryStringParameter(url, 'vid', vid);
+            var vnm = $('#vnm').val();
+            url = updateQueryStringParameter(url, 'vnm', vnm);
+            var dtdl = $('#dtdl').val();
+            url = updateQueryStringParameter(url, 'dtdl', dtdl);
+            var pmgr = $('#pmgr').val();
+            url = updateQueryStringParameter(url, 'pmgr', pmgr);
+            //var dtcr = $('#dtcr').val();
+            //url = updateQueryStringParameter(url, 'dtcr', dtcr);
+            var bro = $('#bro').val();
+            url = updateQueryStringParameter(url, 'bro', bro);
+            var stt = $('#stt').val();
+            url = updateQueryStringParameter(url, 'stt', stt);
+            var aon = $('[name=activeOnly]:checked').val();
+            url = updateQueryStringParameter(url, 'aon', aon);
+            //var $grpStateElem = $('[name="stateFilterItem"].selected');
+            //var state = '';
+            //if ($grpStateElem.length > 0) {
+            //    for (var i = 0; i < $grpStateElem.length; i++) {
+            //        var val = $($grpStateElem[i]).attr('stid');
+            //        if (state > 0) state = state + ',';
+            //        state = state + val;
+            //    }
+            //}
+            
+            //url = updateQueryStringParameter(url, 'state', state);
+
+            window.location = url;
+        }
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function updateQueryStringParameter(uri, key, value) {
+            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+            if (uri.match(re)) {
+                return uri.replace(re, '$1' + key + "=" + value + '$2');
+            } else {
+                return uri + separator + key + "=" + value;
+            }
+        }
+    </script>
+}

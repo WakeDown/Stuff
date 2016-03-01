@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using DataProvider.Helpers;
 using Newtonsoft.Json;
 using Stuff.Objects;
 
@@ -119,6 +122,35 @@ namespace StuffDelivery.Models
             string json = JsonConvert.SerializeObject(emps);
             bool result = PostJson(uri, json, out responseMessage);
             return result;
+        }
+
+        public static string ShortName(string fullName)
+        {
+            string result = String.Empty;
+            string[] nameArr = fullName.Split(' ');
+            for (int i = 0; i < nameArr.Count(); i++)
+            {
+                //if (i > 2) break;
+                string name = nameArr[i];
+                if (String.IsNullOrEmpty(name)) continue;
+                if (i > 0) name = name[0] + ".";
+                if (i == 1) name = " " + name;
+                result += name;
+            }
+            return result;
+        }
+
+        public static string GetEmailBySid(string sid)
+        {
+            if (String.IsNullOrEmpty(sid)) return String.Empty;
+            SqlParameter pSid = new SqlParameter() { ParameterName = "sid", SqlValue = sid, SqlDbType = SqlDbType.VarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("get_email", pSid);
+            string email = String.Empty;
+            if (dt.Rows.Count > 0)
+            {
+                email = Db.DbHelper.GetValueString(dt.Rows[0], "email");
+            }
+            return email;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using HolidayWorkEmailListener.Models;
@@ -12,7 +13,7 @@ namespace HolidayWorkEmailListener
 {
     class Program
     {
-        static ExchangeService Client = new ExchangeService(ExchangeVersion.Exchange2013);
+        static ExchangeService Client = new ExchangeService();
 
         static void Main(string[] args)
         {
@@ -24,11 +25,10 @@ namespace HolidayWorkEmailListener
             string login = ConfigurationManager.AppSettings["login"];
             string pass = ConfigurationManager.AppSettings["pass"];
             string mail = ConfigurationManager.AppSettings["mail"];
-
-            Client.Credentials = new WebCredentials(login, pass);
-
+            WebCredentials credentials = new WebCredentials(mail, pass);
+            //Client.Credentials = new WebCredentials(login, pass);
+            Client.Credentials = credentials;
             Client.UseDefaultCredentials = false;
-
             Client.AutodiscoverUrl(mail, RedirectionUrlValidationCallback);
 
             ItemView view = new ItemView(1000000000);//Чтобы ничего не пропустить берем миллиард записей сразу ))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace HolidayWorkEmailListener.Models
             //Ваша заявка на работу в выходные успешно добавлена
         }
 
-        private static MailAddress defaultMailFrom = new MailAddress("UN1T@un1t.group");
+        private static MailAddress defaultMailFrom = new MailAddress("holiday-work@unitgroup.ru");
 
         public static void SendMailSmtp(string subject, string body, bool isBodyHtml, MailAddress[] mailTo, MailAddress[] hiddenMailTo, MailAddress mailFrom, bool isTest = false)
         {
@@ -46,16 +47,16 @@ namespace HolidayWorkEmailListener.Models
             if ((mailTo == null || !mailTo.Any()) && (hiddenMailTo == null || !hiddenMailTo.Any())) throw new Exception("Не указаны получатели письма!");
 
             if (mailFrom == null || String.IsNullOrEmpty(mailFrom.Address)) mailFrom = defaultMailFrom;
-
+            //mailFrom = new MailAddress("holiday-work@unitgroup.ru");
             MailMessage mail = new MailMessage();
 
             SmtpClient client = new SmtpClient();
-            client.Port = 25;
+            client.Port = 587;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
-
+            client.Credentials = new NetworkCredential("holiday-work@unitgroup.ru", "1qazXSW@");
             mail.From = mailFrom;
 
-            client.EnableSsl = false;
+            client.EnableSsl = true;
 
             if (mailTo != null)
             {
@@ -84,7 +85,7 @@ namespace HolidayWorkEmailListener.Models
             mail.Subject = subject;
             mail.Body = body;
             mail.IsBodyHtml = isBodyHtml;
-            client.Host = "ums-1";
+            client.Host = "smtp.office365.com";
             client.Send(mail);
         }
     }

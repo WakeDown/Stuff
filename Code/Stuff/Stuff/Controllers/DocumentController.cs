@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Xml;
 using SelectPdf;
 //using SelectPdf;
@@ -17,11 +19,12 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class DocumentController : BaseController
     {
         public ActionResult My()
         {
-            var user = DisplayCurUser();
+            //var user = DisplayCurUser();
             var list = Document.GetMyList();
             return View(list);
         }
@@ -80,7 +83,27 @@ namespace Stuff.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult StatementPrintList()
+        {
+            if (!CurUser.UserIsPersonalManager())
+                return new HttpStatusCodeResult(403);
+            var spl = StatementPrint.GetList();
+            return View(spl);
+        }
+
         [HttpPost]
+        public ActionResult StatementPrintList(int? id)
+        {
+            if (!id.HasValue) return RedirectToAction("StatementPrintList");
+            if (!CurUser.UserIsPersonalManager())
+                return new HttpStatusCodeResult(403);
+            var responseMessage = new ResponseMessage();
+            StatementPrint.SetConfirmed(id.Value, out responseMessage);
+            ViewData["message"] = responseMessage;
+            //var spl = StatementPrint.GetList();
+            return RedirectToAction("StatementPrintList");
+        }
         public JsonResult SaveDocMeetLink(int? idDocument, int? idDepartment, int? idPosition, int? idEmployee)
         {
             var user = DisplayCurUser();
@@ -119,7 +142,6 @@ namespace Stuff.Controllers
                     ResponseMessage responseMessage;
                     bool complete = DocMeetLink.Delete(idDocument.Value, idDepartment, idPosition, idEmployee, out responseMessage);
                     if (!complete) throw new Exception(responseMessage.ErrorMessage);
-
                 }
                 catch (Exception ex)
                 {
@@ -179,7 +201,7 @@ namespace Stuff.Controllers
         [HttpGet]
         public ActionResult StatementRestFewHours()
         {
-            var user = DisplayCurUser();
+            var user = DisplayCurUser();      
             return View("StatementFewHours", new StatementRestFewHours(user.Sid));
         }
 
@@ -197,19 +219,43 @@ namespace Stuff.Controllers
             }
 
             HtmlToPdf converter = new HtmlToPdf();
+            var statementPrint = new StatementPrint
+            {
+                IdStatementType = 1,
+                EmployeeSid = data.SidEmployee,
+                DateBegin = data.HourStart,
+                DateEnd = data.HourEnd,
+                DurationHours = data.HoursCount,
+                Cause = data.Cause,
+                IdDepartment = data.Employee.Department.Id,
+                IdOrganization = data.Employee.Organization.Id,
+                Confirmed = false
+            };
+            ResponseMessage rm;
+            if(statementPrint.Save(out rm))
+                statementPrint.Id = rm.Id;
 
-            string url = Url.Action("StatementRestHours", new { sid = data.SidEmployee, dateRest = data.DateRest, hourStart = data.HourStart, hoursCount = data.HoursCount, cause = data.Cause });
+            //return RedirectToAction("StatementRestHours",
+            //    new
+            //    {
+            //        sid = data.SidEmployee,
+            //        dateRest = data.DateRest,
+            //        hourStart = data.HourStart,
+            //        hoursCount = data.HoursCount,
+            //        cause = data.Cause,
+            //        id = statementPrint.Id
+            //    });
+
+            string url = Url.Action("StatementRestHours", new { sid = data.SidEmployee, dateRest = data.DateRest, hourStart = data.HourStart, hoursCount = data.HoursCount, cause = data.Cause, id = statementPrint.Id });
             var leftPartUrl = String.Format("{0}://{1}:{2}", Request.RequestContext.HttpContext.Request.Url.Scheme, Request.RequestContext.HttpContext.Request.Url.Host, Request.RequestContext.HttpContext.Request.Url.Port);
             url = String.Format("{1}{0}", url, leftPartUrl);
             PdfDocument doc = converter.ConvertUrl(url);
             MemoryStream stream = new MemoryStream();
             doc.Save(stream);
             return File(stream.ToArray(), "application/pdf");
-
-            //return View("StatementNoOf", data);
         }
 
-        public ActionResult StatementRestHours(string sid, DateTime? dateRest, DateTime? hourStart, int? hoursCount, string cause)
+        public ActionResult StatementRestHours(string sid, DateTime? dateRest, DateTime? hourStart, int? hoursCount, string cause,int id)
         {
             var data = new StatementRestFewHours();
             data.SidEmployee = sid;
@@ -218,13 +264,15 @@ namespace Stuff.Controllers
             data.HoursCount = hoursCount.Value;
             data.Cause = cause;
             data.Configure();
-
+            data.ShowMatcherSecretaryRow = true;
+            data.Id = id;
             return View("StatementNoOf", data);
         }
 
         [HttpGet]
         public ActionResult StatementRestFewDays()
         {
+
             return View("StatementFewDays", new StatementRestFewDays(CurUser.Sid));
         }
 
@@ -241,8 +289,25 @@ namespace Stuff.Controllers
                 return View("StatementFewDays", data);
             }
             HtmlToPdf converter = new HtmlToPdf();
-            
-            string url = Url.Action("StatementRestDays", new{sid=data.SidEmployee, dateStart=data.DateStart, daysCount=data.DaysCount, cause=data.Cause});
+            var statementPrint = new StatementPrint
+            {
+                IdStatementType = 2,
+                EmployeeSid = data.SidEmployee,
+                DateBegin = data.DateStart,
+                DateEnd = data.DateStart.AddDays(data.DaysCount - 1),
+                DurationDays = data.DaysCount,
+                Cause = data.Cause,
+                IdDepartment = data.Employee.Department.Id,
+                IdOrganization = data.Employee.Organization.Id,
+                Confirmed = false
+            };
+            ResponseMessage rm;
+            if (statementPrint.Save(out rm))
+                statementPrint.Id = rm.Id;
+
+            //return RedirectToAction("StatementRestDays", new { sid = data.SidEmployee, dateStart = data.DateStart, daysCount = data.DaysCount, cause = data.Cause, id = statementPrint.Id });
+
+            string url = Url.Action("StatementRestDays", new{sid=data.SidEmployee, dateStart=data.DateStart, daysCount=data.DaysCount, cause=data.Cause, id=statementPrint.Id});
             var leftPartUrl = String.Format("{0}://{1}:{2}", Request.RequestContext.HttpContext.Request.Url.Scheme, Request.RequestContext.HttpContext.Request.Url.Host, Request.RequestContext.HttpContext.Request.Url.Port);
             url = String.Format("{1}{0}", url, leftPartUrl);
             PdfDocument doc = converter.ConvertUrl(url);
@@ -253,7 +318,7 @@ namespace Stuff.Controllers
 
        
 
-        public ActionResult StatementRestDays(string sid, DateTime? dateStart, int? daysCount, string cause)
+        public ActionResult StatementRestDays(string sid, DateTime? dateStart, int? daysCount, string cause,int id)
         {
             var data = new StatementRestFewDays();
             data.SidEmployee = sid;
@@ -261,7 +326,8 @@ namespace Stuff.Controllers
             data.DaysCount = daysCount.Value;
             data.Cause = cause;
             data.Configure();
-
+            data.ShowMatcherSecretaryRow = true;
+            data.Id = id;
             return View("Statement", data);
         }
 
@@ -324,7 +390,15 @@ namespace Stuff.Controllers
             }
             HtmlToPdf converter = new HtmlToPdf();
 
-            string url = Url.Action("StatementRestPdf", new { sid = data.SidEmployee, dateStart = data.DateStart, dateEnd = data.DateEnd, daysCount=data.DaysCount });
+            //return RedirectToAction("StatementRestPdf",
+            //    new
+            //    {
+            //        sid = data.SidEmployee,
+            //        dateStart = data.DateStart,
+            //        dateEnd = data.DateEnd,
+            //        daysCount = data.DaysCount
+            //    });
+            string url = Url.Action("StatementRestPdf", new { sid = data.SidEmployee, dateStart = data.DateStart, dateEnd = data.DateEnd, daysCount = data.DaysCount });
             var leftPartUrl = String.Format("{0}://{1}:{2}", Request.RequestContext.HttpContext.Request.Url.Scheme, Request.RequestContext.HttpContext.Request.Url.Host, Request.RequestContext.HttpContext.Request.Url.Port);
             url = String.Format("{1}{0}", url, leftPartUrl);
             PdfDocument doc = converter.ConvertUrl(url);
@@ -341,7 +415,8 @@ namespace Stuff.Controllers
             data.DateEnd = dateEnd.Value;
             data.DaysCount = daysCount.Value;
             data.Configure();
-
+            data.ShowMatcherSecretaryRow = true;
+            
             return View("StatementRest", data);
         }
 

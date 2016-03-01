@@ -1,0 +1,64 @@
+﻿@using Stuff.Models
+@model IEnumerable<Employee>
+@{
+    ViewBag.Title = "RehPart";
+    var curYear = (int) ViewBag.CurYear;
+    string message;
+}
+    @{
+        if (Model.Any())
+        {
+            <table class="table table-bordered table-stuff">
+                
+                @foreach (Employee emp in Model)
+                {
+                    var restHolidaysList = RestHoliday.GetRestHolidaysForYear(emp.AdSid, curYear, out message);
+                    var restDays = RestHoliday.GetYears4Sid(emp.AdSid)[curYear];
+                    <tr>
+                        <td class="width-20p">
+                            @emp.DisplayName
+                        </td>
+                        <td>@(@emp.Position != null ? emp.Position.Name : "--отсутствует--")</td>
+                        <td>Выбрано дней: @restHolidaysList.Sum(rh => rh.Duration)</td>
+                        <td>Осталось дней: @restDays</td>
+                    </tr>
+                    if (restHolidaysList.Any(rh => rh.CanEdit == false) && !string.IsNullOrEmpty(emp.AdSid))
+                    {
+                        <tr><td colspan="4">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr class="bg-primary">
+                                        <th>Дата начала</th>
+                                        <th>Дата окончания</th>
+                                        <th class="min-width">Продолжительность</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var restHoliday in restHolidaysList)
+                                    {
+                                        if (restHoliday.CanEdit == false)
+                                        {
+                                            var bg = restHoliday.Confirmed ? "bg-warning" : "bg-success";
+                                            <tr rowtype="restHolidayRow" class="@bg" restHolidayId="@restHoliday.Id">
+                                                <td>@restHoliday.StartDate.ToShortDateString()</td>
+                                                <td>@restHoliday.EndDate.ToShortDateString()</td>
+                                                <td>@restHoliday.Duration</td>
+                                            </tr>
+                                        }
+                                    }
+                                    </tbody>
+                                </table>
+                            </td>
+
+                        </tr>
+                    }
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        <tr><td colspan="2" class="alert-danger">@message</td></tr>
+                    }
+                }
+            </table>
+        }
+    }
+
+

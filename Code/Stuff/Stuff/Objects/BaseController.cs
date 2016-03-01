@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Linq;
@@ -9,11 +10,12 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
+using Stuff.Helpers;
 using Stuff.Models;
 
 namespace Stuff.Objects
 {
-    public class BaseController:Controller
+    public class BaseController : Controller
     {
         //protected ActionResult ViewPdf(string viewName, object model)
         //{
@@ -98,7 +100,13 @@ namespace Stuff.Objects
         [NonAction]
         public AdUser GetCurUser()
         {
+            if (Session["CurUser"] != null)
+            {
+                return (AdUser)Session["CurUser"];
+            }
+
             AdUser user = new AdUser();
+            //user.User = base.User;
             try
             {
                 using (WindowsImpersonationContextFacade impersonationContext
@@ -110,8 +118,22 @@ namespace Stuff.Objects
                     {
                         var domain = new PrincipalContext(ContextType.Domain);
                         string sid = wi.User.Value;
+
+                        //Для прокси пользователя
+                        if (ConfigurationManager.AppSettings["UserProxy"] == "True")
+                        {
+                            sid = ConfigurationManager.AppSettings["UserProxySid"];
+                        }
+                        
                         user.Sid = sid;
-                        var login = wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
+                        var login =  wi.Name.Remove(0, wi.Name.IndexOf("\\", StringComparison.CurrentCulture) + 1);
+
+                        //Для прокси пользователя
+                        if (ConfigurationManager.AppSettings["UserProxy"] == "True")
+                        {
+                            login = ConfigurationManager.AppSettings["UserProxyLogin"];
+                        }
+
                         user.Login = login;
                         var userPrincipal = UserPrincipal.FindByIdentity(domain, login);
                         if (userPrincipal != null)
@@ -130,6 +152,7 @@ namespace Stuff.Objects
                             //        user.AdGroups.Add(role.Group);
                             //    }
                             //}
+                            AdHelper.SetUserAdGroups(wi, ref user);
                         }
                     }
                 }
@@ -138,6 +161,8 @@ namespace Stuff.Objects
             {
                 throw;
             }
+
+            Session["CurUser"] = user;
 
             return user;
         }

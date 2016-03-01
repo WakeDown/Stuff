@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>StuffDB</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{288c2ab9-cc2c-4d34-9337-d79d984d8e1e}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>StuffDB</RootNamespace>
+    <AssemblyName>StuffDB</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <DefaultFileStreamFilegroup>ImageFileGroup</DefaultFileStreamFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="tSQLt\" />
+    <Folder Include="tSQLt\Tables\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="tSQLt\Views\" />
+    <Folder Include="Storage\" />
+    <Folder Include="Security\" />
+    <Folder Include="tSQLt\Functions\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="tSQLt\Stored Procedures\" />
+    <Folder Include="SQLCop\" />
+    <Folder Include="SQLCop\Stored Procedures\" />
+    <Folder Include="tSQLt\User Defined Types\" />
+    <Folder Include="Assemblies\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\departments.sql" />
+    <Build Include="dbo\Tables\engeneer_states.sql" />
+    <Build Include="dbo\Tables\emp_budget_import.sql" />
+    <Build Include="tSQLt\Tables\CaptureOutputLog.sql" />
+    <Build Include="dbo\Tables\vendor_state_implort.sql" />
+    <Build Include="dbo\Tables\organizations.sql" />
+    <Build Include="dbo\Tables\rest_holidays.sql" />
+    <Build Include="dbo\Tables\org_state_images.sql" />
+    <Build Include="dbo\Tables\photos.sql" />
+    <Build Include="dbo\Tables\positions.sql" />
+    <Build Include="dbo\Tables\recruit_vacancy_causes.sql" />
+    <Build Include="dbo\Tables\recruit_candidate_came_types.sql" />
+    <Build Include="tSQLt\Tables\Private_RenamedObjectLog.sql" />
+    <Build Include="dbo\Tables\recruit_question_links.sql" />
+    <Build Include="dbo\Tables\recruit_candidates.sql" />
+    <Build Include="dbo\Tables\recruit_came_resources.sql" />
+    <Build Include="dbo\Tables\document_meet_links.sql" />
+    <Build Include="dbo\Tables\employee_import.sql" />
+    <Build Include="dbo\Tables\recruit_question_forms.sql" />
+    <Build Include="dbo\Tables\document_meets.sql" />
+    <Build Include="dbo\Tables\position_import.sql" />
+    <Build Include="dbo\Tables\branch_offices.sql" />
+    <Build Include="dbo\Tables\recruit_candidate_resume_files.sql" />
+    <Build Include="dbo\Tables\documents.sql" />
+    <Build Include="dbo\Tables\recruit_vacancies.sql" />
+    <Build Include="dbo\Tables\wd_holidays.sql" />
+    <Build Include="dbo\Tables\holiday_work_confirms.sql" />
+    <Build Include="dbo\Tables\wd_short_days.sql" />
+    <Build Include="dbo\Tables\wd_work_holidays.sql" />
+    <Build Include="dbo\Tables\work_days.sql" />
+    <Build Include="dbo\Tables\recruit_selections.sql" />
+    <Build Include="dbo\Tables\holiday_work_documents.sql" />
+    <Build Include="dbo\Tables\work_hours.sql" />
+    <Build Include="dbo\Tables\recruit_question_form_relatives.sql" />
+    <Build Include="dbo\Tables\recruit_question_form_educations.sql" />
+    <Build Include="dbo\Tables\rest_holiday_transfer_days.sql" />
+    <Build Include="dbo\Tables\employee_states.sql" />
+    <Build Include="dbo\Tables\recruit_question_form_further_educations.sql" />
+    <Build Include="dbo\Tables\recruit_vacancy_states.sql" />
+    <Build Include="dbo\Tables\budget.sql" />
+    <Build Include="tSQLt\Tables\TestResult.sql" />
+    <Build Include="dbo\Tables\recruit_question_form_languages.sql" />
+    <Build Include="dbo\Tables\recruit_question_form_works.sql" />
+    <Build Include="dbo\Tables\recruit_vacancy_state_history.sql" />
+    <Build Include="tSQLt\Tables\TestMessage.sql" />
+    <Build Include="tSQLt\Tables\Run_LastExecution.sql" />
+    <Build Include="dbo\Tables\recruit_question_form_facts.sql" />
+    <Build Include="dbo\Tables\recruit_selection_state_history.sql" />
+    <Build Include="dbo\Tables\languages.sql" />
+    <Build Include="dbo\Tables\statement_types.sql" />
+    <Build Include="dbo\Tables\vendor_state_pictures.sql" />
+    <Build Include="dbo\Tables\vendor_states.sql" />
+    <Build Include="dbo\Tables\statement_printed.sql" />
+    <Build Include="dbo\Tables\vendors.sql" />
+    <Build Include="dbo\Tables\employeeAlternates.sql" />
+    <Build Include="dbo\Tables\employeeRoles.sql" />
+    <Build Include="dbo\Tables\employees.sql" />
+    <Build Include="dbo\Tables\recruit_selection_states.sql" />
+    <Build Include="dbo\Tables\cities.sql" />
+    <Build Include="dbo\Views\departments_view.sql" />
+    <Build Include="dbo\Views\employees_report.sql" />
+    <Build Include="dbo\Views\recruit_selections_report.sql" />
+    <Build Include="dbo\Views\recruit_vacancies_report.sql" />
+    <Build Include="dbo\Views\employee_rest_holidays_report.sql" />
+    <Build Include="dbo\Views\recruit_vacancies_view.sql" />
+    <Build Include="tSQLt\Views\TestClasses.sql" />
+    <Build Include="tSQLt\Views\Tests.sql" />
+    <Build Include="dbo\Views\recruit_candidates_view.sql" />
+    <Build Include="dbo\Views\employees_view.sql" />
+    <Build Include="dbo\Views\recruit_selections_view.sql" />
+    <Build Include="dbo\Views\users_view.sql" />
+    <Build Include="Storage\ImageFileGroup.sql" />
+    <Build Include="Security\UN1T_Alexandr.Medvedevski.sql" />
+    <Build Include="Security\sqlUnit_prog.sql" />
+    <Build Include="Security\sqlUnit_report.sql" />
+    <Build Include="Security\sqlUnit_reader.sql" />
+    <Build Include="Security\specalc_report.sql" />
+    <Build Include="Security\UN1T_alexandr.romanov.sql" />
+    <Build Include="Security\UN1T_m.verhoturcev.sql" />
+    <Build Include="Security\UN1T_m_1.verhoturcev.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="tSQLt\Functions\Private_GetQuotedFullName.sql" />
+    <Build Include="tSQLt\Functions\Private_GetSchemaId.sql" />
+    <Build Include="tSQLt\Functions\Private_IsTestClass.sql" />
+    <Build Include="tSQLt\Functions\Private_QuoteClassNameForNewTestClass.sql" />
+    <Build Include="tSQLt\Functions\GetTestResultFormatter.sql" />
+    <Build Include="tSQLt\Functions\Private_GetLastTestNameIfNotProvided.sql" />
+    <Build Include="tSQLt\Functions\Private_GetCleanSchemaName.sql" />
+    <Build Include="tSQLt\Functions\Private_GetCleanObjectName.sql" />
+    <Build Include="tSQLt\Functions\Private_GetOriginalTableName.sql" />
+    <Build Include="dbo\Functions\SplitInt.sql" />
+    <Build Include="tSQLt\Functions\Private_ResolveSchemaName.sql" />
+    <Build Include="tSQLt\Functions\Private_ResolveObjectName.sql" />
+    <Build Include="tSQLt\Functions\Private_ResolveName.sql" />
+    <Build Include="tSQLt\Functions\Info.sql" />
+    <Build Include="tSQLt\Functions\Private_GetForeignKeyDefinition.sql" />
+    <Build Include="tSQLt\Functions\Private_GetDataTypeOrComputedColumnDefinition.sql" />
+    <Build Include="tSQLt\Functions\Private_GetIdentityDefinition.sql" />
+    <Build Include="tSQLt\Functions\Private_GetDefaultConstraintDefinition.sql" />
+    <Build Include="tSQLt\Functions\Private_GetFullTypeName.sql" />
+    <Build Include="tSQLt\Functions\TestCaseSummary.sql" />
+    <Build Include="tSQLt\Functions\Private_ResolveFakeTableNamesForBackwardCompatibility.sql" />
+    <Build Include="tSQLt\Functions\Private_GetOriginalTableInfo.sql" />
+    <Build Include="tSQLt\Functions\Private_GetQuotedTableNameForConstraint.sql" />
+    <Build Include="tSQLt\Functions\Private_FindConstraint.sql" />
+    <Build Include="tSQLt\Functions\Private_ResolveApplyConstraintParameters.sql" />
+    <Build Include="tSQLt\Functions\Private_GetConstraintType.sql" />
+    <Build Include="tSQLt\Functions\F_Num.sql" />
+    <Build Include="dbo\Stored Procedures\get_vendor_state_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_SetFakeViewOn_SingleView.sql" />
+    <Build Include="dbo\Stored Procedures\save_vendor.sql" />
+    <Build Include="tSQLt\Stored Procedures\SetFakeViewOn.sql" />
+    <Build Include="dbo\Stored Procedures\get_employees_bithday.sql" />
+    <Build Include="dbo\Stored Procedures\save_vendor_state.sql" />
+    <Build Include="tSQLt\Stored Procedures\SetFakeViewOff.sql" />
+    <Build Include="dbo\Stored Procedures\get_employees_birthday.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_SetFakeViewOff_SingleView.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_get_history.sql" />
+    <Build Include="dbo\Stored Procedures\check_employee_is_chief.sql" />
+    <Build Include="dbo\Stored Procedures\get_employees_newbie.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_get_state_list.sql" />
+    <Build Include="dbo\Stored Procedures\set_employee_fired.sql" />
+    <Build Include="dbo\Stored Procedures\set_employee_state.sql" />
+    <Build Include="dbo\Stored Procedures\check_vendor_state_is_changed.sql" />
+    <Build Include="dbo\Stored Procedures\get_employee_list.sql" />
+    <Build Include="dbo\Stored Procedures\get_expires_vendor_state_list.sql" />
+    <Build Include="dbo\Stored Procedures\close_city.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_get_file.sql" />
+    <Build Include="dbo\Stored Procedures\get_vendor_state_prev_version.sql" />
+    <Build Include="tSQLt\Stored Procedures\Uninstall.sql" />
+    <Build Include="dbo\Stored Procedures\save_city.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_change.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_get.sql" />
+    <Build Include="dbo\Stored Procedures\set_vendor_state_delivery_sent.sql" />
+    <Build Include="dbo\Stored Procedures\get_city_link_count.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_get_list.sql" />
+    <Build Include="dbo\Stored Procedures\get_other_employee_list.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_get_history.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_get_history.sql" />
+    <Build Include="dbo\Stored Procedures\get_subordinate_list.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_set_delivery_sent.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_clone_in_another_vacancy.sql" />
+    <Build Include="tSQLt\Stored Procedures\LogCapturedOutput.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_get_prev_version.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_check_clone.sql" />
+    <Build Include="dbo\Stored Procedures\engener_state_get_expires_list.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_save.sql" />
+    <Build Include="dbo\Stored Procedures\engeneer_state_close.sql" />
+    <Build Include="tSQLt\Stored Procedures\TableToText.sql" />
+    <Build Include="dbo\Stored Procedures\get_org_state_images.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_close.sql" />
+    <Build Include="dbo\Stored Procedures\save_org_state_image.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_get.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_MarkObjectBeforeRename.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_get_came_type_list.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_list_confirm.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_RenameObjectToUniqueName.sql" />
+    <Build Include="dbo\Stored Procedures\close_org_state_image.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_save.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_RenameObjectToUniqueNameUsingObjectId.sql" />
+    <Build Include="dbo\Stored Procedures\get_org_state_image.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_years_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_ValidateFakeTableParameters.sql" />
+    <Build Include="dbo\Stored Procedures\set_employee_date_fired.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_period_cross.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_check_period_cross.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_CreateFakeOfTable.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_MarkFakeTable.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_get_state_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\FakeTable.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_CreateProcedureSpy.sql" />
+    <Build Include="tSQLt\Stored Procedures\SpyProcedure.sql" />
+    <Build Include="SQLCop\Stored Procedures\test Decimal Size Problem.sql" />
+    <Build Include="SQLCop\Stored Procedures\test Procedures Named SP_.sql" />
+    <Build Include="SQLCop\Stored Procedures\test Procedures With SET ROWCOUNT.sql" />
+    <Build Include="SQLCop\Stored Procedures\test Procedures using dynamic SQL without sp_executesql.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_question_create_link.sql" />
+    <Build Include="SQLCop\Stored Procedures\test Procedures with %40%40Identity.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_question_check_link.sql" />
+    <Build Include="dbo\Stored Procedures\get_doc_meet_link_list.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_question_form_get.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_question_form_create.sql" />
+    <Build Include="dbo\Stored Procedures\save_document.sql" />
+    <Build Include="dbo\Stored Procedures\get_document_list.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_employee_list.sql" />
+    <Build Include="dbo\Stored Procedures\rest_holiday_employee_year_confirm.sql" />
+    <Build Include="dbo\Stored Procedures\close_document.sql" />
+    <Build Include="dbo\Stored Procedures\save_doc_meet_link.sql" />
+    <Build Include="dbo\Stored Procedures\close_doc_meet_link.sql" />
+    <Build Include="dbo\Stored Procedures\get_department.sql" />
+    <Build Include="dbo\Stored Procedures\save_department.sql" />
+    <Build Include="dbo\Stored Procedures\get_document_data.sql" />
+    <Build Include="dbo\Stored Procedures\get_employee.sql" />
+    <Build Include="dbo\Stored Procedures\close_department.sql" />
+    <Build Include="dbo\Stored Procedures\branch_office_get_list.sql" />
+    <Build Include="dbo\Stored Procedures\close_employee.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_restore.sql" />
+    <Build Include="dbo\Stored Procedures\save_employee.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_save_file.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_get_file_list.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_close_file.sql" />
+    <Build Include="dbo\Stored Procedures\hilodays_count_in_period.sql" />
+    <Build Include="dbo\Stored Procedures\fill_work_days.sql" />
+    <Build Include="dbo\Stored Procedures\get_next_work_day.sql" />
+    <Build Include="dbo\Stored Procedures\save_holiday_work_document.sql" />
+    <Build Include="dbo\Stored Procedures\get_city.sql" />
+    <Build Include="dbo\Stored Procedures\get_rest_holiday_transfer_days.sql" />
+    <Build Include="dbo\Stored Procedures\check_is_work_day.sql" />
+    <Build Include="dbo\Stored Procedures\save_holiday_work_confirm.sql" />
+    <Build Include="dbo\Stored Procedures\get_emp_state.sql" />
+    <Build Include="dbo\Stored Procedures\save_rest_holiday_transfer_days.sql" />
+    <Build Include="dbo\Stored Procedures\get_holiday_work_confirms.sql" />
+    <Build Include="dbo\Stored Procedures\get_organization.sql" />
+    <Build Include="dbo\Stored Procedures\get_rest_holiday_transfer_days_list.sql" />
+    <Build Include="dbo\Stored Procedures\get_email.sql" />
+    <Build Include="tSQLt\Stored Procedures\DropClass.sql" />
+    <Build Include="dbo\Stored Procedures\get_position.sql" />
+    <Build Include="dbo\Stored Procedures\save_photo.sql" />
+    <Build Include="dbo\Stored Procedures\set_employee_delivery_send.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_DisallowOverwritingNonTestSchema.sql" />
+    <Build Include="dbo\Stored Procedures\get_employee_sm.sql" />
+    <Build Include="dbo\Stored Procedures\get_holiday_work_delivery_recipient_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_MarkSchemaAsTestClass.sql" />
+    <Build Include="tSQLt\Stored Procedures\NewTestClass.sql" />
+    <Build Include="dbo\Stored Procedures\close_rest_holiday_transfer_days_list.sql" />
+    <Build Include="dbo\Stored Procedures\get_rest_holiday_transfer_days_years_list.sql" />
+    <Build Include="dbo\Stored Procedures\clone_rest_holiday_transfer_days.sql" />
+    <Build Include="dbo\Stored Procedures\save_organization.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_Print.sql" />
+    <Build Include="dbo\Stored Procedures\save_position.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_PrintXML.sql" />
+    <Build Include="dbo\Stored Procedures\close_organization.sql" />
+    <Build Include="tSQLt\Stored Procedures\GetNewTranName.sql" />
+    <Build Include="dbo\Stored Procedures\close_position.sql" />
+    <Build Include="tSQLt\Stored Procedures\Fail.sql" />
+    <Build Include="dbo\Stored Procedures\close_budget.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_RunTest.sql" />
+    <Build Include="dbo\Stored Procedures\get_budget.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_CleanTestResult.sql" />
+    <Build Include="dbo\Stored Procedures\get_budget_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\RunTest.sql" />
+    <Build Include="dbo\Stored Procedures\save_budget.sql" />
+    <Build Include="tSQLt\Stored Procedures\SetTestResultFormatter.sql" />
+    <Build Include="tSQLt\Stored Procedures\DefaultResultFormatter.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_get.sql" />
+    <Build Include="tSQLt\Stored Procedures\XmlResultFormatter.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_get_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\NullTestResultFormatter.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_create.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_OutputTestResults.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_close.sql" />
+    <Build Include="tSQLt\Stored Procedures\RunTestClass.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_set_state.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_SaveTestNameForSession.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_cause_get_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_Run.sql" />
+    <Build Include="tSQLt\Stored Procedures\Run.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_get.sql" />
+    <Build Include="tSQLt\Stored Procedures\RunWithXmlResults.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_create.sql" />
+    <Build Include="tSQLt\Stored Procedures\RunWithNullResults.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_get_list.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_candidate_close.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_RunTestClass.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_came_resource_get_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\RunAll.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_RunAll.sql" />
+    <Build Include="dbo\Stored Procedures\get_organization_link_count.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_change.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_ValidateProcedureCanBeUsedWithSpyProcedure.sql" />
+    <Build Include="dbo\Stored Procedures\get_position_link_count.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_vacancy_get_history.sql" />
+    <Build Include="tSQLt\Stored Procedures\AssertEquals.sql" />
+    <Build Include="tSQLt\Stored Procedures\AssertEqualsString.sql" />
+    <Build Include="dbo\Stored Procedures\statement_printed_save.sql" />
+    <Build Include="tSQLt\Stored Procedures\AssertObjectExists.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_create.sql" />
+    <Build Include="dbo\Stored Procedures\statement_printed_get_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\StubRecord.sql" />
+    <Build Include="dbo\Stored Procedures\statement_printed_set_confirmed.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_get_list.sql" />
+    <Build Include="dbo\Stored Procedures\statement_printed_confirm.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_close.sql" />
+    <Build Include="dbo\Stored Procedures\statement_type_get_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\TableCompare.sql" />
+    <Build Include="dbo\Stored Procedures\statement_type_get.sql" />
+    <Build Include="tSQLt\Stored Procedures\AssertEqualsTable.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_set_state.sql" />
+    <Build Include="dbo\Stored Procedures\recruit_selection_get.sql" />
+    <Build Include="dbo\Stored Procedures\close_vendor.sql" />
+    <Build Include="dbo\Stored Procedures\close_vendor_state.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_ApplyCheckConstraint.sql" />
+    <Build Include="dbo\Stored Procedures\get_language_list.sql" />
+    <Build Include="tSQLt\Stored Procedures\Private_ApplyForeignKeyConstraint.sql" />
+    <Build Include="dbo\Stored Procedures\get_vendor.sql" />
+    <Build Include="dbo\Stored Procedures\get_vendor_state.sql" />
+    <Build Include="tSQLt\Stored Procedures\ApplyConstraint.sql" />
+    <Build Include="dbo\Stored Procedures\get_vendor_state_history.sql" />
+    <Build Include="tSQLt\Stored Procedures\ResultSetFilter.sql" />
+    <Build Include="tSQLt\Stored Procedures\AssertResultSetsHaveSameMetaData.sql" />
+    <Build Include="tSQLt\Stored Procedures\NewConnection.sql" />
+    <Build Include="tSQLt\Stored Procedures\CaptureOutput.sql" />
+    <Build Include="tSQLt\Stored Procedures\SuppressOutput.sql" />
+    <Build Include="tSQLt\User Defined Types\Private.sql" />
+    <Build Include="Security\SQLCop.sql" />
+    <Build Include="Security\tSQLt.sql" />
+    <Build Include="dbo\Tables\requests.sql" />
+    <Build Include="dbo\Tables\request_reasons.sql" />
+    <Build Include="dbo\Tables\request_statuses.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assemblies\tSQLtCLR.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="tSQLtCLR">
+      <HintPath>Assemblies\tSQLtCLR.dll</HintPath>
+      <SqlAssemblyName>tSQLtCLR</SqlAssemblyName>
+      <IsModelAware>True</IsModelAware>
+      <GenerateSqlClrDdl>False</GenerateSqlClrDdl>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>EXTERNAL_ACCESS</SqlPermissionSet>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="PostDeployment.sql" />
+  </ItemGroup>
+</Project>

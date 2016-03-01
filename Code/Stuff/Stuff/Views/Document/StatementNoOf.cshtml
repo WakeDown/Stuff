@@ -14,6 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заявление</title>
     @Styles.Render("~/Content/statement")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    @Scripts.Render("~/bundles/jquery")
 </head>
 <body>
 <div class="print sheet">
@@ -102,8 +104,19 @@
                 _____________ @DateTime.Now.Year г.
             </td>
         </tr>
+        <tr><td colspan="2" style="height: 100px;"></td></tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="barcode" style="float:right"></div>
+            </td>
+        </tr>
     </table>
 </div>
+    @{ ViewBag.ShowMatcherSecretaryRow = Model.ShowMatcherSecretaryRow; }
     @Html.Partial("StatementMatchers", Model.Matchers)
 </body>
 </html>
+<script type="text/javascript">
+    $("#barcode").barcode('@Model.Id.ToString("D7")', 'code39', { barWidth: 2, barHeight: 100 });
+</script>

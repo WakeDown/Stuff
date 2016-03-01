@@ -12,6 +12,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class EmployeeController : BaseController
     {
         public JsonResult GetServerSid()
@@ -80,7 +81,7 @@ namespace Stuff.Controllers
         }
 
         [HttpGet]
-        public ActionResult New(bool? test)
+        public ActionResult New(bool? test, bool? sex, string sur, string nam, string pat, string bdt, int? cit)
         {
             var user = DisplayCurUser();
             if (!user.UserCanEdit()) return RedirectToAction("AccessDenied", "Error");
@@ -102,6 +103,21 @@ namespace Stuff.Controllers
                 emp.Department = new Department() { Id = 10 };
             }
 
+            emp.Male = sex.HasValue && sex.Value;
+            emp.Surname = sur;
+            emp.Name = nam;
+            emp.Patronymic = pat;
+            DateTime birthDate;
+            DateTime.TryParse(bdt, out birthDate);
+            if (birthDate.Year > 1900)
+            {
+                emp.BirthDate = birthDate;
+            }
+            if (cit.HasValue)
+            {
+                emp.City = new City();
+                emp.City.Id = cit.Value;
+            }
             return View(emp);
         }
 
@@ -149,6 +165,9 @@ namespace Stuff.Controllers
             emp.Creator = new Employee(){AdSid = GetCurUser().Sid};
             //var chkCreateAdUser = Request.Form["chkCreateAdUser"];
             //bool createAdUser = chkCreateAdUser != "false";
+            if (String.IsNullOrEmpty(emp.MobilNum)) emp.MobilNum = "-999";
+            if (String.IsNullOrEmpty(emp.WorkNum)) emp.WorkNum = "-999";
+            if (String.IsNullOrEmpty(emp.Email)) emp.Email = "-999";
             bool complete = emp.Save(out responseMessage);
             return complete;
         }

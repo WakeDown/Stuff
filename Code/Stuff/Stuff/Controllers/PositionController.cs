@@ -9,6 +9,7 @@ using Stuff.Objects;
 
 namespace Stuff.Controllers
 {
+    [Authorize]
     public class PositionController : BaseController
     {
         public ActionResult Index()

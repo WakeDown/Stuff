@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Web;
+using Stuff.Models;
 using Stuff.Objects;
 
 namespace Stuff.Helpers
@@ -54,6 +56,38 @@ namespace Stuff.Helpers
             }
         }
 
+        public static void SetUserAdGroups(IIdentity identity, ref AdUser user)
+        {
+
+
+            //using (WindowsImpersonationContextFacade impersonationContext
+            //    = new WindowsImpersonationContextFacade(
+            //        nc))
+            //{
+            var wi = (WindowsIdentity)identity;
+            var context = new PrincipalContext(ContextType.Domain);
+
+
+            if (identity != null && wi.User != null && user != null)
+            {
+
+                user.AdGroups = new List<AdGroup>();
+
+                var wp = new WindowsPrincipal(wi);
+                var gr = wi.Groups;
+
+                foreach (AdUserGroup grp in AdUserGroup.GetList())
+                {
+                    var grpSid = new SecurityIdentifier(grp.Sid);
+                    if (wp.IsInRole(grpSid))
+                    {
+                        user.AdGroups.Add(grp.Group);
+                    }
+                }
+            }
+            //}
+
+        }
 
         public static AdUser GetUserBySid(string sid)
         {
@@ -100,6 +134,38 @@ namespace Stuff.Helpers
 
                 return false;
             }
+        }
+
+        public static IEnumerable<KeyValuePair<string, string>> GetUserListByAdGroup(params AdGroup[] grps)
+        {
+            var list = new Dictionary<string, string>();
+
+            using (WindowsImpersonationContextFacade impersonationContext
+                = new WindowsImpersonationContextFacade(
+                    nc))
+            {
+                var domain = new PrincipalContext(ContextType.Domain);
+                foreach (AdGroup grp in grps)
+                {
+                var group = GroupPrincipal.FindByIdentity(domain, IdentityType.Sid, AdUserGroup.GetSidByAdGroup(grp));
+                if (group != null)
+                {
+                    var members = group.GetMembers(true);
+                    foreach (var principal in members)
+                    {
+                        var userPrincipal = UserPrincipal.FindByIdentity(domain, principal.SamAccountName);
+                        if (userPrincipal != null)
+                        {
+                            var name = Employee.ShortName(userPrincipal.DisplayName);
+                            var sid = userPrincipal.Sid.Value;
+                                if (!list.ContainsKey(sid))list.Add(sid, name);
+                        }
+                    }
+                }
+                }
+            }
+
+            return list.OrderBy(x => x.Value);
         }
     }
 }

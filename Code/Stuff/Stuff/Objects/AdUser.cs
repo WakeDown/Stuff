@@ -9,6 +9,7 @@ namespace Stuff.Objects
 {
     public class AdUser
     {
+        public int id { get; set; }
         public string Sid { get; set; }
         public string Login { get; set; }
         public string FullName{get; set; }
@@ -19,7 +20,7 @@ namespace Stuff.Objects
             get { return MainHelper.ShortName(FullName); }
         }
 
-        //public List<AdGroup> AdGroups { get; set; }
+        public List<AdGroup> AdGroups { get; set; }
         
 
         public bool UserCanEdit()
@@ -48,19 +49,24 @@ namespace Stuff.Objects
 
         public bool Is(params AdGroup[] groups)
         {
-            bool result = false;
-            if (String.IsNullOrEmpty(Sid)) return false;
-            result = AdHelper.UserInGroup(Sid, groups);
-            return result;
+            return groups.Select(grp => AdGroups.Contains(grp)).Any(res => res);
+            //bool result = false;
+            //if (String.IsNullOrEmpty(Sid)) return false;
+            //result = AdHelper.UserInGroup(Sid, groups);
+            //return result;
         }
 
         public bool HasAccess(params AdGroup[] groups)
         {
-            bool result = false;
-            if (String.IsNullOrEmpty(Sid)) return false;
-            if (AdHelper.UserInGroup(Sid, AdGroup.SuperAdmin)) return true;
-            result = AdHelper.UserInGroup(Sid, groups);
-            return result;
+            if (AdGroups == null || !AdGroups.Any()) return false;
+            if (AdGroups.Contains(AdGroup.SuperAdmin)) return true;
+            return groups.Select(grp => AdGroups.Contains(grp)).Any(res => res);
+
+            ////bool result = false;
+            ////if (String.IsNullOrEmpty(Sid)) return false;
+            ////if (AdHelper.UserInGroup(Sid, AdGroup.SuperAdmin)) return true;
+            ////result = AdHelper.UserInGroup(Sid, groups);
+            ////return result;
         }
     }
 }

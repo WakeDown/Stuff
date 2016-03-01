@@ -1,0 +1,305 @@
+﻿@using Stuff.Models
+@using Stuff.Objects
+@model Stuff.Models.RecruitCandidate
+
+@{
+    ViewBag.Title = "Кандидат №" + Model.Id;
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Кандидат №@Model.Id
+@if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler))
+{
+    <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
+}
+    <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
+}
+
+@section PanelBody
+{
+    <div class="row">
+        <div class="col-lg-8">
+            @using (Html.BeginForm("CandidateChange", "Recruit", FormMethod.Post, new {@id = "cndFileForm", @class = "form-horizontal", role = "form", enctype = "multipart/form-data"}))
+            {
+                @Html.HiddenFor(m => m.Id)
+                <div class="form-group">
+                    <div class="col-lg-push-2 col-lg-push-2 col-lg-6">
+                        <span class="text-danger">@TempData["error"]</span>
+                    </div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">ФИО:</div>
+                    <div class="col-lg-10 col-sm-12 text-center-sm" id="fioContainer">
+                        @Html.LabelFor(m => m, Model.Surname) @Html.LabelFor(m => m, Model.Name) @Html.LabelFor(m => m, Model.Patronymic)
+                    </div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Ресурс:</div>
+                    <div class="col-lg-4 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CameResourceName)</div>
+                </div>
+                @*<div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Как поступил:</div>
+                    <div class="col-lg-4 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CameTypeName)</div>
+                </div>*@
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Дата рождения:</div>
+                    <div class="col-lg-2 col-sm-12 text-center-sm bold" id="birthDateContainer">@(Model.BirthDate.HasValue ? String.Format("{0}", Model.BirthDate.Value.ToString("dd.MM.yyyy"), Model.Age) : "не указана")</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Телефон:</div>
+                    <div class="col-lg-4 col-sm-12 text-center-sm" id="phoneContainer">@Html.LabelFor(m => m, Model.Phone)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">E-mail:</div>
+                    <div class="col-lg-4 col-sm-12 text-center-sm" id="emailContainer">@Html.LabelFor(m => m, Model.Email)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-2 col-sm-12 text-center-sm text-right-lg">Файлы:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">
+                        @if (Model.Files != null && Model.Files.Count > 0)
+                        {
+                            foreach (DbFile file in Model.Files)
+                            {
+                                if (String.IsNullOrEmpty(file.Sid))
+                                {
+
+                                }
+                                else
+                                {
+                                    <div id="fcont-@file.Sid">
+                                        @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler))
+                                        {
+                                            <a class="btn btn-link btn-xs" name="del-file" fsid="@file.Sid"><i class="fa fa-trash"></i></a>
+                                        }
+                                        <a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile", new {sid = file.Sid})" target="_blank">@file.Name</a>
+                                    </div>
+                                }
+                            }
+                        }
+                        <div id="fileContainer" style="display: none">
+                            <input id="fileResume" type="file" name="fileResume" multiple="multiple"/>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="nomargin">
+                        История
+                    </h4>
+                </div>
+                <div class="panel-body" id="history">
+                </div>
+            </div>
+        </div>
+    </div>
+<p>
+    <h4>
+        Список вакансий в которых участвовал кандидат <span id="vacancyCount" class="badge badge-info"></span>
+    </h4>
+
+    <div id="vacancyList"></div>
+</p>
+
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        function loadHistory() {
+            var $cont = $('#history');
+
+            $.ajax({
+                url: '@Url.Action("GetCandidateHistory")',
+                method: 'POST',
+                data: { id: @Model.Id, full: false },
+                success: function(data) {
+                    $cont.empty();
+
+                    if (data.list.length > 0) {
+                        for (var i = 0; i < data.list.length; i++) {
+                            var item = data.list[i];
+                            var cell = '<div class="history-item"><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small>' + (item.Descr == null || item.Descr == '' ? '' :'<br /><small>' +  item.Descr + '</small>') +'<br />' +
+                                '<small><a target="_blank" href="@Url.Action("VacancyCard")?id=' + item.LinkId + '">Вакансия №'+ item.LinkId +'</a></small></div>';
+                            $cont.append(cell);
+                        }
+
+                        if (data.totalCount > data.list.length) {
+                            $cont.append('<button id="historyMore" class="btn btn-default btn-xs">еще...(' + (data.totalCount - data.list.length) + ')</button>');
+                            $('#historyMore').click(function() {
+                                $.ajax({
+                                    url: '@Url.Action("GetCandidateHistory")',
+                                    method: 'POST',
+                                    data: { id: @Model.Id, full: true },
+                                    success: function(data) {
+                                        $cont.empty();
+                                        if (data.list.length > 0) {
+                                            for (var i = 0; i <= data.list.length; i++) {
+                                                var item = data.list[i];
+                                                var cell = '<div class="history-item"><strong>' + item.StateName + '</strong><br /><small>' + item.DateCreateStr + ' - ' + item.CreatorName + '</small>' + (item.Descr == null || item.Descr == '' ? '' :'<br /><small>' +  item.Descr + '</small>') +'<br />' +
+                                '<small><a target="_blank" href="@Url.Action("VacancyCard")?id=' + item.LinkId + '">Вакансия №'+ item.LinkId +'</a></small></div>';
+                                                $cont.append(cell);
+                                            }
+                                        }
+
+                                    },
+                                    error: function() {
+                                        alert('Ошибка при загрузке истории!');
+                                    }
+                                });
+                            });
+                        }
+                    }
+
+                },
+                error: function() {
+                    alert('Ошибка при загрузке истории!');
+                }
+            });
+        }
+
+        function loadVacancyList() {
+            var $cont = $('#vacancyList');
+            var $candidatesCount = $('#vacancyCount');
+            $cont.empty();
+            $candidatesCount.empty();
+            $.ajax({
+                url: '@Url.Action("GetCandadateVacancyList")',
+                method: 'POST',
+                data: { id: @Model.Id },
+                success: function(data) {
+                    $cont.empty();
+                    $candidatesCount.text(data.totalCount);
+                    var $table = $('<table id="tblVacancyCandidateList" class="table table-bordered table-striped table-hover"></table>');
+                    $table.append('<thead><tr class="bg-primary">' +
+                        '<th class="min-width text-nowrap">ID</th>' +
+                        '<th>Вакансия</th>' +
+                        '<th>Кандидатов (всего / отклонено)</th>' +
+                        '<th>Менеджер</th>' +
+                        '<th>Статус</th>' +
+                        '<th>Добавлена</th>' +
+                        '</tr></thead>');
+                    $cont.append($table);
+                    if (data.list.length > 0) {
+                        for (var i = 0; i < data.list.length; i++) {
+                            var item = data.list[i];
+                            $table.append('<tr>' +
+                        '<th class="min-width text-nowrap">' + item.IdVacancy +'</th>' +
+                        '<td><a target="_blank" href="@Url.Action("VacancyCard")?id=' + item.Vacancy.Id + '">' + item.Vacancy.PositionName + '</a><br /><small>' + item.Vacancy.DepartmentName + '</small></td>' +
+                        '<td class="text-center">' + item.Vacancy.CandidateTotalCount + ' / ' + item.Vacancy.CandidateCancelCount + '</td>' +
+                        '<td>' + item.Vacancy.PersonalManagerName + '</td>' +
+                        '<td><strong>' + item.Vacancy.StateName + '</strong><br /><small>' + item.Vacancy.StateChangeDateStr +  ' - ' + item.Vacancy.StateChangerName + '</small></td>' +
+                        '<td><strong>Добавлена</strong><br /><small>' + item.Vacancy.DateCreateStr +  ' - ' + item.Vacancy.CreatorName + '</small></td>' +
+                        '</tr>');
+                        }
+                    } else {
+                        $table.append('<tr><td>пусто</td></tr>');
+                    }
+                },
+                error: function() {
+                    alert('Ошибка при загрузке списка вакансий');
+                }
+            });
+        }
+
+        $(function() {
+            loadHistory();
+            loadVacancyList();
+            $('#delete').click(function() {
+                if (!confirm('Вы уверены что хотите удалить кандидата?')) return;
+                $.ajax({
+                    url: '@Url.Action("CandidateDelete")',
+                    method: 'POST',
+                    data: { id: @Model.Id },
+                    success: function() {
+                        window.location = '@Url.Action("Candidates")';
+                    },
+                    error: function() {
+                        alert('Ошибка при удалении, Удаление не выполнено!');
+                    }
+                });
+            });
+
+            $('#change').click(function() {
+                var $btnChange = $('#change');
+                var $btnSave = $('<button id="save" class="btn btn-success btn-xs pull-right"><i class="fa fa-save"></i> сохранить</button>');
+                $btnSave.click(saveCandidate);
+                $btnChange.replaceWith($btnSave);
+
+                var $fioCont = $('#fioContainer');
+                $fioCont.html('<div class="col-lg-2" style="padding-left: 0"><input id="surname" type="text" class="form-control input-xs" value="@Model.Surname" name="Surname" placeholder="Фамилия" /></div><div class="col-lg-2"><input id="name" name="Name" type="text" class="form-control input-xs" value="@Model.Name" placeholder="Имя" /></div><div class="col-lg-2"><input id="patronymic" type="text" class="form-control input-xs" name="Patronymic" value="@Model.Patronymic" placeholder="Отчетсво" /></div>');
+
+                var $fileContainer = $('#fileContainer');
+                $fileContainer.show();
+
+                var $phoneContainer = $('#phoneContainer');
+                $phoneContainer.html('<input type="text" class="form-control input-xs" value="@Model.Phone" name="Phone" placeholder="" />');
+
+                var $emailContainer = $('#emailContainer');
+                $emailContainer.html('<input type="text" class="form-control input-xs" value="@Model.Email" name="Email" placeholder="" />');
+                var $birthDateContainer = $('#birthDateContainer');
+                $birthDateContainer.html('<input id="birthDate" type="text" class="form-control input-xs" value="@(Model.BirthDate.HasValue ? Model.BirthDate.Value.ToString("dd.MM.yyyy") : String.Empty)" name="BirthDate" placeholder="" />');
+                $("#birthDate").mask('00.00.0000');
+            });
+
+            $('[name="del-file"]').click(function() {
+                if (!confirm('Вы уверены что хотите удалить файл резюме?'))return;
+                var fsid = $(this).attr('fsid');
+                
+                $.ajax({
+                    url:'@Url.Action("DeleteFile")',
+                    method:'POST',
+                    data:{sid:fsid},
+                    success:function() {
+                        var $cont = $('#fcont-' + fsid);
+                        $cont.remove();
+                    },
+                    error:function() {
+                        alert('Ошибка при удалении файла!');
+                    }
+                });
+            });
+        });
+
+        function saveCandidate() {
+            //var fio = $('#fio').val();
+
+            ////var file = null;
+            ////var fileInput = document.getElementById('fileResume');
+            ////if (fileInput.files.length > 0)file = fileInput.files[0];
+            ////var data = null;
+            //////var reader = new FileReader();
+            //////reader.onload = function(){
+            //////    data = reader.result;
+            //////}
+            //////reader.readAsArrayBuffer(file);
+            //////alert(data.byteLength);
+
+            ////var reader = new FileReader();
+            ////reader.onload = function(){
+            ////    data = reader.result;
+
+            ////    alert(data.byteLength);
+            ////};
+            ////reader.readAsArrayBuffer(file);
+
+            $('#cndFileForm').submit();
+
+            @*$.ajax({
+                url: '@Url.Action("ChangeCandidate")',
+                method: 'POST',
+                data: { id: @Model.Id, fio: fio, file:data },
+                success: function() {
+                    window.location.reload();
+                },
+                error: function() {
+                    alert('Ошибка при сохранении. Возможно данные не были сохранены!');
+                }
+            });*@
+        }
+    </script>
+}

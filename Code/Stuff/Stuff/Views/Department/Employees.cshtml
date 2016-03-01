@@ -28,40 +28,7 @@
         <th>@i</th>
         <td>@dep.Name</td>
         <td>@dep.Chief.DisplayName</td>
-        <td>
-            @{
-    var stuff = dep.GetStuff();
-    if (stuff.Any())
-    {
-        <table class="table table-bordered table-stuff">
-            @foreach (Employee emp in stuff)
-            {
-                <tr>
-                    @if (userCanEdit)
-                    {
-                        <td class="min-width">
-                            <a class=" btn btn-link" href="@Url.Action("Edit", "Employee", new {id = emp.Id})" data-toggle="tooltip" title="изменить">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                        </td>
-                    }
-                    <td class="width-20p">
-                        @emp.DisplayName
-                    </td>
-                    @if (userCanEdit)
-                    {
-                        <td class="min-width">
-                            <button name="delete-emp" class="btn btn-link" empid="@emp.Id" data-toggle="tooltip" title="удалить"><i class="fa fa-trash"></i></button>
-                        </td>
-                    }
-                    <td>@(@emp.Position != null ? emp.Position.Name : "--отсутствует--")</td>
-                    @*<td>@(@emp.EmpState != null ? emp.EmpState.Name : "--отсутствует--")</td>*@
-                </tr>
-            }
-        </table>
-    }
-            }
-        </td>
+        <td department="@dep.Id" name="depTable"></td>
     </tr>
 }
     </table>
@@ -69,15 +36,37 @@
 
 @section scripts
 {
-@if (userCanEdit)
-{
     <script type="text/javascript">
         $(document).ready(function() { init(); });
 
         function init() {
             $("[name='delete-emp']").click(deleteEmployee);
-        }
 
+            $('[name="depTable"]').map(function () {
+                var elem = $(this);
+                elem.text("Загрузка...");
+                var url = "@Url.Action("EmployeesTable", "Department")?departmentId=" + $(this).attr("department")+"&userCanEdit=@userCanEdit";
+                var loadCount = 0;
+                loadDepartment(loadCount, elem, url);
+            });
+        }
+        function loadDepartment(loadCount, elem, url) {
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                success: function (data) {
+                    elem.html(data);
+                },
+                error: function (errorData) {
+                    if (loadCount < 3) {
+                        loadCount++;
+                        setTimeout(loadDepartment(loadCount, elem, url), 1000);
+                    } else {
+                        elem.html("<span class='alert-danger'>" + errorData.statusText + "</span>");
+                    }
+                }
+            });
+        }
         function deleteEmployee() {
             if (!confirm('Вы действительно хотите удалить сотрудника?')) return;
 
@@ -88,5 +77,5 @@
             );
         }
     </script>
-}
+
 }
