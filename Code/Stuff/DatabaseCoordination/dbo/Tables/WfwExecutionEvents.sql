@@ -2,7 +2,7 @@
 CREATE TABLE [dbo].[WfwExecutionEvents] (
     [Id]          INT           IDENTITY (1, 1) NOT NULL,
     [ExecutionId] INT           NOT NULL,
-    [Date]        DATETIME      CONSTRAINT [DK_WfwExecutionEvents_CREATEDate] DEFAULT (getdate()) NOT NULL,
+    [Date]        DATETIMEOFFSET(4)      CONSTRAINT [DK_WfwExecutionEvents_CREATEDate] DEFAULT (getutcdate()) NOT NULL,
     [CreaterSid]   VARCHAR(46)   COLLATE SQL_Latin1_General_CP1_CI_AS        NOT NULL,
     [ResultId]    INT           NOT NULL,
     [Comment]     VARCHAR (MAX) NULL,
@@ -18,6 +18,6 @@ AS
 BEGIN
    If NOT Exists(SELECT ad_sid FROM [Stuff].[dbo].[employees] WHERE ad_sid in (SELECT CreaterSid FROM inserted)) BEGIN
       -- Handle the Referential Error Here
-	  RAISERROR ('Cannot insert [WfwDocumentExecutions] - no [CreaterId]',16,1)
+	  RAISERROR ('Cannot insert [WfwExecutionEvents] - no [CreaterSid]',16,1)
    END
 END

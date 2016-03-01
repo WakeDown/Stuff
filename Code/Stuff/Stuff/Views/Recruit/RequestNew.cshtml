@@ -707,8 +707,8 @@
                         $selectResponsible.append(nullOpt);
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
-                            if (item.id != null && item.id != 0) {
-                                var opt = '<option value="' + item.id + '">' + item.name + '</option>';
+                            if (item.ad_sid != null && item.ad_sid != '') {
+                                var opt = '<option value="' + item.ad_sid + '">' + item.name + '</option>';
                                 $selectManager.append(opt);
                                 $selectTeacher.append(opt);
                                 $selectContact.append(opt);

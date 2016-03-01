@@ -221,6 +221,7 @@
     <Compile Include="Helpers\PdfCreator.cs" />
     <Compile Include="Helpers\UrlHelperExtensions.cs" />
     <Compile Include="Models\Ad.cs" />
+    <Compile Include="Models\EmployeeToCombo.cs" />
     <Compile Include="Models\BranchOffice.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BaseDictionary.cs" />
@@ -521,6 +522,7 @@
     <Content Include="Views\Recruit\Requests.cshtml" />
     <Content Include="Views\Recruit\RequestNew.cshtml" />
     <Content Include="Views\Recruit\RequestCard.cshtml" />
+    <Content Include="Views\Recruit\Coordinations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

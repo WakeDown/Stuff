@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using CoordinationDB;
 using DALStuff.Models;
-using Stuff.Models;
+
 
 namespace Stuff.Services
 {
@@ -73,12 +73,12 @@ namespace Stuff.Services
                     .Select(src => new Models.BaseDictionary { id = src.Id, name = src.Name }).ToList();
             }
         }
-        public static IEnumerable<Models.BaseDictionary> GetEmployeeList()
+        public static IEnumerable<Models.EmployeeToCombo> GetEmployeeList()
         {
             using (StuffContext stuffDB = new StuffContext(StuffConnectionString))
             {
-                return stuffDB.employees.Where(it => it.enabled)
-                    .Select(src => new Models.BaseDictionary { id = src.id, name = src.full_name }).ToList();
+                return stuffDB.employees_view
+                    .Select(src => new Models.EmployeeToCombo { ad_sid = src.ad_sid, name = src.full_name }).ToList();
             }
         }
         public static IEnumerable<Models.BaseDictionary> GetDepartmentList()
@@ -96,7 +96,6 @@ namespace Stuff.Services
                 return RequestMapper.MapRequestToModel(stuffDB.requests.First(it => it.Enabled && it.Id == id));
             }
         }
-
         public static int CreateRequest(Models.Request model, string creatorSid)
         {
             using (StuffContext stuffDB = new StuffContext(StuffConnectionString))
@@ -130,9 +129,9 @@ namespace Stuff.Services
         {
             return true;
         }
-        public static void CreateNewCoordination(CoordinationDocumentTypes type, int? docId, string creatorSid)
+        public static void CreateNewCoordination(Models.CoordinationDocumentTypes type, int? docId, string creatorSid)
         {
-            if (type == CoordinationDocumentTypes.Request)
+            if (type == Models.CoordinationDocumentTypes.Request)
                 CreateNewRequestCoordination(docId, creatorSid);
         }
         public static void CreateNewRequestCoordination(int? docId, string creatorSid)
@@ -140,7 +139,7 @@ namespace Stuff.Services
             if (!docId.HasValue || string.IsNullOrWhiteSpace(creatorSid))
                 throw new Exception("Неверные параметры для создания согласования в CreateNewRequestCoordination()");
 
-            StringBuilder linkSB = new StringBuilder("{Type:" + (int) CoordinationDocumentTypes.Request);
+            StringBuilder linkSB = new StringBuilder("{Type:" + (int)Models.CoordinationDocumentTypes.Request);
             linkSB.Append(",ConnString:\"" + StuffConnectionString + "\"");
             linkSB.Append(",DocId:" + docId.Value);
             linkSB.Append("}");
@@ -153,18 +152,18 @@ namespace Stuff.Services
 
                     var execution = new DAL.Entities.Models.WfwDocumentExecution
                     {
-                        StartDate = DateTime.Now,
+                        StartDate = DateTimeOffset.Now,
                         CreaterSid = creatorSid,
                         Level = 0,
                     };
-                    var docType = coordinationDB.DocumentTypes.First(it => it.Name == CoordinationDocumentTypes.Request.ToString() && it.Enabled);
+                    var docType = coordinationDB.DocumentTypes.First(it => it.Name == Models.CoordinationDocumentTypes.Request.ToString() && it.Enabled);
 
                     var coordDoc = new DAL.Entities.Models.Document
                     {
                         DocumentType = docType,
                         WfwDocumentExecution = execution,
                         Name = "Согласование заявки на подбор персонала №" + docId.Value,
-                        Id = CoordinationDocumentTypes.Request.ToString() + docId.Value,
+                        Id = Models.CoordinationDocumentTypes.Request + ":" + docId.Value,
                         LinkToDoc = linkSB.ToString(),
                         LinkToDocId = docId.Value,
                     };

@@ -72,7 +72,6 @@
     <Compile Include="Entities\Mapping\EmployeeMap.cs" />
     <Compile Include="Entities\Mapping\EmployeeRoleMap.cs" />
     <Compile Include="Entities\Mapping\WfwDocumentExecutionMap.cs" />
-    <Compile Include="Entities\Mapping\WfwDocumentTypeSchemMap.cs" />
     <Compile Include="Entities\Mapping\WfwEventResultMap.cs" />
     <Compile Include="Entities\Mapping\WfwExecutionEventMap.cs" />
     <Compile Include="Entities\Mapping\WfwSchemeMap.cs" />

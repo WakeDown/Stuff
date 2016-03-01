@@ -28,7 +28,7 @@ namespace CoordinationDB
         public DbSet<EmployeeRole> EmployeeRoles { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<WfwDocumentExecution> WfwDocumentExecutions { get; set; }
-        public DbSet<WfwDocumentTypeSchem> WfwDocumentTypesSchems { get; set; }
+//        public DbSet<WfwDocumentTypeSchem> WfwDocumentTypesSchems { get; set; }
         public DbSet<WfwEventResult> WfwEventsResults { get; set; }
         public DbSet<WfwExecutionEvent> WfwExecutionEvents { get; set; }
         public DbSet<WfwScheme> WfwSchemes { get; set; }
@@ -42,7 +42,7 @@ namespace CoordinationDB
             modelBuilder.Configurations.Add(new EmployeeRoleMap());
             modelBuilder.Configurations.Add(new EmployeeMap());
             modelBuilder.Configurations.Add(new WfwDocumentExecutionMap());
-            modelBuilder.Configurations.Add(new WfwDocumentTypeSchemMap());
+//            modelBuilder.Configurations.Add(new WfwDocumentTypeSchemMap());
             modelBuilder.Configurations.Add(new WfwEventResultMap());
             modelBuilder.Configurations.Add(new WfwExecutionEventMap());
             modelBuilder.Configurations.Add(new WfwSchemeMap());

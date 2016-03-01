@@ -84,6 +84,10 @@
                                 {
                                     <li><a href='@Url.Action("Requests", "Recruit")'>Заявки</a></li>
                                 }
+                                @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+                                {
+                                    <li><a href='@Url.Action("Coordinations", "Recruit")'>Согласования</a></li>
+                                }
                             </ul>
                         </li>
                    

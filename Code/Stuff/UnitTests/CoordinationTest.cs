@@ -294,10 +294,10 @@ namespace CoordinationTests
                     requestReason.Requests.Add(request);
                     stuffDb.SaveChanges();
 
-                    Assert.AreEqual(request.SidContactPerson, empl1.id);
-                    Assert.AreEqual(request.SidManager, empl2.id);
-                    Assert.AreEqual(request.SidResponsiblePerson, empl3.id);
-                    Assert.AreEqual(request.SidTeacher, empl1.id);
+                    Assert.AreEqual(request.SidContactPerson, empl1.ad_sid);
+                    Assert.AreEqual(request.SidManager, empl2.ad_sid);
+                    Assert.AreEqual(request.SidResponsiblePerson, empl3.ad_sid);
+                    Assert.AreEqual(request.SidTeacher, empl1.ad_sid);
 
                     int newEmployeeCnt = employees.Count();
                     int newEmployeeCntView = employeesView.Count();

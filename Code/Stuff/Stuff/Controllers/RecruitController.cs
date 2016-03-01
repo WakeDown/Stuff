@@ -251,6 +251,56 @@ namespace Stuff.Controllers
             return Json(new { });
         }
 
+        public ActionResult Coordinatios(int? topRows, int? page, string cid, string pos, string cDat, string stat,
+    string added, string changed)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            if (!topRows.HasValue)
+                topRows = 30;
+            if (!page.HasValue) page = 1;
+
+            int totalCount = 0;
+            DateTime appearDat;
+            DateTime createDat;
+            DateTime changeDat;
+            Expression<Func<request, bool>> filter = it => it.Enabled;
+            int id;
+            if (int.TryParse(cid, out id))
+                filter = PredicateExtensions.And(filter, it => it.Id == id);
+            if (!string.IsNullOrWhiteSpace(pos))
+                filter = PredicateExtensions.And(filter, it => it.Position != null && it.Position.name.ToLower().StartsWith(pos.ToLower()));
+            if (DateTime.TryParse(cDat, out appearDat) && appearDat.CompareTo(DateTime.MinValue) > 0)
+            {
+                DateTime datPlusDay = appearDat.AddDays(1);
+                filter = PredicateExtensions.And(filter, it => it.Appearance != null
+                    && it.Appearance.Value.CompareTo(appearDat.Date) >= 0
+                    && it.Appearance.Value.CompareTo(datPlusDay.Date) < 0);
+            }
+            if (DateTime.TryParse(added, out createDat) && createDat.CompareTo(DateTime.MinValue) > 0)
+            {
+                DateTime datPlusDay = createDat.AddDays(1);
+                filter = PredicateExtensions.And(filter, it => it.CreateDatetime != null
+                    && it.CreateDatetime.Value.CompareTo(createDat.Date) >= 0
+                    && it.CreateDatetime.Value.CompareTo(datPlusDay.Date) < 0);
+            }
+            if (DateTime.TryParse(changed, out changeDat) && changeDat.CompareTo(DateTime.MinValue) > 0)
+            {
+                DateTime datPlusDay = changeDat.AddDays(1);
+                filter = PredicateExtensions.And(filter, it => it.LastChangeDatetime != null
+                    && it.LastChangeDatetime.Value.CompareTo(changeDat.Date) >= 0
+                    && it.LastChangeDatetime.Value.CompareTo(datPlusDay.Date) < 0);
+            }
+            if (!string.IsNullOrWhiteSpace(stat))
+                filter = PredicateExtensions.And(filter, it => it.RequestStatus.Name.ToLower().Contains(stat.ToLower()));
+
+
+            var requests = RequestService.GetReguestsList(out totalCount, filter, page.Value, topRows.Value);
+            ViewBag.TotalCount = totalCount;
+            return View(requests);
+        }
+
+
+
         public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;

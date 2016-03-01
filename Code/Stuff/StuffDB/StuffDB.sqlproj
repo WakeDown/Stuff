@@ -385,7 +385,6 @@
     <Build Include="tSQLt\User Defined Types\Private.sql" />
     <Build Include="Security\SQLCop.sql" />
     <Build Include="Security\tSQLt.sql" />
-    <Build Include="User1.sql" />
     <Build Include="dbo\Tables\requests.sql" />
     <Build Include="dbo\Tables\request_reasons.sql" />
     <Build Include="dbo\Tables\request_statuses.sql" />
@@ -409,9 +408,6 @@
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
     </ArtifactReference>
-  </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="StuffDB.refactorlog" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="PostDeployment.sql" />

@@ -6,7 +6,7 @@ namespace DAL.Entities.Models
     {
         public WfwScheme()
         {
-            this.WfwDocumentTypesSchems = new List<WfwDocumentTypeSchem>();
+//            this.WfwDocumentTypesSchems = new List<WfwDocumentTypeSchem>();
             this.WfwSchemeStages = new List<WfwSchemeStage>();
             this.DocumentTypes = new List<DocumentType>();
         }
@@ -14,7 +14,7 @@ namespace DAL.Entities.Models
         public string Name { get; set; }
         public int Action { get; set; }
         public bool ContinueLastStage { get; set; }
-        public virtual ICollection<WfwDocumentTypeSchem> WfwDocumentTypesSchems { get; set; }
+//        public virtual ICollection<WfwDocumentTypeSchem> WfwDocumentTypesSchems { get; set; }
         public virtual ICollection<WfwSchemeStage> WfwSchemeStages { get; set; }
         public virtual ICollection<DocumentType> DocumentTypes { get; set; }
     }
