@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.ModelConfiguration;
-using DAL.Entities.Models;
 
-namespace DAL.Entities.Mapping
+namespace DALCoordination.Entities.Mapping
 {
     public class DocumentTypeMap : EntityTypeConfiguration<DocumentType>
     {

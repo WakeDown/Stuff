@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using CoordinationDB;
+using System.Web.Helpers;
+using DALCoordination;
+using DALCoordination.Entities;
 using DALStuff.Models;
+using Microsoft.Ajax.Utilities;
+using Document = DALCoordination.Entities.Document;
 
 
 namespace Stuff.Services
 {
-    public static class Constants
+    public static class RequestConstants
     {
-        public static int RequestStatus_New_Id = 1;
-        public static int RequestStatus_Coordinate_Id = 2;
-        public static int RequestStatus_NotCoordinate_Id = 3;
-        public static int RequestStatus_InWork_Id = 4;
-        public static int RequestStatus_Closed_Id = 5;
-
+        public static int RequestStatusNewId = 1;
+        public static int RequestStatusCoordinateId = 2;
+        public static int RequestStatusNotCoordinateId = 3;
+        public static int RequestStatusInWorkId = 4;
+        public static int RequestStatusClosedId = 5;
     }
 
     public class RequestService
@@ -32,7 +34,6 @@ namespace Stuff.Services
                 return PrivateStuffConnectionString;
             }
         }
-
         private static string PrivateCoordinationConnectionString { get; set; }
         private static string CoordinationConnectionString
         {
@@ -44,18 +45,19 @@ namespace Stuff.Services
                 return PrivateCoordinationConnectionString;
             }
         }
-
         public static IEnumerable<Models.Request> GetReguestsList(out int totalCnt, Expression<Func<request, bool>> pred, int page, int pagwSize)
         {
-            List<Models.Request> result;
+
             using (StuffContext stuffDB = new StuffContext(StuffConnectionString))
             {
-                var nativeList = stuffDB.requests.Where(pred).OrderByDescending(it=>it.Id).Skip((page - 1) * pagwSize).Take(pagwSize).ToList();
-                result = nativeList.Select(src => RequestMapper.MapRequestToModel(src)).ToList();
                 totalCnt = stuffDB.requests.Count(pred);
-            }
+                int maxPage = (totalCnt%pagwSize == 0) ? (totalCnt%pagwSize) : (totalCnt%pagwSize + 1);
+                if (page > maxPage + 1)
+                    page = maxPage;
 
-            return result;
+                var nativeList = stuffDB.requests.Where(pred).OrderByDescending(it=>it.Id).Skip((page - 1) * pagwSize).Take(pagwSize).ToList();
+                return nativeList.Select(src => RequestMapper.MapRequestToListModel(src)).ToList();
+            }
         }
         public static IEnumerable<Models.BaseDictionary> GetReguestPositionList()
         {
@@ -103,25 +105,12 @@ namespace Stuff.Services
                 var newRequest = RequestMapper.MapRequestToEntity(model);
                 newRequest.LastChangeDatetime = DateTime.Now;
                 newRequest.CreateDatetime = DateTime.Now;
-                newRequest.IdStatus = Constants.RequestStatus_New_Id;
+                newRequest.IdStatus = RequestConstants.RequestStatusNewId;
                 newRequest.HaveCoordination = false;
                 newRequest.Enabled = true;
                 stuffDB.requests.Add(newRequest);
 
-
-                string errMsg = "";
-                if (stuffDB.GetValidationErrors().Any())
-                {
-                    errMsg = stuffDB.GetValidationErrors().SelectMany(
-                        validationResults => validationResults.ValidationErrors)
-                        .Aggregate(errMsg, (current, error) => current + string.Format("Entity Property: {0}, Error {1}", error.PropertyName, error.ErrorMessage));
-
-                    throw new Exception(errMsg);
-                }
-                else
-                {
-                    stuffDB.SaveChanges();
-                }
+                stuffDB.SaveIfNoError();
                 return newRequest.Id;
             }
         }
@@ -129,28 +118,32 @@ namespace Stuff.Services
         {
             return true;
         }
-        public static void CreateNewCoordination(Models.CoordinationDocumentTypes type, int? docId, string creatorSid)
+        public static void CreateNewCoordination(Models.CoordinationDocumentTypes type, int docId, string creatorSid)
         {
             if (type == Models.CoordinationDocumentTypes.Request)
                 CreateNewRequestCoordination(docId, creatorSid);
         }
-        public static void CreateNewRequestCoordination(int? docId, string creatorSid)
+        public static void CreateNewRequestCoordination(int docId, string creatorSid)
         {
-            if (!docId.HasValue || string.IsNullOrWhiteSpace(creatorSid))
+            if (docId <= 0 || string.IsNullOrWhiteSpace(creatorSid))
                 throw new Exception("Неверные параметры для создания согласования в CreateNewRequestCoordination()");
 
-            StringBuilder linkSB = new StringBuilder("{Type:" + (int)Models.CoordinationDocumentTypes.Request);
-            linkSB.Append(",ConnString:\"" + StuffConnectionString + "\"");
-            linkSB.Append(",DocId:" + docId.Value);
-            linkSB.Append("}");
+            var linkModel = new Models.JsonDocumentLinkType
+            {
+                Type = Models.CoordinationDocumentTypes.Request,
+                ConnString = ConfigurationManager.ConnectionStrings["StuffConnectionString"].ConnectionString,
+                DocId = docId
+            };
+            String link = Json.Encode(linkModel);
             using (StuffContext stuffDB = new StuffContext(StuffConnectionString))
             {
                 using (CoordinationContext coordinationDB = new CoordinationContext(CoordinationConnectionString))
                 {
                     var coordDocuments = coordinationDB.Documents;
-                    //var creator = coordinationDB.Employees.First(employee => employee.AdSid == creatorSid);
-
-                    var execution = new DAL.Entities.Models.WfwDocumentExecution
+                    /*  создаем исполнение и связываем его с документом coorddoc 
+                        находим тип документа согдасования doctype 
+                        через который будет связана схема согласования с coorddoc*/
+                    var execution = new WfwDocumentExecution
                     {
                         StartDate = DateTimeOffset.Now,
                         CreaterSid = creatorSid,
@@ -158,47 +151,93 @@ namespace Stuff.Services
                     };
                     var docType = coordinationDB.DocumentTypes.First(it => it.Name == Models.CoordinationDocumentTypes.Request.ToString() && it.Enabled);
 
-                    var coordDoc = new DAL.Entities.Models.Document
+                    var coordDoc = new Document
                     {
                         DocumentType = docType,
                         WfwDocumentExecution = execution,
-                        Name = "Согласование заявки на подбор персонала №" + docId.Value,
-                        Id = Models.CoordinationDocumentTypes.Request + ":" + docId.Value,
-                        LinkToDoc = linkSB.ToString(),
-                        LinkToDocId = docId.Value,
+                        Name = "Согласование заявки на подбор персонала №" + docId,
+                        Id = Models.CoordinationDocumentTypes.Request + ":" + docId,
+                        LinkToDoc = link,
+                        LinkToDocId = docId,
                     };
                     coordDocuments.Add(coordDoc);
 
-                    string errMsg = "";
-                    if (coordinationDB.GetValidationErrors().Any())
-                    {
-                        errMsg = coordinationDB.GetValidationErrors().SelectMany(
-                            validationResults => validationResults.ValidationErrors)
-                            .Aggregate(errMsg, (current, error) => current + string.Format("Entity Property: {0}, Error {1}", error.PropertyName, error.ErrorMessage));
-
-                        throw new Exception(errMsg);
-                    }
-                    else
-                    {
-                        coordinationDB.SaveChanges();
-                    }
-
-                    var requestDoc = stuffDB.requests.First(it => it.Id == docId.Value && it.Enabled);
+                    /*заполняем таблицу для всего процесса согласования на основе шаблона - схемы*/
+                    coordinationDB.WfwSchemeStages
+                        .Where(it => it.Enabled && it.SchemeId == docType.SchemeId)
+                        .OrderBy(it=>it.Level)
+                        .ForEach(it => coordinationDB.WfwDocumentWorkStages.Add(
+                            new WfwDocumentWorkStages
+                            {
+                               WfwDocumentExecution = execution,
+                               Level = it.Level,
+                               EmployeeRole = it.EmployeeRole,
+                               Coordinator = it.Coordinator,
+                            }));
+                    
+                    var requestDoc = stuffDB.requests.First(it => it.Id == docId && it.Enabled);
                     requestDoc.HaveCoordination = true;
+                    requestDoc.IdStatus = RequestConstants.RequestStatusInWorkId;
 
-                    errMsg = "";
-                    if (stuffDB.GetValidationErrors().Any())
+                    stuffDB.SaveIfNoError();
+                    coordinationDB.SaveIfNoError();
+                }
+            }
+        }
+        public static void ProcessRestartCoordination(Models.CoordinationDocumentTypes type, int docId, string creatorSid)
+        {
+            if (type == Models.CoordinationDocumentTypes.Request)
+                ProcessRequestRestartCoordination(docId, creatorSid);
+        }
+        public static void ProcessRequestRestartCoordination(int docId, string creatorSid)
+        {
+            using (CoordinationContext coordinationDB = new CoordinationContext(CoordinationConnectionString))
+            {
+                using (StuffContext stuffDB = new StuffContext(StuffConnectionString))
+                {
+                    var linkModel = new Models.JsonDocumentLinkType
                     {
-                        errMsg = stuffDB.GetValidationErrors().SelectMany(
-                            validationResults => validationResults.ValidationErrors)
-                            .Aggregate(errMsg, (current, error) => current + string.Format("Entity Property: {0}, Error {1}", error.PropertyName, error.ErrorMessage));
+                        Type = Models.CoordinationDocumentTypes.Request,
+                        ConnString = ConfigurationManager.ConnectionStrings["StuffConnectionString"].ConnectionString,
+                        DocId = docId
+                    };
+                    String link = Json.Encode(linkModel);
+                    var doc = coordinationDB.Documents.Single(it => it.Enabled &&
+                        it.LinkToDocId == docId && it.LinkToDoc == link);
+                    var execution = doc.WfwDocumentExecution;
+                    var continueFromLastStage = doc.DocumentType.WfwScheme.ContinueLastStage;
 
-                        throw new Exception(errMsg);
+                    if (continueFromLastStage)
+                    {
+                        var schemesToRevert = execution.WfwDocumentWorkSchemes.Where(it => it.Enabled
+                            && it.Level == execution.Level && it.WfwEventResult != null && !it.WfwEventResult.Success);
+                        schemesToRevert.All(it =>
+                        {
+                            it.Date = null;
+                            it.WfwEventResult = null;
+                            it.Comment = null;
+                            return true;
+                        });
                     }
                     else
                     {
-                        stuffDB.SaveChanges();
+                        var schemesToRevert = execution.WfwDocumentWorkSchemes.Where(it => it.Enabled);
+                        schemesToRevert.All(it =>
+                        {
+                            it.Date = null;
+                            it.ResultId = null;
+                            it.Comment = null;
+                            return true;
+                        });
+                        execution.Level = 0;
                     }
+                    
+                    var request = stuffDB.requests.First(it => it.Enabled && it.Id == docId);
+                    request.IdStatus = RequestConstants.RequestStatusInWorkId;
+                    request.CoordinationPaused = false;
+
+                    coordinationDB.SaveIfNoError();
+                    stuffDB.SaveIfNoError();
                 }
             }
         }

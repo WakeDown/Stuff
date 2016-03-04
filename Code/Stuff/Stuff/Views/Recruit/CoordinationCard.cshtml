@@ -1,0 +1,155 @@
+﻿@using System.Configuration
+@using Stuff.Objects
+@model Stuff.Models.Coordination
+
+@{
+    ViewBag.Title = "Заявка на подбор персонала №" + Model.id;
+    var r = @TempData["error"];
+    Layout = "~/Views/Shared/_Editor.cshtml";
+}
+
+@section PanelHead
+{
+    Согласование №@Model.id
+
+    @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+    {
+        if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.enabled)
+         {
+            @*<button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
+            <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>*@
+            <button id="approve" class="btn btn-success btn-xs pull-right" style="margin-right: 5px;"
+                    @{ if (!ViewBag.IsCoordinator) { @Html.Raw("disabled")  } else { @Html.Raw("")  }  }>
+                <i class="fa fa-plus"></i> утвердить
+            </button>
+            <button id="dismiss" class="btn btn-success btn-xs pull-right" style="margin-right: 5px;"
+                    @{ if (!ViewBag.IsCoordinator) { @Html.Raw("disabled")  } else { @Html.Raw("")  }  }>
+                <i class="fa fa-plus"></i> отклонить
+            </button>
+        }
+    }
+    @*<link rel="stylesheet" type="text/css" href="../../Content/tiny.editor.min.css"/>
+    <script src="../../Scripts/tiny.editor.min.js"></script>*@
+    <link rel="stylesheet" type="text/css" href="../../Content/bootstrap-wysiwyg.css" />
+}
+
+@section PanelBody
+{
+    <div>
+        <div>
+            <span class="text-danger">@TempData["error"]</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-push-2 col-lg-push-2 col-lg-6">
+            <span class="text-danger">@Html.LabelFor(m => m, @TempData["error"])</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div id="vacancyInfo">
+<div>                
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Документ:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.doc)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Инициатор:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.creator)</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата завершения:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.endDate.HasValue ? Model.endDate.Value.ToString("d") : "")</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Ступень согласования:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">
+                        @Html.LabelFor(m => m,
+                       Model.stat.ToString()
+                       )
+                    </div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата создания:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.create_datetime.HasValue ? Model.create_datetime.Value.ToString("d") : "")</div>
+                </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата последного редактирования:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.last_change_datetime.HasValue ? Model.last_change_datetime.Value.ToString("d") : "")</div>
+                </div>
+                <hr>
+</div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="nomargin">
+                        История
+                    </h4>
+                </div>
+                <div class="panel-body" id="history">
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    <script src="../../Scripts/bootstrap-wysiwyg.js"></script>
+    <script type="text/javascript">
+        //коды результатов событий согласования (см. БД)
+        var approve = 1;
+        var revision = 2;
+        $(function() {
+            $('#approve').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
+                if (!confirm('Вы уверены что хотите согласовать документ?')) {
+                    hideSpinnerAndEnabled($this);
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("CoordinationWorkflowEvent")',
+                    method: 'POST',
+                    data: { id: @Model.id, type : approve},
+                    success: function() {
+                        hideSpinnerAndEnabled($this);
+                        window.location = '@Url.Action("CoordinationCard")?id=@Model.id';
+                        //window.location.reload();
+                    },
+                    error: function() {
+                        alert('Ошибка при согласовании. Согласование не выполнено!');
+                        hideSpinnerAndEnabled($this);
+                    }
+                });
+            });
+
+            $('#dismiss').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
+                if (!confirm('Вы уверены что хотите отклонить документ?')) {
+                    hideSpinnerAndEnabled($this);
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("CoordinationWorkflowEvent")',
+                    method: 'POST',
+                    data: { id: @Model.id, type : revision},
+                    success: function() {
+                        hideSpinnerAndEnabled($this);
+                        window.location = '@Url.Action("CoordinationCard")?id=@Model.id';
+                        //window.location.reload();
+                    },
+                    error: function() {
+                        alert('Ошибка при согласовании. Согласование не выполнено!');
+                        hideSpinnerAndEnabled($this);
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+);

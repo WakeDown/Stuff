@@ -94,6 +94,7 @@
 	-- статус заявки
 	[id_status] INT NOT NULL,
     [HaveCoordination]        BIT CONSTRAINT [DK_requests_HaveCoordination] DEFAULT ((0)) NOT NULL,
+	[CoordinationPaused]        BIT CONSTRAINT [DK_requests_CoordinationStoped] DEFAULT ((0)) NOT NULL,
     [Enabled]        BIT CONSTRAINT [DK_requests_Enabled] DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_requests] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_requests_id_position] FOREIGN KEY ([id_position]) REFERENCES [dbo].[positions] ([id]),

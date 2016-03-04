@@ -61,6 +61,7 @@
     <Compile Include="Models\Mapping\sysdiagramMap.cs" />
     <Compile Include="Models\Mapping\WfwDocumentExecutionMap.cs" />
     <Compile Include="Models\Mapping\WfwDocumentTypesSchemMap.cs" />
+    <Compile Include="Models\Mapping\WfwDocumentWorkSchemeMap.cs" />
     <Compile Include="Models\Mapping\WfwEventsResultMap.cs" />
     <Compile Include="Models\Mapping\WfwExecutionEventMap.cs" />
     <Compile Include="Models\Mapping\WfwSchemeMap.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Models\sysdiagram.cs" />
     <Compile Include="Models\WfwDocumentExecution.cs" />
     <Compile Include="Models\WfwDocumentTypesSchem.cs" />
+    <Compile Include="Models\WfwDocumentWorkScheme.cs" />
     <Compile Include="Models\WfwEventsResult.cs" />
     <Compile Include="Models\WfwExecutionEvent.cs" />
     <Compile Include="Models\WfwScheme.cs" />

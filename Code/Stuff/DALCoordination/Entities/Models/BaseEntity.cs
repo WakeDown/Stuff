@@ -1,4 +1,4 @@
-﻿namespace DAL.Entities.Models
+﻿namespace DALCoordination.Entities
 {
     public abstract class BaseEntity
     {

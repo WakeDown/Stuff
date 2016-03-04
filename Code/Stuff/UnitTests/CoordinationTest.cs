@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
-using CoordinationDB;
-using DAL.Entities.Models;
+using DALCoordination;
+using DALCoordination.Entities;
 using DALStuff.Models;
 using NUnit.Framework;
 using employee = DALStuff.Models.employee;
 using EmployeeAlternate = DALStuff.Models.EmployeeAlternate;
 
-//using Employee = DAL.Entities.Models.Employee;
+//using Employee = DAL.Entities.Models.Creator;
 
 namespace CoordinationTests
 {

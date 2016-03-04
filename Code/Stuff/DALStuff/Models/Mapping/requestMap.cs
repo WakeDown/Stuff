@@ -58,6 +58,7 @@ namespace DALStuff.Models.Mapping
             this.Property(t => t.SidResponsiblePerson).HasColumnName("sid_responsible_person");
             this.Property(t => t.IdStatus).HasColumnName("id_status").IsRequired();
             this.Property(t => t.HaveCoordination).HasColumnName("HaveCoordination");
+            this.Property(t => t.CoordinationPaused).HasColumnName("CoordinationPaused");
             this.Property(t => t.Enabled).HasColumnName("Enabled");
 
             // Relationships

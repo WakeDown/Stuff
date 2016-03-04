@@ -1,4 +1,4 @@
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
     public class WfwDocumentTypeSchem : EnabledEntity
     {

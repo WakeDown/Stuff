@@ -10,7 +10,7 @@ namespace Stuff.Models
         public int DaysCount { get; set; }
         public DateTime DateStart { get; set; }
         DateTime DateEnd { get; set; }
-        //public Employee Employee { get; set; }
+        //public Employee Creator { get; set; }
         public string SidEmployee { get; set; }
 
         public StatementRestFewDays(){}
@@ -28,7 +28,7 @@ namespace Stuff.Models
 
             base.Configure(SidEmployee);
             SetMatchersOficial(SidEmployee);
-            //Matchers = new List<Employee>() {Employee.Manager};
+            //Matchers = new List<Employee>() {Creator.Manager};
             //var depDir = new Employee().GetDepartmentDirector(SidEmployee);
             //if (depDir != null)
             //{

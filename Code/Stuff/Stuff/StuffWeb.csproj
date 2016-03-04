@@ -49,6 +49,10 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EFlogger.EntityFramework6, Version=0.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EFlogger-For6.0.4.1\lib\EFlogger.EntityFramework6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -225,7 +229,7 @@
     <Compile Include="Models\BranchOffice.cs" />
     <Compile Include="Models\Budget.cs" />
     <Compile Include="Models\BaseDictionary.cs" />
-    <Compile Include="Models\CoordinationDocumentTypes.cs" />
+    <Compile Include="Models\JsonDocumentLinkType.cs" />
     <Compile Include="Models\DbFile.cs" />
     <Compile Include="Models\DocMeetLink.cs" />
     <Compile Include="Models\DocMeetLinkList.cs" />
@@ -247,6 +251,7 @@
     <Compile Include="Models\RecruitVacancy.cs" />
     <Compile Include="Models\RecruitVacancyCause.cs" />
     <Compile Include="Models\Report.cs" />
+    <Compile Include="Models\Coordination.cs" />
     <Compile Include="Models\RequestReason.cs" />
     <Compile Include="Models\RequestPosition.cs" />
     <Compile Include="Models\Request.cs" />
@@ -285,7 +290,9 @@
     <Compile Include="Objects\TranslitDate.cs" />
     <Compile Include="Objects\WindowsImpersonationContextFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CoordinationMapper.cs" />
     <Compile Include="Services\RequestMapper.cs" />
+    <Compile Include="Services\CoordinationService.cs" />
     <Compile Include="Services\RequestService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -523,6 +530,7 @@
     <Content Include="Views\Recruit\RequestNew.cshtml" />
     <Content Include="Views\Recruit\RequestCard.cshtml" />
     <Content Include="Views\Recruit\Coordinations.cshtml" />
+    <Content Include="Views\Recruit\CoordinationCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

@@ -1,6 +1,4 @@
-using System;
-
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
     public class WfwSchemeStage : EnabledEntity
     {
@@ -11,5 +9,7 @@ namespace DAL.Entities.Models
         public int SchemeId { get; set; }
         public virtual EmployeeRole EmployeeRole { get; set; }
         public virtual WfwScheme WfwScheme { get; set; }
+        public virtual Employee Coordinator { get; set; }
+
     }
 }

@@ -1,7 +1,11 @@
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
     public class Document
     {
+        public Document()
+        {
+            Enabled = true;
+        }
         public string Id { get; set; }
         public string Name { get; set; }
         public string LinkToDoc { get; set; }

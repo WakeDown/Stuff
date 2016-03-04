@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
     public class DocumentType : EnabledEntity
     {

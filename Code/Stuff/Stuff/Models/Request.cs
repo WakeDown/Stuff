@@ -227,5 +227,11 @@ namespace Stuff.Models
         /// Флаг начатого согласования
         /// </summary>
         public bool IsCoordinationStarted { get; set; }
+
+        /// <summary>
+        /// Флаг - согласование на доработке
+        /// </summary>
+        public bool IsCoordinationPaused { get; set; }
+        
     }
 }

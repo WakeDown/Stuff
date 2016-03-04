@@ -1,7 +1,7 @@
 ﻿@using Stuff.Helpers
 @using Stuff.Models
 
-@model IEnumerable<Request>
+@model IEnumerable<Coordination>
 
 @{
     ViewBag.Title = "Заявки на подбор персонала ";
@@ -42,9 +42,6 @@
                 </ul>
             </nav>
         </div>
-        <div class="pull-left pad-l-sm">
-            <a class="btn btn-primary" href="@Url.Action("RequestNew")"><i class="fa fa-plus-circle"></i>новая заявка</a>
-        </div>
     </div>
     <div class="col-lg-5 col-sm-12 col-xs-12">
         <div id="stateFilterList"></div>
@@ -70,19 +67,16 @@
             <input id="cid" class="form-control input-xs" placeholder="ID" value="@Request.QueryString["cid"]" style="width: 50px;"/>
         </th>
         <th>
-            <input id="pos" class="form-control input-xs" placeholder="Должность" value="@Request.QueryString["pos"]" />
-        </th>
-        @*<th>
-            <input type="radio" name="sex" value="" @(String.IsNullOrEmpty(Request.QueryString["sex"]) ? "checked" : String.Empty)>&nbsp;все&nbsp;<input type="radio" name="sex" value="1" @(!String.IsNullOrEmpty(Request.QueryString["sex"]) && Request.QueryString["sex"].Equals("1") ? "checked" : String.Empty)>&nbsp;М&nbsp;<input type="radio" name="sex" value="0" @(!String.IsNullOrEmpty(Request.QueryString["sex"]) && Request.QueryString["sex"].Equals("0") ? "checked" : String.Empty)>&nbsp;Ж
-        </th>*@
-        @*<th>
-            <input id="age" class="form-control input-xs" placeholder="Открыта с" value="@Request.QueryString["age"]" />
-        </th>*@
-        <th>
-            <input id="cDat" class="form-control input-xs" placeholder="Дата выхода" value="@Request.QueryString["cDat"]" />
+            <input id="doc" class="form-control input-xs" placeholder="Документ" value="@Request.QueryString["doc"]" />
         </th>
         <th>
-            <input id="stat" class="form-control input-xs" placeholder="Статус" value="@Request.QueryString["stat"]"/>
+            <input id="init" class="form-control input-xs" placeholder="Инициатор" value="@Request.QueryString["init"]" />
+        </th>
+        <th>
+            <input id="eDat" class="form-control input-xs" placeholder="Дата завершения" value="@Request.QueryString["eDat"]" />
+        </th>
+        <th>
+            <input id="stat" class="form-control input-xs" placeholder="Ступень согласования" value="@Request.QueryString["stat"]"/>
         </th>
         <th>
             <input id="changed" class="form-control input-xs" placeholder="Изменено" value="@Request.QueryString["changed"]" />
@@ -91,27 +85,30 @@
             <input id="added" class="form-control input-xs" placeholder="Добавлено" value="@Request.QueryString["added"]"/>
         </th>
         <th class="min-width">
-            <a href="@Url.Action("Requests")" class="btn btn-default btn-xs" title="очистить фильтр"><i class="fa fa-refresh"></i></a>
+            <a href="@Url.Action("Coordinations")" class="btn btn-default btn-xs" title="Очистить фильтр"><i class="fa fa-refresh"></i></a>
         </th>
     </tr>
     </thead>
     <tbody>
         @if (Model != null && Model.Any())
         {
-            foreach (Request rc in Model)
+            foreach (Coordination rc in Model)
             {
                 <tr id="cnd-@rc.id" cndid="@rc.id" class="cursor-pointer">
                     <th>@rc.id</th>
                     <td>
-                        @rc.position 
+                        @rc.doc
                     </td>
                     <td>
-                        @if (rc.appearance.HasValue)
+                        @rc.creator
+                    </td>
+                    <td>
+                        @if (rc.endDate.HasValue)
                         {
-                            @rc.appearance.Value.ToString("dd.MM.yyyy")
+                            @rc.endDate.Value.ToString("dd.MM.yyyy")
                         }
                     </td>
-                    <td>@rc.status</td>
+                    <td>@rc.stat</td>
                     <td>
                         @if (rc.last_change_datetime.HasValue)
                         {
@@ -151,11 +148,11 @@
         $(function() {
             $('tr[cndid]').click(function() {
                 var id = $(this).attr('cndid');
-                window.location = '@Url.Action("RequestCard")?id=' + id;
+                window.location = '@Url.Action("CoordinationCard")?id=' + id;
             });
             $('tr[cndid]').on('contextmenu', function() {
                 var id = $(this).attr('cndid');
-                window.open('@Url.Action("RequestCard")?id=' + id);
+                window.open('@Url.Action("CoordinationCard")?id=' + id);
             });
             $('#candidateList thead tr input').keypress(function(e) {
                 if (e.keyCode != 13) return;
@@ -171,10 +168,12 @@
             var url = curUrl;
             var cid = $('#cid').val();
             url = updateQueryStringParameter(url, 'cid', cid);
-            var pos = $('#pos').val();
-            url = updateQueryStringParameter(url, 'pos', pos);
-            var cDat = $('#cDat').val();
-            url = updateQueryStringParameter(url, 'cDat', cDat);
+            var doc = $('#doc').val();
+            url = updateQueryStringParameter(url, 'doc', doc);
+            var init = $('#init').val();
+            url = updateQueryStringParameter(url, 'init', init);
+            var cDat = $('#eDat').val();
+            url = updateQueryStringParameter(url, 'eDat', cDat);
             var stat = $('#stat').val();
             url = updateQueryStringParameter(url, 'stat', stat);
             var changed = $('#changed').val();

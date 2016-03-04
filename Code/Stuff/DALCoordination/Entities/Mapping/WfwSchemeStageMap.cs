@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.ModelConfiguration;
-using DAL.Entities.Models;
 
-namespace DAL.Entities.Mapping
+namespace DALCoordination.Entities.Mapping
 {
     public class WfwSchemeStageMap : EntityTypeConfiguration<WfwSchemeStage>
     {
@@ -30,6 +29,9 @@ namespace DAL.Entities.Mapping
             this.Property(t => t.Enabled).HasColumnName("Enabled");
 
             // Relationships
+            this.HasRequired(t => t.Coordinator)
+                .WithMany(t => t.WfwSchemeStages)
+                .HasForeignKey(d => d.CoordinatorSid);
             this.HasOptional(t => t.EmployeeRole)
                 .WithMany(t => t.WfwSchemeStages)
                 .HasForeignKey(d => d.RoleId);

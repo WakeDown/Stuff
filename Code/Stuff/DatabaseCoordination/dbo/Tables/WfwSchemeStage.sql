@@ -11,12 +11,6 @@ CREATE TABLE [dbo].[WfwSchemeStage] (
     CONSTRAINT [CK_WfwSchemeStage_RoleId_CoordinatorId] CHECK ([RoleId] IS NOT NULL AND [CoordinatorSid] IS NULL OR [RoleId] IS NULL AND [CoordinatorSid] IS NOT NULL),
     CONSTRAINT [FK_WfwSchemeStage_WfwScheme] FOREIGN KEY ([SchemeId]) REFERENCES [dbo].[WfwScheme] ([Id])
 );
-
-
-
-
-
-
 GO
 CREATE Trigger [dbo].[WfwSchemeStageEmployeeRolesTrigger] ON [dbo].[WfwSchemeStage] After Insert, Update
 AS

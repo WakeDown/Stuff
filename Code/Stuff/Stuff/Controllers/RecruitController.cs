@@ -2,12 +2,14 @@
 using System.IO;
 using System.Linq.Expressions;
 using System.Web.Mvc;
+using DALCoordination.Entities;
 using DALStuff.Models;
 using Infrustructer;
 using Stuff.Helpers;
 using Stuff.Models;
 using Stuff.Objects;
 using Stuff.Services;
+using Employee = Stuff.Models.Employee;
 
 namespace Stuff.Controllers
 {
@@ -126,14 +128,14 @@ namespace Stuff.Controllers
             RecruitVacancy.Close(id, CurUser.Sid);
             return Json(new {});
         }
-
+        [HttpGet]
         public ActionResult Requests(int? topRows, int? page, string cid, string pos, string cDat, string stat,
             string added, string changed)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!topRows.HasValue)
                 topRows = 30;
-            if (!page.HasValue) page = 1;
+            if (!page.HasValue || page < 1) page = 1;
 
             int totalCount = 0;
             DateTime appearDat;
@@ -168,8 +170,7 @@ namespace Stuff.Controllers
             }
             if (!string.IsNullOrWhiteSpace(stat))
                 filter = PredicateExtensions.And(filter, it => it.RequestStatus.Name.ToLower().Contains(stat.ToLower()));
-
-
+            
             var requests = RequestService.GetReguestsList(out totalCount, filter, page.Value, topRows.Value);
             ViewBag.TotalCount = totalCount;
             return View(requests);
@@ -178,7 +179,6 @@ namespace Stuff.Controllers
         [HttpGet]
         public ActionResult RequestNew()
         {
-            ViewBag.Editable = true;
             return View();
         }
 
@@ -208,10 +208,9 @@ namespace Stuff.Controllers
             string viewerSid = null;
             if (userIsViewer) viewerSid = CurUser.Sid;
 
-
-            ViewBag.UserCanBeginCoordination = !userIsViewer;
             if (!id.HasValue)
-                return RedirectToAction("RequestNew");
+                return HttpNotFound();
+
             return View(RequestService.GetReguest(id.Value));
             //if (CurUser.Is(AdGroup.RecruitManager))
             //    return HttpNotFound();
@@ -219,7 +218,7 @@ namespace Stuff.Controllers
         }
 
         [HttpPost]
-        public ActionResult RequestNewCoordination(int? id, Request model)
+        public ActionResult RequestNewCoordination(int? id)
         {
             bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
             string viewerSid = null;
@@ -227,7 +226,7 @@ namespace Stuff.Controllers
 
             try
             {
-                RequestService.CreateNewCoordination(CoordinationDocumentTypes.Request, id, CurUser.Sid);
+                RequestService.CreateNewCoordination(CoordinationDocumentTypes.Request, id.Value, CurUser.Sid);
 
                 //ViewBag.UserCanBeginCoordination = !userIsViewer;
                 //return RedirectToAction("RequestCard", new { id = id.Value });
@@ -238,10 +237,31 @@ namespace Stuff.Controllers
                 TempData["error"] = "Не получилось начать согласование!\n";
                 TempData["error"] += ex.ToString();
                 throw new Exception(TempData["error"].ToString());
-                ViewBag.Editable = true;
-                return RedirectToAction("RequestCard", new { id = id.Value });
             }
         }
+        [HttpPost]
+        public ActionResult RequestRestartCoordination(int? id)
+        {
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            try
+            {
+                RequestService.ProcessRestartCoordination(CoordinationDocumentTypes.Request, id.Value, CurUser.Sid);
+
+                //ViewBag.UserCanBeginCoordination = !userIsViewer;
+                //return RedirectToAction("RequestCard", new { id = id.Value });
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Не получилось начать согласование!\n";
+                TempData["error"] += ex.ToString();
+                throw new Exception(TempData["error"].ToString());
+            }
+        }
+
 
         [HttpPost]
         public JsonResult RequestDelete(int id)
@@ -251,23 +271,23 @@ namespace Stuff.Controllers
             return Json(new { });
         }
 
-        public ActionResult Coordinatios(int? topRows, int? page, string cid, string pos, string cDat, string stat,
-    string added, string changed)
+        public ActionResult Coordinations(int? topRows, int? page, string cid, string pos, string cDat, string stat,
+            string added, string changed)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
             if (!topRows.HasValue)
                 topRows = 30;
-            if (!page.HasValue) page = 1;
+            if (!page.HasValue || page < 1) page = 1;
 
             int totalCount = 0;
             DateTime appearDat;
             DateTime createDat;
             DateTime changeDat;
-            Expression<Func<request, bool>> filter = it => it.Enabled;
+            Expression<Func<WfwDocumentExecution, bool>> filter = it => it.Enabled;
             int id;
             if (int.TryParse(cid, out id))
                 filter = PredicateExtensions.And(filter, it => it.Id == id);
-            if (!string.IsNullOrWhiteSpace(pos))
+/*            if (!string.IsNullOrWhiteSpace(pos))
                 filter = PredicateExtensions.And(filter, it => it.Position != null && it.Position.name.ToLower().StartsWith(pos.ToLower()));
             if (DateTime.TryParse(cDat, out appearDat) && appearDat.CompareTo(DateTime.MinValue) > 0)
             {
@@ -292,14 +312,55 @@ namespace Stuff.Controllers
             }
             if (!string.IsNullOrWhiteSpace(stat))
                 filter = PredicateExtensions.And(filter, it => it.RequestStatus.Name.ToLower().Contains(stat.ToLower()));
+*/
 
-
-            var requests = RequestService.GetReguestsList(out totalCount, filter, page.Value, topRows.Value);
+            var coordinations = CoordinationService.GetCoordinationsList(out totalCount, filter, page.Value, topRows.Value);
             ViewBag.TotalCount = totalCount;
-            return View(requests);
+            return View(coordinations);
         }
 
+        [HttpGet]
+        public ActionResult CoordinationCard(int? id)
+        {
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
 
+
+            if (!id.HasValue)
+                return HttpNotFound();
+
+            ViewBag.IsCoordinator = CoordinationService.UserNeedCoordinateExecution(CurUser.Sid, id.Value);
+
+            return View(CoordinationService.GetCoordination(id.Value));
+            //if (CurUser.Is(AdGroup.RecruitManager))
+            //    return HttpNotFound();
+        }
+
+        [HttpPost]
+        public ActionResult CoordinationWorkflowEvent(int? id, int? type)
+        {
+            bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
+            string viewerSid = null;
+            if (userIsViewer) viewerSid = CurUser.Sid;
+
+            try
+            {
+                if (CoordinationService.UserNeedCoordinateExecution(CurUser.Sid, id.Value))
+                    CoordinationService.ProcessCoordinationWorkflowEvent(id.Value, type.Value, CurUser.Sid);
+
+                //ViewBag.UserCanBeginCoordination = !userIsViewer;
+                //return RedirectToAction("RequestCard", new { id = id.Value });
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Не получилось начать согласование!\n";
+                TempData["error"] += ex.ToString();
+                throw new Exception(TempData["error"].ToString());
+            }
+        }
+        
 
         public ActionResult Candidates(int? topRows, int? page, string cid, string fio, string age, string phone, string email, string added, byte? sex, string changed)
         {

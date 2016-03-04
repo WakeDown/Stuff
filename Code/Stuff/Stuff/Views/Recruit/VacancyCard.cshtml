@@ -469,7 +469,7 @@
                         '<button name="changeVac" slid="' + item.Id + '" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>'
                         //+ '<button name="create-link" class="btn btn-info btn-sm btn-block pull-right" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">Приглашение</button>'
                         : '') +
-                    (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '')
+                    (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createCreator" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '')
                      +
                     (item.StateIsAccept == false && item.StateIsCancel == true ?
                     '<button name="restoreSel" slid="' + item.Id + '" class="btn btn-success btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">Восстановить</button>'

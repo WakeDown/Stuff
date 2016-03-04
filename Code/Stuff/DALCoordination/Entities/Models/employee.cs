@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
-    public class Employee
+    public class Employee : EnabledEntity
     {
         public Employee()
         {
@@ -11,9 +11,11 @@ namespace DAL.Entities.Models
             this.EmployeeRoles = new List<EmployeeRole>();
             this.WfwDocumentExecutions = new List<WfwDocumentExecution>();
             this.WfwExecutionEvents = new List<WfwExecutionEvent>();
+            this.WfwDocumentWorkSchemes = new List<WfwDocumentWorkStages>();
+            this.WfwSchemeStages = new List<WfwSchemeStage>();
+
         }
 
-        public int Id { get; set; }
         public string AdSid { get; set; }
         public int IdManager { get; set; }
         public string Surname { get; set; }
@@ -29,7 +31,6 @@ namespace DAL.Entities.Models
         public short IdEmpState { get; set; }
         public int IdDepartment { get; set; }
         public int IdCity { get; set; }
-        public bool Enabled { get; set; }
         public System.DateTime Dattim1 { get; set; }
         public System.DateTime Dattim2 { get; set; }
         public System.DateTime? DateCame { get; set; }
@@ -49,5 +50,6 @@ namespace DAL.Entities.Models
         public virtual ICollection<EmployeeRole> EmployeeRoles { get; set; }
         public virtual ICollection<WfwDocumentExecution> WfwDocumentExecutions { get; set; }
         public virtual ICollection<WfwExecutionEvent> WfwExecutionEvents { get; set; }
-    }
+        public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkSchemes { get; set; }
+        public virtual ICollection<WfwSchemeStage> WfwSchemeStages { get; set; }    }
 }

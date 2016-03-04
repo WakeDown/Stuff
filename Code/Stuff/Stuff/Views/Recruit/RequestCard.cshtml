@@ -1,5 +1,4 @@
-﻿@using System.Configuration
-@using Stuff.Objects
+﻿@using Stuff.Objects
 @model Stuff.Models.Request
 
 @{
@@ -16,21 +15,18 @@
     {
         if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.enabled)
          {
-             <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
-             <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
-             <button id="newCoordination" class="btn btn-success btn-xs pull-right" style="margin-right: 5px;"
-                     @{
-                         if (Model.IsCoordinationStarted == true)
-                         {
-                             @Html.Raw("disabled")
-                         }
-                         else
-                         {
-                             @Html.Raw("")
-                         }
-
-                     }><i class="fa fa-plus"></i> начать согласование</button>
-
+            <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
+            <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
+            <button id="newCoordination" class="btn btn-success btn-xs pull-right" style="margin-right: 5px;"
+                    @{if (Model.IsCoordinationStarted){@Html.Raw("disabled")}else{@Html.Raw("")}}>
+                <i class="fa fa-plus"></i> начать согласование
+            </button>
+            <button id="restartCoordination" class="btn btn-success btn-xs pull-right" style="margin-right: 5px;"
+                    @{
+                        if (!Model.IsCoordinationPaused) { @Html.Raw("disabled")  } else { @Html.Raw("")  }
+                    }>
+                <i class="fa fa-plus"></i> возобновить согласование
+            </button>
         }
     }
     @*<link rel="stylesheet" type="text/css" href="../../Content/tiny.editor.min.css"/>
@@ -287,6 +283,36 @@
                     }
                 });
             });
+
+            $('#restartCoordination').click(function() {
+                var $this = $(this);
+                showSpinnerAppendAndDisable($this);
+                if (!confirm('Вы уверены что хотите возобновить согласование?')) {
+                    hideSpinnerAndEnabled($this);
+                    return;
+                }
+                if (!Boolean("@Model.IsCoordinationPaused")) {
+                    alert('Ошибка при перезапуске согласования. Перезапуск согласования не выполнен!');
+                    hideSpinnerAndEnabled($this);
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("RequestRestartCoordination")',
+                    method: 'POST',
+                    data: { id: @Model.id},
+                    success: function() {
+                        hideSpinnerAndEnabled($this);
+                        window.location = '@Url.Action("RequestCard")?id=@Model.id';
+                        //window.location.reload();
+                    },
+                    error: function() {
+                        alert('Ошибка при перезапуске согласования. Перезапуск согласования не выполнен!');
+                        hideSpinnerAndEnabled($this);
+                    }
+                });
+            });
+
+
         });
     </script>
 }

@@ -8,13 +8,8 @@ CREATE TABLE [dbo].[WfwDocumentExecutions] (
     [Enabled]   BIT      CONSTRAINT [DK_Executions_Enabled] DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_Executions] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
-
-
-
-
-
-
 GO
+/*
 CREATE Trigger [dbo].[WfwDocumentExecutionsCreaterIdTrigger] ON [dbo].[WfwDocumentExecutions] After Insert, Update
 AS
 BEGIN
@@ -23,3 +18,4 @@ BEGIN
 	  RAISERROR ('Cannot insert [WfwDocumentExecutions] - no [CreaterSid]',16,1)
    END
 END
+*/

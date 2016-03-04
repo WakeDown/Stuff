@@ -34,13 +34,13 @@ namespace Stuff.Models
 
         //public Statement(int idEmployee)
         //{
-        //    Employee = new Employee(idEmployee);
+        //    Employee = new Creator(idEmployee);
         //    Init();
         //}
 
         //public Statement(string sidEmployee)
         //{
-        //    Employee = new Employee(sidEmployee);
+        //    Employee = new Creator(sidEmployee);
         //    Init();
         //}
 

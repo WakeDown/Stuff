@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.ModelConfiguration;
-using DAL.Entities.Models;
 
-namespace DAL.Entities.Mapping
+namespace DALCoordination.Entities.Mapping
 {
     public class WfwExecutionEventMap : EntityTypeConfiguration<WfwExecutionEvent>
     {
@@ -19,7 +18,7 @@ namespace DAL.Entities.Mapping
             // Table & Column Mappings
             this.ToTable("WfwExecutionEvents");
             this.Property(t => t.Id).HasColumnName("Id");
-            this.Property(t => t.ExecutionId).HasColumnName("ExecutionId");
+            this.Property(t => t.WfwDocumentWorkStagesId).HasColumnName("WfwDocumentWorkStagesId");
             this.Property(t => t.Date).HasColumnName("Date");
             this.Property(t => t.CreaterSid).HasColumnName("CreaterSid");
             this.Property(t => t.ResultId).HasColumnName("ResultId");
@@ -27,12 +26,12 @@ namespace DAL.Entities.Mapping
             this.Property(t => t.Enabled).HasColumnName("Enabled");
 
             // Relationships
-            this.HasRequired(t => t.Employee)
+            this.HasRequired(t => t.Creator)
                 .WithMany(t => t.WfwExecutionEvents)
                 .HasForeignKey(d => d.CreaterSid);
-            this.HasRequired(t => t.WfwDocumentExecution)
+            this.HasRequired(t => t.WfwDocumentWorkStage)
                 .WithMany(t => t.WfwExecutionEvents)
-                .HasForeignKey(d => d.ExecutionId);
+                .HasForeignKey(d => d.WfwDocumentWorkStagesId);
             this.HasRequired(t => t.WfwEventResult)
                 .WithMany(t => t.WfwExecutionEvents)
                 .HasForeignKey(d => d.ResultId);

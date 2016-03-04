@@ -1,10 +1,33 @@
-﻿using DALStuff.Models;
-
+﻿
 namespace Stuff.Services
 {
+
     public class RequestMapper
     {
-        public static Models.Request MapRequestToModel(request src, Models.Request dst = null)
+        public static Models.Request MapRequestToListModel(DALStuff.Models.request src, Models.Request dst = null)
+        {
+            if (src == null)
+                return null;
+
+            if (dst == null)
+                dst = new Models.Request();
+
+            dst.id = src.Id;
+            dst.id_position = src.IdPosition;
+            dst.position = src.Position != null ? src.Position.name : "";
+            dst.appearance = src.Appearance;
+            dst.create_datetime = src.CreateDatetime;
+            dst.last_change_datetime = src.LastChangeDatetime;
+            dst.id_status = src.IdStatus;
+            dst.status = src.RequestStatus != null ? src.RequestStatus.Name : "";
+            dst.IsCoordinationStarted = src.HaveCoordination;
+            dst.IsCoordinationPaused = src.CoordinationPaused;
+            dst.enabled = src.Enabled;
+
+            return dst;
+        }
+
+        public static Models.Request MapRequestToModel(DALStuff.Models.request src, Models.Request dst = null)
         {
             if (src == null)
                 return null;
@@ -67,18 +90,20 @@ namespace Stuff.Services
             dst.sid_responsible_person = src.SidResponsiblePerson;
             dst.responsible_person = src.ResponsiblePerson != null ? src.ResponsiblePerson.full_name : "";
             dst.IsCoordinationStarted = src.HaveCoordination;
+            dst.IsCoordinationPaused = src.CoordinationPaused;
+
             dst.enabled = src.Enabled;
 
             return dst;
         }
 
-        public static request MapRequestToEntity(Models.Request src, request dst = null)
+        public static DALStuff.Models.request MapRequestToEntity(Models.Request src, DALStuff.Models.request dst = null)
         {
             if (src == null)
                 return null;
 
             if (dst == null)
-                dst = new request();
+                dst = new DALStuff.Models.request();
 
             dst.Id  = src.id;
             dst.IdPosition  = src.id_position;
@@ -126,6 +151,8 @@ namespace Stuff.Services
             dst.IdStatus  = src.id_status;
             dst.SidResponsiblePerson  = src.sid_responsible_person;
             dst.HaveCoordination = src.IsCoordinationStarted;
+            dst.CoordinationPaused  = src.IsCoordinationPaused;
+
             dst.Enabled  = src.enabled;
 
             return dst;

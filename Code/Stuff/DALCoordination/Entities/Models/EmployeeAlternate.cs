@@ -1,6 +1,6 @@
 using System;
 
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
     public class EmployeeAlternate : EnabledEntity
     {

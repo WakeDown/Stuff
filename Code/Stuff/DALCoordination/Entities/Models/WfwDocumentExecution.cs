@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 
-namespace DAL.Entities.Models
+namespace DALCoordination.Entities
 {
     public class WfwDocumentExecution : EnabledEntity
     {
         public WfwDocumentExecution()
         {
             this.Documents = new List<Document>();
-            this.WfwExecutionEvents = new List<WfwExecutionEvent>();
+            this.WfwDocumentWorkSchemes = new List<WfwDocumentWorkStages>();
         }
 
         public int Level { get; set; }
@@ -16,6 +16,6 @@ namespace DAL.Entities.Models
         public System.DateTimeOffset? EndDate { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
         public virtual Employee CreatorEmployee { get; set; }
-        public virtual ICollection<WfwExecutionEvent> WfwExecutionEvents { get; set; }
+        public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkSchemes { get; set; }
     }
 }

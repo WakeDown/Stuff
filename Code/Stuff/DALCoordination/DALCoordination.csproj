@@ -7,8 +7,8 @@
     <ProjectGuid>{52406436-E508-4342-A94D-C186B882F8F7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DAL</RootNamespace>
-    <AssemblyName>DAL</AssemblyName>
+    <RootNamespace>DALCoordination</RootNamespace>
+    <AssemblyName>DALCoordination</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -78,6 +78,8 @@
     <Compile Include="Entities\Mapping\WfwSchemeStageMap.cs" />
     <Compile Include="Entities\Models\WfwDocumentExecution.cs" />
     <Compile Include="Entities\Models\WfwDocumentTypeSchem.cs" />
+    <Compile Include="Entities\Mapping\WfwDocumentWorkSchemeMap.cs" />
+    <Compile Include="Entities\Models\WfwDocumentWorkStages.cs" />
     <Compile Include="Entities\Models\WfwEventResult.cs" />
     <Compile Include="Entities\Models\WfwExecutionEvent.cs" />
     <Compile Include="Entities\Models\WfwScheme.cs" />
