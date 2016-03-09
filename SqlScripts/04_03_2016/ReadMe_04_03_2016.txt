@@ -1,0 +1,2 @@
+Сначала выполнить скрипт обновления БД Stuff - "Stuff_update_04_03_2016.sql"
+Затем выполнить скрипт создания БД Coordination - "Coordination_create_04_03_2016.sql"
