@@ -1,0 +1,104 @@
+﻿@model Stuff.Models.RecruitQuestionForm
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+    <style type="text/css">
+        body {font-family: Arial;background: #B4B4B4 url(../../Content/images/bg1.png) repeat left top;}
+        .body-content {padding-left: 15px;padding-right: 15px;}
+        .body-content {background: #fff;padding-top: 70px;}
+        .body-content {box-shadow: 0 0 10px #666;border-bottom-right-radius: 4px;border-bottom-left-radius: 4px;}
+        .navbar {box-shadow: 0 0 25px #333;margin-bottom: 0px !important;}
+        .navbar-brand {padding-top: 3px;}
+        .navbar-brand div {padding: 3px 0 0 8px;margin: 0;}
+        .brand-prefix {padding-top: 5px;}
+        .headLogo {display: block;height: 25px;padding-left: 25px;}
+        input.required-mark, select.required-mark,div.required-mark, span.required-mark, textarea.required-mark {background-color: #fcf8e3;}
+    </style>
+</head>
+<body>
+    <div>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="~/">
+                        <img class="headLogo" src="~/Content/images/logo-unit.png" alt="" />
+                        <div class="h5"><strong>ЮНИТ</strong>&nbsp;<span class="h6">Анкета</span></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="container body-content">
+            @using (Html.BeginForm("Index", "RecruitQuestion", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="form-group">
+                    <h2 class="text-center">АНКЕТА КАНДИДАТА</h2>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" for="">Пол</label>
+                    <div class="col-lg-2">
+                        <span class="form-control required-mark">
+                            @Html.RadioButtonFor(m => m.Male, true) муж&nbsp;&nbsp;&nbsp; @Html.RadioButtonFor(m => m.Male, false) жен
+                        </span>
+                        <span class="help-block with-errors"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" for="fio">ФИО</label>
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(m => m.Surname, new {@class = "form-control required-mark", @id = "surname", placeholder = "Фамилия", required = "required", data_error = "Заполните поле Фамилия"})
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(m => m.Name, new {@class = "form-control required-mark", @id = "name", placeholder = "Имя", required = "required", data_error = "Заполните поле Имя"})
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(m => m.Patronymic, new {@class = "form-control required-mark", @id = "patronymic", required = "required", placeholder = "Отчество", data_error = "Заполните поле Отчество"})
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <span class="help-block with-errors"></span>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" for="">Гражданство</label>
+                    <div class="col-lg-10">
+                        <span class="form-control required-mark">
+                            @Html.TextBoxFor(m => m.Patronymic, new { @class = "form-control required-mark", @id = "patronymic", required = "required", placeholder = "Отчество", data_error = "Заполните поле Отчество" })
+                        </span>
+                        <span class="help-block with-errors"></span>
+                    </div>
+                </div>
+            }
+            <div class="clearfix"></div>
+            <hr class="last"/>
+            <footer>
+                <div class="pull-left">
+                    <h5>
+                        2015 @if (DateTime.Now.Year > 2015)
+                             {
+                                 @String.Format("- {0}", DateTime.Now.Year)
+                             }
+                        &copy; UN1T
+                    </h5>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
+</body>
+</html>
