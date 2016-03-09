@@ -25,7 +25,7 @@ namespace Stuff.Controllers
                 topRows = 30;
             if (!page.HasValue || page < 1) page = 1;
 
-            int totalCount = 0;
+            int totalCount;
             DateTime appearDat;
             DateTime createDat;
             DateTime changeDat;

@@ -33,287 +33,285 @@
     <script src="../../Scripts/tiny.editor.min.js"></script>*@
     <link rel="stylesheet" type="text/css" href="../../Content/bootstrap-wysiwyg.css" />
 }
-
 @section PanelBody
 {
-    <div>
         <div>
-            <span class="text-danger">@TempData["error"]</span>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-lg-push-2 col-lg-push-2 col-lg-6">
-            <span class="text-danger">@Html.LabelFor(m => m, @TempData["error"])</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <div id="vacancyInfo">
-<div>                
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Должность:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.position)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Причина открытия:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.reason)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Цель:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.aim)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Руководитель:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.manager)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Наставник:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.teacher)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Отдел:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.department)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Есть ли подчиненные:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_subordinates.HasValue ? (Model.is_subordinates.Value ? "Есть" : "Нет") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Подчиненные:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.subordinates)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Ожидаемые функции:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.functions)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Взаимодействия:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.interactions)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Есть ли должностные инструкции:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_instructions.HasValue ? (Model.is_instructions.Value ? "Есть" : "Нет") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Показатели успешности:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.success_rates)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">План на испытательном сроке:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.plan_to_test)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">План после испытательного срока:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.plan_after_test)</div>
-                </div>
-                <hr>
-                <!--****************************************************************************************-->
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Место работы:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.work_place)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Режим работы:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.work_mode)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Отпуск:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.holiday)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Больничные:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.hospital)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Командировки:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.business_trip)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Сверхурочная работа:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.overtime_work)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Компенсации:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.compensations)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Испытательный срок:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.probation)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">ЗП на испытательном:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.salary_to_test)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">ЗП после испытания:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.salary_after_test)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Бонусы:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.bonuses)</div>
-                </div>
-</div>
-    <hr>
-<div>
-                <!--****************************************************************************************-->
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Пол:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.sex.HasValue ? (Model.sex.Value ? "М" : "Ж") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Возраст с:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.age_from.HasValue ? Model.age_from.Value.ToString() : "")</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Возраст по:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.age_to.HasValue ? Model.age_to.Value.ToString() : "")</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Образование:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.education)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Предыдущие работы:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.last_work)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Обязательные требования:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.requirements)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Навыки и знания:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.knowledge)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Нужна ли мебель:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_furniture.HasValue ? (Model.is_furniture.Value ? "Да" : "Нет") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Мебель:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.furniture)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Нужен ли ПК:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_pc.HasValue ? (Model.is_pc.Value ? "Да" : "Нет") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Нужен ли телефон:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_telephone.HasValue ? (Model.is_telephone.Value ? "Да" : "Нет") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Нужен ли "Эталон":</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_ethalon.HasValue ? (Model.is_ethalon.Value ? "Да" : "Нет") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дополнительные пожелания:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.suggestions)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Сроки выхода на рабору:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.appearance.HasValue ? Model.appearance.Value.ToString("d") : ""))</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата создания:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.create_datetime.HasValue ? Model.create_datetime.Value.ToString("d") : "")</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Дата последного редактирования:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.last_change_datetime.HasValue ? Model.last_change_datetime.Value.ToString("d") : "")</div>
-                </div>
-                <hr>
-                <!--****************************************************************************************-->
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Контактное лицо по собеседованию:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.contact_person)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Руководитель принимающий окончательное решение:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.responsible_person)</div>
-                </div>
-                <div class="row pad-t-sm-sm">
-                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Статус:</div>
-                    <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.status)</div>
-                </div>
-</div>
+            <div>
+                <span class="text-danger">@TempData["error"]</span>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="nomargin">
-                        История
-                    </h4>
+        <div class="form-group">
+            <div class="col-lg-push-2 col-lg-push-2 col-lg-6">
+                <span class="text-danger">@Html.LabelFor(m => m, @TempData["error"])</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div id="vacancyInfo">
+                    <div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Должность:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.position)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Причина открытия:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.reason)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Цель:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm bold">@Html.LabelFor(m => m, Model.aim)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Руководитель:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.manager)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Наставник:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.teacher)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Отдел:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.department)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Есть ли подчиненные:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_subordinates.HasValue ? (Model.is_subordinates.Value ? "Есть" : "Нет") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Подчиненные:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.subordinates)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Ожидаемые функции:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.functions)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Взаимодействия:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.interactions)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Есть ли должностные инструкции:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_instructions.HasValue ? (Model.is_instructions.Value ? "Есть" : "Нет") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Показатели успешности:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.success_rates)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">План на испытательном сроке:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.plan_to_test)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">План после испытательного срока:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.plan_after_test)</div>
+                        </div>
+                        <hr>
+                        <!--****************************************************************************************-->
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Место работы:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.work_place)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Режим работы:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.work_mode)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Отпуск:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.holiday)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Больничные:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.hospital)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Командировки:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.business_trip)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Сверхурочная работа:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.overtime_work)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Компенсации:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.compensations)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Испытательный срок:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.probation)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">ЗП на испытательном:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.salary_to_test)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">ЗП после испытания:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.salary_after_test)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Бонусы:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.bonuses)</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div>
+                        <!--****************************************************************************************-->
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Пол:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.sex.HasValue ? (Model.sex.Value ? "М" : "Ж") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Возраст с:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.age_from.HasValue ? Model.age_from.Value.ToString() : "")</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Возраст по:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.age_to.HasValue ? Model.age_to.Value.ToString() : "")</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Образование:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.education)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Предыдущие работы:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.last_work)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Обязательные требования:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.requirements)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Навыки и знания:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.knowledge)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Нужна ли мебель:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_furniture.HasValue ? (Model.is_furniture.Value ? "Да" : "Нет") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Мебель:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.furniture)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Нужен ли ПК:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_pc.HasValue ? (Model.is_pc.Value ? "Да" : "Нет") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Нужен ли телефон:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_telephone.HasValue ? (Model.is_telephone.Value ? "Да" : "Нет") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Нужен ли "Эталон":</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.is_ethalon.HasValue ? (Model.is_ethalon.Value ? "Да" : "Нет") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Дополнительные пожелания:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.suggestions)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Сроки выхода на рабору:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, (Model.appearance.HasValue ? Model.appearance.Value.ToString("d") : ""))</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Дата создания:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.create_datetime.HasValue ? Model.create_datetime.Value.ToString("d") : "")</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Дата последного редактирования:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.last_change_datetime.HasValue ? Model.last_change_datetime.Value.ToString("d") : "")</div>
+                        </div>
+                        <hr>
+                        <!--****************************************************************************************-->
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Контактное лицо по собеседованию:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.contact_person)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Руководитель принимающий окончательное решение:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.responsible_person)</div>
+                        </div>
+                        <div class="row pad-t-sm-sm">
+                            <div class="col-lg-3 col-sm-12 text-center-sm text-right-lg">Статус:</div>
+                            <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.status)</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body" id="history">
+            </div>
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="nomargin">
+                            История
+                        </h4>
+                    </div>
+                    <div class="panel-body" id="history">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
 
-@section scripts
-{
-    <script src="../../Scripts/bootstrap-wysiwyg.js"></script>
-    <script type="text/javascript">
-        $(function() {        
-            $('#newCoordination').click(function() {
-                var $this = $(this);
-                showSpinnerAppendAndDisable($this);
-                if (!confirm('Вы уверены что хотите начать согласование?')) {
-                     hideSpinnerAndEnabled($this);
-                     return;
-                }
-                if (!Boolean("@Model.IsCoordinationStarted")) {
-                    alert('Ошибка при инициировании согласования. Инициация согласования не выполнена!');
-                    hideSpinnerAndEnabled($this);
-                    return;
-                }
-                $.ajax({
-                    url: '@Url.Action("RequestNewCoordination")',
-                    method: 'POST',
-                    data: { id: @Model.id},
-                    success: function() {
+    @section scripts
+    {
+        <script src="../../Scripts/bootstrap-wysiwyg.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('#newCoordination').click(function() {
+                    var $this = $(this);
+                    showSpinnerAppendAndDisable($this);
+                    if (!confirm('Вы уверены что хотите начать согласование?')) {
                         hideSpinnerAndEnabled($this);
-                        window.location = '@Url.Action("RequestCard")?id=@Model.id';
-                        //window.location.reload();
-                    },
-                    error: function() {
+                        return;
+                    }
+                    if (!Boolean("@Model.IsCoordinationStarted")) {
                         alert('Ошибка при инициировании согласования. Инициация согласования не выполнена!');
                         hideSpinnerAndEnabled($this);
+                        return;
                     }
+                    $.ajax({
+                        url: '@Url.Action("RequestNewCoordination")',
+                        method: 'POST',
+                        data: { id: @Model.id },
+                        success: function() {
+                            hideSpinnerAndEnabled($this);
+                            window.location = '@Url.Action("RequestCard")?id=@Model.id';
+                            //window.location.reload();
+                        },
+                        error: function() {
+                            alert('Ошибка при инициировании согласования. Инициация согласования не выполнена!');
+                            hideSpinnerAndEnabled($this);
+                        }
+                    });
                 });
-            });
 
-            $('#restartCoordination').click(function() {
-                var $this = $(this);
-                showSpinnerAppendAndDisable($this);
-                if (!confirm('Вы уверены что хотите возобновить согласование?')) {
-                    hideSpinnerAndEnabled($this);
-                    return;
-                }
-                if (!Boolean("@Model.IsCoordinationPaused")) {
-                    alert('Ошибка при перезапуске согласования. Перезапуск согласования не выполнен!');
-                    hideSpinnerAndEnabled($this);
-                    return;
-                }
-                $.ajax({
-                    url: '@Url.Action("RequestRestartCoordination")',
-                    method: 'POST',
-                    data: { id: @Model.id},
-                    success: function() {
+                $('#restartCoordination').click(function() {
+                    var $this = $(this);
+                    showSpinnerAppendAndDisable($this);
+                    if (!confirm('Вы уверены что хотите возобновить согласование?')) {
                         hideSpinnerAndEnabled($this);
-                        window.location = '@Url.Action("RequestCard")?id=@Model.id';
-                        //window.location.reload();
-                    },
-                    error: function() {
+                        return;
+                    }
+                    if (!Boolean("@Model.IsCoordinationPaused")) {
                         alert('Ошибка при перезапуске согласования. Перезапуск согласования не выполнен!');
                         hideSpinnerAndEnabled($this);
+                        return;
                     }
+                    $.ajax({
+                        url: '@Url.Action("RequestRestartCoordination")',
+                        method: 'POST',
+                        data: { id: @Model.id },
+                        success: function() {
+                            hideSpinnerAndEnabled($this);
+                            window.location = '@Url.Action("RequestCard")?id=@Model.id';
+                            //window.location.reload();
+                        },
+                        error: function() {
+                            alert('Ошибка при перезапуске согласования. Перезапуск согласования не выполнен!');
+                             hideSpinnerAndEnabled($this);
+                        }
+                    });
                 });
+
+
             });
-
-
-        });
-    </script>
-}
-);
+        </script>
+    }
