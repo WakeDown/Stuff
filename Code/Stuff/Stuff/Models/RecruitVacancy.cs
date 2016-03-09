@@ -53,6 +53,7 @@ namespace Stuff.Models
         public string CityName { get; set; }
         public int IdBranchOffice { get; set; }
         public string BranchOfficeName { get; set; }
+        public string Comment { get; set; }
 
         public RecruitVacancy()
         {
@@ -115,6 +116,7 @@ namespace Stuff.Models
             CityName = Db.DbHelper.GetValueString(row, "city_name");
             IdBranchOffice = Db.DbHelper.GetValueIntOrDefault(row, "id_branch_office");
             BranchOfficeName = Db.DbHelper.GetValueString(row, "branch_office_name");
+            Comment = Db.DbHelper.GetValueString(row, "comment");
         }
 
         public void Create(string creatorSid)
@@ -134,8 +136,9 @@ namespace Stuff.Models
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pIdCity = new SqlParameter() { ParameterName = "id_city", SqlValue = IdCity, SqlDbType = SqlDbType.Int };
             SqlParameter pIdBranchOffice = new SqlParameter() { ParameterName = "id_branch_office", SqlValue = IdBranchOffice, SqlDbType = SqlDbType.Int };
+            SqlParameter pComment = new SqlParameter() { ParameterName = "comment", SqlValue = Comment, SqlDbType = SqlDbType.NVarChar };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity, pIdBranchOffice);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity, pIdBranchOffice, pComment);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
@@ -204,12 +207,13 @@ namespace Stuff.Models
             var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_close", pId, pDeleterSid);
         }
 
-        public static void Change(string creatorSid, int id, string personalManagerSid)
+        public static void Change(string creatorSid, int id, string personalManagerSid, string comment)
         {
             SqlParameter pId = new SqlParameter() { ParameterName = "id", SqlValue = id, SqlDbType = SqlDbType.Int };
             SqlParameter ppersonalManagerSid = new SqlParameter() { ParameterName = "personal_manager_sid", SqlValue = personalManagerSid, SqlDbType = SqlDbType.VarChar };
             SqlParameter pCreatorAdSid = new SqlParameter() { ParameterName = "creator_sid", SqlValue = creatorSid, SqlDbType = SqlDbType.VarChar };
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_change", pId, pCreatorAdSid, ppersonalManagerSid);
+            SqlParameter pComment = new SqlParameter() { ParameterName = "comment", SqlValue = comment, SqlDbType = SqlDbType.NVarChar };
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_change", pId, pCreatorAdSid, ppersonalManagerSid, pComment);
         }
 
         public static IEnumerable<HistoryItem> GetHistory(out int totalCount, int id, bool fullList = false)

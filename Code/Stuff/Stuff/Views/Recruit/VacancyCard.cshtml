@@ -87,6 +87,10 @@
                     <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Причина возникновения:</div>
                     <div class="col-lg-8 col-sm-12 text-center-sm">@Html.LabelFor(m => m, Model.CauseName)</div>
                 </div>
+                <div class="row pad-t-sm-sm">
+                    <div class="col-lg-4 col-sm-12 text-center-sm text-right-lg">Комментарий:</div>
+                    <div class="col-lg-8 col-sm-12 text-center-sm" id="commentContainer">@Html.LabelFor(m => m, Model.Comment)</div>
+                </div>
             </div>
         </div>
         <div class="col-lg-4">
@@ -838,6 +842,12 @@
                         alert('Ошибка при редактировании!');
                     }
                 });
+
+                var $contComment = $('#commentContainer');
+                $contComment.empty();
+                var $textarea = $('<textarea id="comment" class="input-sm form-control" rows="2"></textarea>');
+                $contComment.append($textarea);
+                $textarea.val('@Html.Raw(Model.Comment)');
             });
 
             $('#delete').click(function() {
@@ -886,10 +896,11 @@
             var $this = $(this);
             showSpinnerAppendAndDisable($this);
             var pesrManager = $('#personalManager').val();
+            var comment = $('#comment').val();
             $.ajax({
                 url: '@Url.Action("ChangeVacancy")',
                 method: 'POST',
-                data: { id: @Model.Id, personalManagerSid: pesrManager },
+                data: { id: @Model.Id, personalManagerSid: pesrManager, comment: comment },
                 success: function() {
                     window.location.reload();
                 },

@@ -110,7 +110,14 @@
         <div class="form-group">
             <label class="col-lg-2 control-label" for="claimEndDate">Дата окончания Заявка</label>
             <div class="col-lg-2">
-                @Html.TextBoxFor(m => m.ClaimEndDate, new { @class = "form-control text-right required-mark", @id = "claimEndDate", required = "required", data_mask = "00.00.0000" })
+                @Html.TextBoxFor(m => m.ClaimEndDate, new {@class = "form-control text-right required-mark", @id = "claimEndDate", required = "required", data_mask = "00.00.0000"})
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="comment">Комментарий</label>
+            <div class="col-lg-5">
+                @Html.TextAreaFor(m => m.Comment, new { @class = "form-control", rows="3" })
                 <span class="help-block with-errors"></span>
             </div>
         </div>
