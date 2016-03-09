@@ -12,6 +12,7 @@
     {
         pageCount++;
     }
+    var stateCount = RecruitSelection.GetStateList().Count();
 }
 
 @*<p>
@@ -94,7 +95,7 @@
                 <input id="pmgr" class="form-control input-xs" placeholder="Менеджер" value="@Request.QueryString["pmgr"]"/>
             </th>
             <th>
-                <input id="stt" class="form-control input-xs" placeholder="Статус" value="@Request.QueryString["stt"]" />
+                @*<input id="stt" class="form-control input-xs" placeholder="Статус" value="@Request.QueryString["stt"]" />*@
             </th>
             @*<th>
                 <input id="dtcr" class="form-control input-xs" placeholder="Добавлена" value="@Request.QueryString["dtcr"]"/>
@@ -138,10 +139,14 @@
                      </td>
                      <td>@rv.PersonalManagerName</td>
                      <td>
+                         <strong>@rv.TopSelectionStateName</strong>
+                         <div name="topSelection" slid="@rv.TopSelectionId"></div>
+                     </td>
+                     @*<td>
                          <strong>@rv.StateName</strong>
                          <div><small class="text-nowrap">@(rv.StateChangeDate.HasValue ? rv.StateChangeDate.Value.ToString("dd.MM.yyyy") : null) - @rv.StateChangerName</small>
                          </div>
-                     </td>
+                     </td>*@
                      @*<td><strong>Добавлена</strong>
                         <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
                      </td>*@
@@ -165,7 +170,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
+        $(function () {
+            loadTopSelections();
             $('tr[vacid]').click(function() {
                 var id = $(this).attr('vacid');
                 window.location = '@Url.Action("VacancyCard")?id=' + id;
@@ -183,6 +189,42 @@
 
             //loadStateFilterList();
         });
+
+        function loadTopSelections() {
+            var $conts = $('[name=topSelection]');
+            for (var i = 0; i < $conts.length; i++) {
+                var slid = $($conts[i]).attr('slid');
+                (function(i, slid) {
+                    $.ajax({
+                        url: '@Url.Action("GetTopSelection")',
+                        method: 'POST',
+                        data: {slid:slid},
+                        success: function (data) {
+                            var $cont = $('[name=topSelection][slid=' + slid+']');
+                            $cont.empty();
+                            $cont.append(getstateIndicate(data.FullStateCount, data.StateIsCancel));
+                            //console.log(data);
+                        },
+                        error: function () {
+                        }
+                    });
+                }(i, slid)
+                );
+            }
+
+        }
+
+        function getstateIndicate(curStateNum, isCancel) {
+            var stateCount = @stateCount;
+            var result = '<div class="stateIndicateContainer">';
+
+            for (var i = 1; i <= stateCount; i++) {
+                result += '<div class="state-indicate-item ' + (i <= curStateNum ? 'full' : 'empty') + '' + (isCancel == true && i == curStateNum ? ' cancel' : '') + '">&nbsp;&nbsp;</div>';
+            }
+            result += '</div>';
+
+            return result;
+        }
 
         function loadStateFilterList() {
             var $cont = $('#stateFilterList');
@@ -202,9 +244,9 @@
                             var elem = '<li><a name="stateFilterItem" class="btn state-filter-item' + (stArr.indexOf(item.Id) > -1 ? ' selected' : '') + '" stid="' + item.Id + '">' + item.Name + ' <span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge">' + item.Count + '</span></a></li>';
                             $ul.append(elem);
                         }
-                        
-                            //var li = '<li><a name="stateGroupFilterItemAll" value="all" class="btn btn-block state-group-filter-item text-sm" style="background-color: #CFD8DC; color: #607D8B; border-color: #37474F; border-width: 1px; border-style: solid;"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge" style="background-color:#607D8B">' + totalCount + '</span>&nbsp;Все&nbsp;</a></div>';
-                            //$ul.append(li);
+
+                        //var li = '<li><a name="stateGroupFilterItemAll" value="all" class="btn btn-block state-group-filter-item text-sm" style="background-color: #CFD8DC; color: #607D8B; border-color: #37474F; border-width: 1px; border-style: solid;"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge" style="background-color:#607D8B">' + totalCount + '</span>&nbsp;Все&nbsp;</a></div>';
+                        //$ul.append(li);
                         $('[name="stateFilterItem"]').click(function () {
                             $(this).toggleClass('selected');
                             search();
@@ -232,8 +274,8 @@
             //url = updateQueryStringParameter(url, 'dtcr', dtcr);
             var bro = $('#bro').val();
             url = updateQueryStringParameter(url, 'bro', bro);
-            var stt = $('#stt').val();
-            url = updateQueryStringParameter(url, 'stt', stt);
+            //var stt = $('#stt').val();
+            //url = updateQueryStringParameter(url, 'stt', stt);
             var aon = $('[name=activeOnly]:checked').val();
             url = updateQueryStringParameter(url, 'aon', aon);
             //var $grpStateElem = $('[name="stateFilterItem"].selected');
@@ -245,7 +287,7 @@
             //        state = state + val;
             //    }
             //}
-            
+
             //url = updateQueryStringParameter(url, 'state', state);
 
             window.location = url;

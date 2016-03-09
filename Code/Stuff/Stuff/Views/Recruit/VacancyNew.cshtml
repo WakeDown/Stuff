@@ -19,6 +19,19 @@
     @using (Html.BeginForm("VacancyNew", "Recruit", FormMethod.Post, new { @id = "posForm", @class = "form-horizontal", role = "form" }))
     {
         <div class="form-group">
+            <label class="col-lg-2 control-label" for="vacancyType">Тип заявки</label>
+            <div class="col-lg-5">
+                <div class="form-control required-mark">
+                    @foreach (RecruitVacancyType type in RecruitVacancyType.GetList())
+                    {
+                        @Html.RadioButtonFor(m => m.TypeId, type.Id, new { required = "required" })
+                        @:&nbsp;@type.Name
+                    }
+                </div>
+                <span class="help-block with-errors"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-lg-2 control-label" for="cause">Причина возникновения</label>
             <div class="col-lg-5">
                 <div class="form-control required-mark">

@@ -441,6 +441,14 @@ namespace Stuff.Controllers
             return Json(list);
         }
 
+        [HttpPost]
+        public JsonResult GetTopSelection(int slid)
+        {
+            if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
+            var selection = new RecruitSelection(slid);
+            return Json(selection);
+        }
+
         [HttpGet]
         public FileResult GetCandidateFile(string sid)
         {

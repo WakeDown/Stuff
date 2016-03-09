@@ -54,6 +54,10 @@ namespace Stuff.Models
         public int IdBranchOffice { get; set; }
         public string BranchOfficeName { get; set; }
         public string Comment { get; set; }
+        public int TypeId { get; set; }
+        public string TypeName { get; set; }
+        public string TopSelectionStateName { get; set; }
+        public int? TopSelectionId { get; set; }
 
         public RecruitVacancy()
         {
@@ -117,6 +121,10 @@ namespace Stuff.Models
             IdBranchOffice = Db.DbHelper.GetValueIntOrDefault(row, "id_branch_office");
             BranchOfficeName = Db.DbHelper.GetValueString(row, "branch_office_name");
             Comment = Db.DbHelper.GetValueString(row, "comment");
+            TypeId = Db.DbHelper.GetValueIntOrDefault(row, "id_vacancy_type");
+            TypeName = Db.DbHelper.GetValueString(row, "vacancy_type_name");
+            TopSelectionStateName = Db.DbHelper.GetValueString(row, "top_selection_state_name");
+            TopSelectionId = Db.DbHelper.GetValueIntOrDefault(row, "top_selection_id");
         }
 
         public void Create(string creatorSid)
@@ -137,8 +145,9 @@ namespace Stuff.Models
             SqlParameter pIdCity = new SqlParameter() { ParameterName = "id_city", SqlValue = IdCity, SqlDbType = SqlDbType.Int };
             SqlParameter pIdBranchOffice = new SqlParameter() { ParameterName = "id_branch_office", SqlValue = IdBranchOffice, SqlDbType = SqlDbType.Int };
             SqlParameter pComment = new SqlParameter() { ParameterName = "comment", SqlValue = Comment, SqlDbType = SqlDbType.NVarChar };
+            SqlParameter pTypeId = new SqlParameter() { ParameterName = "id_vacancy_type", SqlValue = TypeId, SqlDbType = SqlDbType.Int };
 
-            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity, pIdBranchOffice, pComment);
+            var dt = Db.Stuff.ExecuteQueryStoredProcedure("recruit_vacancy_create", pAuthorSid, pIdPosition, pIdDepartment, pChiefSid, pIdCause, pMatcherSid, pPersonalManagerSid, pDeadlineDate, pCreatorAdSid, pOrderEndDate, pClaimEndDate, pIdCity, pIdBranchOffice, pComment, pTypeId);
             int id = 0;
             if (dt.Rows.Count > 0)
             {
@@ -266,5 +275,7 @@ namespace Stuff.Models
             }
             return lst;
         }
+
+        
     }
 }

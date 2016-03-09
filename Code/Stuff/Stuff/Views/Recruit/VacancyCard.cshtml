@@ -11,8 +11,8 @@
 
 @section PanelHead
 {
-    Вакансия №@Model.Id
-
+    Вакансия №@Model.Id <small>@Model.TypeName</small>
+    
 @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
 {
     if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler) && Model.StateIsActive)
