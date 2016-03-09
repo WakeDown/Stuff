@@ -60,7 +60,7 @@ namespace Stuff.Controllers
             {
                 if (CurUser.Is(AdGroup.RecruitManager))
                     momy = 1;
-                        else if (CurUser.HasAccess(AdGroup.RecruitControler))
+                        else 
                     momy = -1;
 
                     return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon, bro, momy });
