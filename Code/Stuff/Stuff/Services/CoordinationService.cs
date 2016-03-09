@@ -29,8 +29,7 @@ namespace Stuff.Services
             {
                 if (string.IsNullOrWhiteSpace(PrivateStuffConnectionString))
                     PrivateStuffConnectionString =
-                        ConfigurationManager.ConnectionStrings["StuffConnectionString"].ConnectionString +
-                        ";Password=sa";
+                        ConfigurationManager.ConnectionStrings["StuffConnectionString"].ConnectionString/* + ";Password=sa"*/;
 
                 return PrivateStuffConnectionString;
             }
@@ -44,8 +43,7 @@ namespace Stuff.Services
             {
                 if (string.IsNullOrWhiteSpace(PrivateCoordinationConnectionString))
                     PrivateCoordinationConnectionString =
-                        ConfigurationManager.ConnectionStrings["CoordinationDbContext"].ConnectionString +
-                        ";Password=sa";
+                        ConfigurationManager.ConnectionStrings["CoordinationDbContext"].ConnectionString/* + ";Password=sa"*/;
 
                 return PrivateCoordinationConnectionString;
             }

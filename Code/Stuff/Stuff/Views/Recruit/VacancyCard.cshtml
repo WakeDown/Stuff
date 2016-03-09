@@ -15,7 +15,7 @@
 
 @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
 {
-    if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager) && Model.StateIsActive)
+    if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler) && Model.StateIsActive)
      {
          <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
          <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
@@ -440,7 +440,7 @@
                 '<td><a target="_blank" href="@Url.Action("CandidateCard")?id=' + item.Candidate.Id + '">' + item.Candidate.Surname + ' ' + item.Candidate.Name + ' ' + (item.Candidate.Patronymic == null ? '' : item.Candidate.Patronymic) + '</a>' +
                 (item.CameTypeName == null ? '' : '<br /><small>' + item.CameTypeName + '</small>') +
                 @*(item.Candidate.FileSid == null || item.Candidate.FileSid == '' ? '' : '<br />' +
-                    '<a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>')+*@ 
+                    '<a class="text-danger btn-sm" href="@Url.Action("GetCandidateFile")?sid=' + item.Candidate.FileSid + '" target="_blank">файл резюме</a>')+*@
                     '<div id="sel-files-' + item.Id + '"></div>' +
                 '</td>' +
                 '<td>' + (item.Candidate.MaleStr == null ? '' : item.Candidate.MaleStr) + '</td>' +
@@ -469,7 +469,7 @@
                         '<button name="changeVac" slid="' + item.Id + '" class="btn btn-danger btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">На другую вакансию</button>'
                         //+ '<button name="create-link" class="btn btn-info btn-sm btn-block pull-right" slid="' + item.Id + '" eml="' + item.Candidate.Email + '">Приглашение</button>'
                         : '') +
-                    (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createCreator" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '')
+                    (item.StateIsAccept == true ? '<a href="@Url.Action("New", "Employee")?sex=' + item.Candidate.Male + '&sur=' + item.Candidate.Surname + '&nam=' + item.Candidate.Name + '&pat=' + item.Candidate.Patronymic + '&bdt=' + item.Candidate.BirthDateQueStr + '&cit=' + item.Vacancy.IdCity + '" name="createEmployee" slid="' + item.Id + '" curvid="@Model.Id" class="btn btn-success btn-lg btn-block">В новобранца</a>' : '')
                      +
                     (item.StateIsAccept == false && item.StateIsCancel == true ?
                     '<button name="restoreSel" slid="' + item.Id + '" class="btn btn-success btn-sm btn-block" cname="' + item.Candidate.DisplayName + '">Восстановить</button>'
@@ -617,7 +617,29 @@
             var slid = $modal.attr('slid');
             var descr = $('#stateComment').val();
 
-            if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите принять утвердить данного кандидата?')) return;
+            if (!confirm('Вы уверены что хотите утвердить данного кандидата?')) return;
+
+            $.ajax({
+                url: '@Url.Action("SelectionSetChiefAcceptState")',
+                method: 'POST',
+                data: { id: slid, descr: descr },
+                success: function(data) {
+                    var $row = $('#sel-' + slid);
+                    $row.replaceWith(getCandidateListRow(data));
+                    $modal.modal('hide');
+                    hideSpinnerAndEnabled($this);
+                    //var $row = $('#sel-' + slid);
+                    //$row.replaceWith(getCandidateListRow(data));
+                    //$modal.modal('hide');
+
+                },
+                error: function() {
+                    alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
+                    hideSpinnerAndEnabled($this);
+                }
+            });
+
+            @*if (!confirm('После утверждения кандидата остальным кандидатам будет присвоен статус Отклонено и вакансия будет переведена в статус Завершено! Вы уверены что хотите утвердить данного кандидата?')) return;
 
 
             $.ajax({
@@ -635,7 +657,7 @@
                     alert('Ошибка при именении статуса кандидата! Возможно изменения не были сохранены!');
                     hideSpinnerAndEnabled($this);
                 }
-            });
+            });*@
         }
 
         function selectionSetCancelState(e) {

@@ -76,18 +76,18 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-compass fa-fw"></i>Подбор персонала <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href='@Url.Action("Index", "Recruit")'>Вакансии</a></li>
-                                @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
-                                {
-                                    <li><a href='@Url.Action("Candidates", "Recruit")'>Кандидаты</a></li>
-                                }
-                                @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
-                                {
-                                    <li><a href='@Url.Action("Requests", "Recruit")'>Заявки</a></li>
-                                }
-                                @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
-                                {
-                                    <li><a href='@Url.Action("Coordinations", "Recruit")'>Согласования</a></li>
-                                }
+@if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+{
+    <li><a href='@Url.Action("Candidates", "Recruit")'>Кандидаты</a></li>
+} 
+@if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+{
+    <li><a href='@Url.Action("Requests", "Recruit")'>Заявки</a></li>
+}
+@if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
+{
+    <li><a href='@Url.Action("Coordinations", "Recruit")'>Согласования</a></li>
+}
                             </ul>
                         </li>
                    
@@ -155,15 +155,15 @@
                             </ul>
                         </li>
                     }
-                    @if (ViewBag.CurUser.HasAccess(AdGroup.SuperAdmin))
-                    {
-                        <li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-book fa-fw"></i>Отчеты <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href='@Url.Action("GetItBudgetReport", "Report")' target="_blank">IT бюджет</a></li>
-                            </ul>
-                        </li>
-                    }
+@if (ViewBag.CurUser.HasAccess(AdGroup.SuperAdmin))
+{
+    <li>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-book fa-fw"></i>Отчеты <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href='@Url.Action("GetItBudgetReport", "Report")' target="_blank">IT бюджет</a></li>
+        </ul>
+    </li>
+}
                     @*<li>
                         <a href="@Url.Action("My", "Document")"><i class="fa fa-book fa-fw"></i>Мои документы</a>
                     </li>*@
@@ -233,16 +233,16 @@
 
     @*@Scripts.Render("~/bundles/fuelux")*@
     @RenderSection("scripts", required: false)
-<script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function() {
         $('#userName').click(function() {
-            $.ajax({
-                url: '@Url.Action("GetServerUserName", "Employee")',
-                type: 'POST',
+                $.ajax({
+                    url: '@Url.Action("GetServerUserName", "Employee")',
+                    type: 'POST',
                 success: function(data) { alert(data.sid) }
+                });
             });
         });
-    });
 </script>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -252,7 +252,7 @@
 
     ga('create', 'UA-72701828-2', 'auto');
     ga('send', 'pageview');
-</script>
+    </script>
 </body>
 
 </html>

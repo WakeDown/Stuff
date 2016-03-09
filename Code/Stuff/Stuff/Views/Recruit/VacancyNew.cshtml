@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = "Новая вакансия";
     Layout = "~/Views/Shared/_Editor.cshtml";
-    //var empList =Employee.GetCreatorListSid();
+    //var empList =Employee.GetEmployeeListSid();
 }
 
 @section PanelHead
@@ -26,7 +26,7 @@
                     {
                         @Html.RadioButtonFor(m => m.IdCause, cause.Id, new { required = "required" })
                         @:&nbsp;@cause.Name
-                    }
+                }
                 </div>
                 <span class="help-block with-errors"></span>
             </div>
