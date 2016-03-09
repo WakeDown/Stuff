@@ -310,7 +310,23 @@
                         }
                     });
                 });
-
+                $('#delete').click(function() {
+                    var $this = $(this);
+                    showSpinnerAppendAndDisable($this);
+                    if (!confirm('Вы уверены что хотите удалить вакансию?')) return;
+                    $.ajax({
+                        url: '@Url.Action("RequestDelete")',
+                        method: 'POST',
+                        data: { id: @Model.id },
+                        success: function() {
+                            window.location = '@Url.Action("Requests")';
+                        },
+                        error: function() {
+                            alert('Ошибка при удалении. Удаление не выполнено!');
+                            hideSpinnerAndEnabled($this);
+                        }
+                    });
+                });
 
             });
         </script>

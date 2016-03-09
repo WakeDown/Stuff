@@ -116,7 +116,12 @@ namespace Stuff.Services
         }
         public static bool DeleteRequest(int id, string deletorSid)
         {
-            return true;
+            using (StuffContext stuffDB = new StuffContext(StuffConnectionString))
+            {
+                stuffDB.requests.First(it => it.Enabled && it.Id == id).Enabled = false;
+                stuffDB.SaveIfNoError();
+                return true;
+            }
         }
         public static void CreateNewCoordination(Models.CoordinationDocumentTypes type, int docId, string creatorSid)
         {
