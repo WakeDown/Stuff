@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.EntitySql;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -16,7 +17,7 @@ namespace Stuff.Controllers
     public class RecruitController : BaseController
     {
         // GET: Recruit
-        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, int? aon, string bro)
+        public ActionResult Index(int? topRows, int? page, string vid, string vnm,string dtdl, string pmgr ,string dtcr, string stt, int? aon, string bro, int? momy)
         {
             bool? activeOnly = null;
             if (aon.HasValue)
@@ -36,7 +37,33 @@ namespace Stuff.Controllers
             }
             else
             {
-                return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon = 1, bro });
+                return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon = 1, bro, momy });
+            }
+
+            bool? managerOnlyMy = null;
+            if (momy.HasValue)
+            {
+                if (momy.Value == 1)
+                {
+                    managerOnlyMy = true;
+                }
+                else if (momy.Value == 0)
+                {
+                    managerOnlyMy = false;
+                }
+                else
+                {
+                    managerOnlyMy = null;
+                }
+            }
+            else
+            {
+                if (CurUser.Is(AdGroup.RecruitManager))
+                    momy = 1;
+                        else if (CurUser.HasAccess(AdGroup.RecruitControler))
+                    momy = -1;
+
+                    return RedirectToAction("Index", new { topRows, page, vid, vnm, dtdl, pmgr, dtcr, stt, aon, bro, momy });
             }
 
             bool userIsViewer = !CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager);
@@ -51,7 +78,7 @@ namespace Stuff.Controllers
             int.TryParse(vid, out id);
             string persManagerSid = CurUser.Is(AdGroup.RecruitManager) ? CurUser.Sid : null;
 
-            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid, viewerSid, bro);
+            var list = RecruitVacancy.GetList(out totalCount, topRows, page, id, vnm, dtdl, pmgr, dtcr, stt, activeOnly, persManagerSid, viewerSid, bro, managerOnlyMy, CurUser.Sid);
             ViewBag.TotalCount = totalCount;
             return View(list);
         }

@@ -57,8 +57,18 @@
     </div>
     <div class="col-lg-5 col-sm-12 col-xs-12">
         <div id="stateFilterList"></div>
-        <input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("-1") ? "checked" : String.Empty) value="-1" />&nbsp;все&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("1") ? "checked" : String.Empty ) value="1" />&nbsp;только активные&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("0") ? "checked" : String.Empty ) value="0" />&nbsp;только неактивные
-        @*<input type="checkbox" id="activeOnly" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty) />&nbsp;только активные*@
+        <div>
+            <strong>Статус: </strong> 
+            <input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("-1") ? "checked" : String.Empty) value="-1"/>&nbsp;все&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("1") ? "checked" : String.Empty ) value="1"/>&nbsp;только активные&nbsp;<input name="activeOnly" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("0") ? "checked" : String.Empty ) value="0"/>&nbsp;только неактивные
+            @*<input type="checkbox" id="activeOnly" @(!String.IsNullOrEmpty(Request.QueryString["aon"]) && Request.QueryString["aon"].Equals("true") ? "checked" : String.Empty) />&nbsp;только активные*@
+        </div>
+        @if (ViewBag.CurUser.Is(AdGroup.RecruitManager))
+        {
+            <div>
+                <strong>Менеджер: </strong> 
+                <input name="managerOnlyMy" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["momy"]) && Request.QueryString["momy"].Equals("-1") ? "checked" : String.Empty) value="-1"/>&nbsp;все&nbsp;<input name="managerOnlyMy" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["momy"]) && Request.QueryString["momy"].Equals("1") ? "checked" : String.Empty ) value="1"/>&nbsp;только мои&nbsp;<input name="managerOnlyMy" type="radio" @(!String.IsNullOrEmpty(Request.QueryString["momy"]) && Request.QueryString["momy"].Equals("0") ? "checked" : String.Empty ) value="0"/>&nbsp;только чужие
+            </div>
+        }
     </div>
     <div class="col-lg-2 col-sm-6 col-xs-6">
         <div>
@@ -186,7 +196,7 @@
             });
 
             $('[name="activeOnly"]').click(search);
-
+            $('[name="managerOnlyMy"]').click(search);
             //loadStateFilterList();
         });
 
@@ -278,6 +288,14 @@
             //url = updateQueryStringParameter(url, 'stt', stt);
             var aon = $('[name=activeOnly]:checked').val();
             url = updateQueryStringParameter(url, 'aon', aon);
+
+            @if (ViewBag.CurUser.Is(AdGroup.RecruitManager))
+            {
+                <text>
+            var momy = $('[name=managerOnlyMy]:checked').val();
+            url = updateQueryStringParameter(url, 'momy', momy);
+            </text>
+        }
             //var $grpStateElem = $('[name="stateFilterItem"].selected');
             //var state = '';
             //if ($grpStateElem.length > 0) {

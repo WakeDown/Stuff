@@ -55,7 +55,7 @@ namespace Stuff.Models
 
         public static SelectList GetSelectionList()
         {
-            return new SelectList(Vendor.GetList(), "Id", "Name");
+            return new SelectList(Vendor.GetList().OrderBy(x=>x.Name), "Id", "Name");
         }
     }
 }
