@@ -315,7 +315,7 @@ namespace Stuff.Controllers
         [HttpPost]
         public JsonResult ChangeVacancy(int id, string personalManagerSid, string comment)
         {
-            if (!CurUser.HasAccess(AdGroup.RecruitControler)) return null;
+            if (!CurUser.HasAccess(AdGroup.RecruitControler,AdGroup.RecruitManager)) return null;
             RecruitVacancy.Change(CurUser.Sid, id, personalManagerSid, comment);
 
             return Json(new {});
