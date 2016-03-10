@@ -35,8 +35,8 @@ namespace Stuff.Controllers
             DateTime changeDat;
             Expression<Func<request, bool>> filter = it => it.Enabled;
 
-            string OdataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
-            Uri uri = new Uri(String.Format("{0}/Employee/GetSubordinatesSimple?sid={1}", OdataServiceUri, CurUser.Sid));
+            string odataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
+            Uri uri = new Uri(String.Format("{0}/Employee/GetSubordinatesSimple?sid={1}", odataServiceUri, CurUser.Sid));
             string jsonString = DbModel.GetJson(uri);
             var subordinatesList = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<String,String>>>(jsonString).Select(it=>it.Key).ToList();
             filter = PredicateExtensions.And(filter, it => it.SidCreator == CurUser.Sid || subordinatesList.Contains(it.SidCreator));
@@ -184,8 +184,8 @@ namespace Stuff.Controllers
             DateTime changeDat;
             Expression<Func<WfwDocumentExecution, bool>> filter = it => it.Enabled;
 
-            string OdataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
-            Uri uri = new Uri(String.Format("{0}/Employee/GetSubordinatesSimple?sid={1}", OdataServiceUri, CurUser.Sid));
+            string odataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
+            Uri uri = new Uri(String.Format("{0}/Employee/GetSubordinatesSimple?sid={1}", odataServiceUri, CurUser.Sid));
             string jsonString = DbModel.GetJson(uri);
             var subordinatesList = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<String, String>>>(jsonString).Select(it => it.Key).ToList();
             filter = PredicateExtensions.And(filter, it => it.CreaterSid == CurUser.Sid || subordinatesList.Contains(it.CreaterSid));
