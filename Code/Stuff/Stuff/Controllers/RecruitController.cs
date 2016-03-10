@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using DALCoordination.Entities;
 using DALStuff.Models;
 using Infrustructer;
+using Newtonsoft.Json;
 using Stuff.Helpers;
 using Stuff.Models;
 using Stuff.Objects;
@@ -30,6 +34,13 @@ namespace Stuff.Controllers
             DateTime createDat;
             DateTime changeDat;
             Expression<Func<request, bool>> filter = it => it.Enabled;
+
+            string OdataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
+            Uri uri = new Uri(String.Format("{0}/Employee/GetSubordinatesSimple?sid={1}", OdataServiceUri, CurUser.Sid));
+            string jsonString = DbModel.GetJson(uri);
+            var subordinatesList = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<String,String>>>(jsonString).Select(it=>it.Key).ToList();
+            filter = PredicateExtensions.And(filter, it => it.SidCreator == CurUser.Sid || subordinatesList.Contains(it.SidCreator));
+
             int id;
             if (int.TryParse(cid, out id))
                 filter = PredicateExtensions.And(filter, it => it.Id == id);
@@ -159,7 +170,7 @@ namespace Stuff.Controllers
             return Json(new { });
         }
 
-        public ActionResult Coordinations(int? topRows, int? page, string cid, string pos, string cDat, string stat,
+        public ActionResult Coordinations(int? topRows, int? all, int? page, string cid, string pos, string cDat, string stat,
             string added, string changed)
         {
             if (!CurUser.HasAccess(AdGroup.RecruitControler, AdGroup.RecruitManager)) return null;
@@ -172,6 +183,17 @@ namespace Stuff.Controllers
             DateTime createDat;
             DateTime changeDat;
             Expression<Func<WfwDocumentExecution, bool>> filter = it => it.Enabled;
+
+            string OdataServiceUri = ConfigurationManager.AppSettings["OdataServiceUri"];
+            Uri uri = new Uri(String.Format("{0}/Employee/GetSubordinatesSimple?sid={1}", OdataServiceUri, CurUser.Sid));
+            string jsonString = DbModel.GetJson(uri);
+            var subordinatesList = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<String, String>>>(jsonString).Select(it => it.Key).ToList();
+            filter = PredicateExtensions.And(filter, it => it.CreaterSid == CurUser.Sid || subordinatesList.Contains(it.CreaterSid));
+
+            if (!all.HasValue || all < 1)
+                filter = PredicateExtensions.And(filter, it => it.EndDate == null);
+
+
             int id;
             if (int.TryParse(cid, out id))
                 filter = PredicateExtensions.And(filter, it => it.Id == id);

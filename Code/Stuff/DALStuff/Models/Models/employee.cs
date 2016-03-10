@@ -14,6 +14,7 @@ namespace DALStuff.Models
             RequestsFromManagerRole = new List<request>();
             RequestsFromResponsibleRole = new List<request>();
             RequestsFromTeacherRole = new List<request>();
+            RequestsCreated = new List<request>();
         }
 
         public int id { get; set; }
@@ -54,5 +55,6 @@ namespace DALStuff.Models
         public virtual ICollection<request> RequestsFromManagerRole { get; set; }
         public virtual ICollection<request> RequestsFromResponsibleRole { get; set; }
         public virtual ICollection<request> RequestsFromTeacherRole { get; set; }
+        public virtual ICollection<request> RequestsCreated { get; set; }
     }
 }

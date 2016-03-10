@@ -93,6 +93,7 @@
 	[sid_responsible_person] VARCHAR(46) NULL, 
 	-- статус заявки
 	[id_status] INT NOT NULL,
+	[sid_creator] VARCHAR(46) NULL, 
     [HaveCoordination]        BIT CONSTRAINT [DK_requests_HaveCoordination] DEFAULT ((0)) NOT NULL,
 	[CoordinationPaused]        BIT CONSTRAINT [DK_requests_CoordinationStoped] DEFAULT ((0)) NOT NULL,
     [Enabled]        BIT CONSTRAINT [DK_requests_Enabled] DEFAULT ((1)) NOT NULL,
@@ -100,11 +101,13 @@
     CONSTRAINT [FK_requests_id_position] FOREIGN KEY ([id_position]) REFERENCES [dbo].[positions] ([id]),
     CONSTRAINT [FK_requests_id_reason] FOREIGN KEY ([id_reason]) REFERENCES [dbo].[request_reasons] ([id]),
 	CONSTRAINT [FK_requests_id_status] FOREIGN KEY ([id_status]) REFERENCES [dbo].[request_statuses] ([id]),
-	CONSTRAINT [FK_requests_id_manager] FOREIGN KEY ([sid_manager]) REFERENCES [dbo].[employees] ([ad_sid]),
-	CONSTRAINT [FK_requests_id_teacher] FOREIGN KEY ([sid_teacher]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_sid_manager] FOREIGN KEY ([sid_manager]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_sid_teacher] FOREIGN KEY ([sid_teacher]) REFERENCES [dbo].[employees] ([ad_sid]),
 	CONSTRAINT [FK_requests_id_department] FOREIGN KEY ([id_department]) REFERENCES [dbo].[departments] ([id]),
-	CONSTRAINT [FK_requests_id_contact_person] FOREIGN KEY ([sid_contact_person]) REFERENCES [dbo].[employees] ([ad_sid]),
-	CONSTRAINT [FK_requests_id_responsible_person] FOREIGN KEY ([sid_responsible_person]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_sid_contact_person] FOREIGN KEY ([sid_contact_person]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_sid_responsible_person] FOREIGN KEY ([sid_responsible_person]) REFERENCES [dbo].[employees] ([ad_sid]),
+	CONSTRAINT [FK_requests_sid_creator] FOREIGN KEY ([sid_creator]) REFERENCES [dbo].[employees] ([ad_sid]),
+
 );
 /*GO
 

@@ -10,6 +10,22 @@ namespace DALStuff.Models.Mapping
             this.HasKey(t => t.Id);
 
             // Properties
+            this.Property(t => t.SidManager)
+                .HasMaxLength(46);
+
+            this.Property(t => t.SidTeacher)
+                .HasMaxLength(46);
+
+            this.Property(t => t.SidContactPerson)
+                .HasMaxLength(46);
+
+            this.Property(t => t.SidResponsiblePerson)
+                .HasMaxLength(46);
+
+            this.Property(t => t.SidCreator)
+                .HasMaxLength(46);
+
+
             // Table & Column Mappings
             this.ToTable("requests");
             this.Property(t => t.Id).HasColumnName("id");
@@ -57,6 +73,7 @@ namespace DALStuff.Models.Mapping
             this.Property(t => t.SidContactPerson).HasColumnName("sid_contact_person");
             this.Property(t => t.SidResponsiblePerson).HasColumnName("sid_responsible_person");
             this.Property(t => t.IdStatus).HasColumnName("id_status").IsRequired();
+            this.Property(t => t.SidCreator).HasColumnName("sid_creator");
             this.Property(t => t.HaveCoordination).HasColumnName("HaveCoordination");
             this.Property(t => t.CoordinationPaused).HasColumnName("CoordinationPaused");
             this.Property(t => t.Enabled).HasColumnName("Enabled");
@@ -86,6 +103,11 @@ namespace DALStuff.Models.Mapping
             this.HasRequired(t => t.RequestStatus)
                 .WithMany(t => t.requests)
                 .HasForeignKey(d => d.IdStatus);
+            this.HasOptional(t => t.Creator)
+                .WithMany(t => t.RequestsCreated)
+                .HasForeignKey(d => d.SidCreator);
+
+
         }
     }
 }

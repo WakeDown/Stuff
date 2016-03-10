@@ -29,7 +29,7 @@ namespace Stuff.Services
             {
                 if (string.IsNullOrWhiteSpace(PrivateStuffConnectionString))
                     PrivateStuffConnectionString =
-                        ConfigurationManager.ConnectionStrings["StuffConnectionString"].ConnectionString/* + ";Password=sa"*/;
+                        ConfigurationManager.ConnectionStrings["StuffEntityConnectionString"].ConnectionString/* + ";Password=sa"*/;
 
                 return PrivateStuffConnectionString;
             }

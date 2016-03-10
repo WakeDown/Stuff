@@ -56,6 +56,7 @@ namespace DALStuff.Models
         public string SidContactPerson { get; set; }
         public string SidResponsiblePerson { get; set; }
         public int IdStatus { get; set; }
+        public string SidCreator { get; set; }
         public bool HaveCoordination { get; set; }
         public bool CoordinationPaused { get; set; }
         public bool Enabled { get; set; }
@@ -64,6 +65,7 @@ namespace DALStuff.Models
         public virtual employee ManagerPersom { get; set; }
         public virtual employee ResponsiblePerson { get; set; }
         public virtual employee TeacherPerson { get; set; }
+        public virtual employee Creator { get; set; }
         public virtual position Position { get; set; }
         public virtual RequestReason RequestReason { get; set; }
         public virtual RequestStatus RequestStatus { get; set; }

@@ -27,7 +27,7 @@ namespace Stuff.Objects
         //    }
         //}
 
-        protected static string GetJson(Uri uri)
+        public static string GetJson(Uri uri)
         {
             string result = String.Empty;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
