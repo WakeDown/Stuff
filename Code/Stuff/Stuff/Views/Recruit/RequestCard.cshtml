@@ -313,7 +313,7 @@
                 $('#delete').click(function() {
                     var $this = $(this);
                     showSpinnerAppendAndDisable($this);
-                    if (!confirm('Вы уверены, что хотите удалить заявку?')) return;
+                    if (!confirm('Вы уверены что хотите удалить вакансию?')) return;
                     $.ajax({
                         url: '@Url.Action("RequestDelete")',
                         method: 'POST',
@@ -327,9 +327,6 @@
                         }
                     });
                 });
-
-
-
 
             });
         </script>
