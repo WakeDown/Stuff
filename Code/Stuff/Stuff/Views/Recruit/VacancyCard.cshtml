@@ -16,10 +16,10 @@
 @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitManager, AdGroup.RecruitControler))
 {
     if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler) && Model.StateIsActive)
-     {
-         <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
-         <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
-     }
+    {
+        <button id="delete" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i> удалить</button>
+    }
+    <button id="change" class="btn btn-warning btn-xs pull-right" style="margin-right: 5px;"><i class="fa fa-edit"></i> изменить</button>
 }
     @*<link rel="stylesheet" type="text/css" href="../../Content/tiny.editor.min.css"/>
     <script src="../../Scripts/tiny.editor.min.js"></script>*@
@@ -819,6 +819,9 @@
                 $btnSave.click(saveVacancy);
                 $btnChange.replaceWith($btnSave);
 
+                @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler))
+                {
+                    <text>
                 var $cont = $('#personalManagerContainer');
                 $.ajax({
                     url: '@Url.Action("GetPersonalManagerList")',
@@ -830,11 +833,12 @@
                             $cont.append($select);
                             var optionNull = '<option value="">--выберите--</option>';
                             $select.append(optionNull);
-                            for (var i = 0; i <= data.length; i++) {
+                            for (var i = 0; i < data.length; i++) {
                                 var item = data[i];
                                 var option = '<option value="' + item.Key + '">' + item.Value + '</option>';
                                 $select.append(option);
                             }
+
                             $select.val('@Model.PersonalManagerSid');
                         }
                     },
@@ -842,6 +846,8 @@
                         alert('Ошибка при редактировании!');
                     }
                 });
+                </text>
+            }
 
                 var $contComment = $('#commentContainer');
                 $contComment.empty();

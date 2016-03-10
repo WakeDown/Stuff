@@ -106,6 +106,7 @@
             </th>
             <th>
                 @*<input id="stt" class="form-control input-xs" placeholder="Статус" value="@Request.QueryString["stt"]" />*@
+                Максимальный статус
             </th>
             @*<th>
                 <input id="dtcr" class="form-control input-xs" placeholder="Добавлена" value="@Request.QueryString["dtcr"]"/>
@@ -149,7 +150,7 @@
                      </td>
                      <td>@rv.PersonalManagerName</td>
                      <td>
-                         <strong>@rv.TopSelectionStateName</strong>
+                         <small>@rv.TopSelectionStateName</small>
                          <div name="topSelection" slid="@rv.TopSelectionId"></div>
                      </td>
                      @*<td>
@@ -160,7 +161,6 @@
                      @*<td><strong>Добавлена</strong>
                         <div><small class="text-nowrap">@rv.DateCreate.ToString("dd.MM.yyyy") - @rv.CreatorName</small></div>
                      </td>*@
-                     
                      @*<td>
                          <button name="del" class="btn btn-link btn-nopadding"><i class="fa fa-trash"></i></button>
                      </td>*@
@@ -180,7 +180,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             loadTopSelections();
             $('tr[vacid]').click(function() {
                 var id = $(this).attr('vacid');
@@ -204,22 +204,24 @@
             var $conts = $('[name=topSelection]');
             for (var i = 0; i < $conts.length; i++) {
                 var slid = $($conts[i]).attr('slid');
-                (function(i, slid) {
-                    $.ajax({
-                        url: '@Url.Action("GetTopSelection")',
-                        method: 'POST',
-                        data: {slid:slid},
-                        success: function (data) {
-                            var $cont = $('[name=topSelection][slid=' + slid+']');
-                            $cont.empty();
-                            $cont.append(getstateIndicate(data.FullStateCount, data.StateIsCancel));
-                            //console.log(data);
-                        },
-                        error: function () {
-                        }
-                    });
-                }(i, slid)
-                );
+                if (slid > 0) {
+                    (function(i, slid) {
+                            $.ajax({
+                                url: '@Url.Action("GetTopSelection")',
+                                method: 'POST',
+                                data: { slid: slid },
+                                success: function(data) {
+                                    var $cont = $('[name=topSelection][slid=' + slid + ']');
+                                    $cont.empty();
+                                    $cont.append(getstateIndicate(data.FullStateCount, data.StateIsCancel));
+                                    //console.log(data);
+                                },
+                                error: function() {
+                                }
+                            });
+                        }(i, slid)
+                    );
+                }
             }
 
         }
@@ -242,7 +244,7 @@
             $.ajax({
                 url: '@Url.Action("GetVacancyStateList")',
                 method: 'POST',
-                success: function (data) {
+                success: function(data) {
                     var $ul = $('<ul class="list-inline"></ul>');
                     $cont.append($ul);
                     if (data.length > 0) {
@@ -257,13 +259,13 @@
 
                         //var li = '<li><a name="stateGroupFilterItemAll" value="all" class="btn btn-block state-group-filter-item text-sm" style="background-color: #CFD8DC; color: #607D8B; border-color: #37474F; border-width: 1px; border-style: solid;"><span class="sel-mark text-success"><i class="fa fa-check-circle"></i></span><span class="badge" style="background-color:#607D8B">' + totalCount + '</span>&nbsp;Все&nbsp;</a></div>';
                         //$ul.append(li);
-                        $('[name="stateFilterItem"]').click(function () {
+                        $('[name="stateFilterItem"]').click(function() {
                             $(this).toggleClass('selected');
                             search();
                         });
                     }
                 },
-                error:function() {
+                error: function() {
                     alert('Не удалось загрузить фильтр статусов!');
                 }
             });
@@ -295,7 +297,7 @@
             var momy = $('[name=managerOnlyMy]:checked').val();
             url = updateQueryStringParameter(url, 'momy', momy);
             </text>
-        }
+            }
             //var $grpStateElem = $('[name="stateFilterItem"].selected');
             //var state = '';
             //if ($grpStateElem.length > 0) {
