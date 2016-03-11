@@ -78,10 +78,13 @@
     <Build Include="dbo\Tables\WfwDocumentWorkSchemes.sql" />
   </ItemGroup>
   <ItemGroup>
-    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
-      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-      <DatabaseVariableLiteralValue>sys</DatabaseVariableLiteralValue>
+    <PostDeploy Include="PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\110\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\110\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>True</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
     </ArtifactReference>
   </ItemGroup>
   <ItemGroup>
@@ -89,17 +92,14 @@
       <Name>StuffDB</Name>
       <Project>{288c2ab9-cc2c-4d34-9337-d79d984d8e1e}</Project>
       <Private>True</Private>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <SuppressMissingDependenciesErrors>True</SuppressMissingDependenciesErrors>
       <DatabaseSqlCmdVariable>StuffDB</DatabaseSqlCmdVariable>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="StuffDB">
-      <DefaultValue>StuffDB</DefaultValue>
+      <DefaultValue>Stuff</DefaultValue>
       <Value>$(SqlCmdVar__1)</Value>
     </SqlCmdVariable>
-  </ItemGroup>
-  <ItemGroup>
-    <PostDeploy Include="PostDeployment.sql" />
   </ItemGroup>
 </Project>

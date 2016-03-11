@@ -21,6 +21,8 @@ namespace DALCoordination.Entities.Mapping
             this.Property(t => t.WfwDocumentWorkStagesId).HasColumnName("WfwDocumentWorkStagesId");
             this.Property(t => t.Date).HasColumnName("Date");
             this.Property(t => t.CreaterSid).HasColumnName("CreaterSid");
+            this.Property(t => t.RoleId).HasColumnName("RoleId");
+            this.Property(t => t.AlternateId).HasColumnName("AlternateId");
             this.Property(t => t.ResultId).HasColumnName("ResultId");
             this.Property(t => t.Comment).HasColumnName("Comment");
             this.Property(t => t.Enabled).HasColumnName("Enabled");
@@ -35,7 +37,12 @@ namespace DALCoordination.Entities.Mapping
             this.HasRequired(t => t.WfwEventResult)
                 .WithMany(t => t.WfwExecutionEvents)
                 .HasForeignKey(d => d.ResultId);
-
+            this.HasOptional(t => t.EmployeeRole)
+                .WithMany(t => t.WfwExecutionEventsFromRole)
+                .HasForeignKey(d => d.RoleId);
+            this.HasOptional(t => t.EmployeeAlternate)
+                .WithMany(t => t.WfwExecutionEventFormAlternate)
+                .HasForeignKey(d => d.AlternateId);
         }
     }
 }

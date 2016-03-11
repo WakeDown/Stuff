@@ -122,6 +122,7 @@
     <Compile Include="Models\Mapping\recruit_vacancy_statesMap.cs" />
     <Compile Include="Models\Mapping\recruit_vacancy_state_historyMap.cs" />
     <Compile Include="Models\Mapping\requestMap.cs" />
+    <Compile Include="Models\Mapping\request_historyMap.cs" />
     <Compile Include="Models\Mapping\request_reasonsMap.cs" />
     <Compile Include="Models\Mapping\request_statusesMap.cs" />
     <Compile Include="Models\Mapping\rest_holidaysMap.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Models\recruit_vacancy_states.cs" />
     <Compile Include="Models\recruit_vacancy_state_history.cs" />
     <Compile Include="Models\request.cs" />
+    <Compile Include="Models\request_history.cs" />
     <Compile Include="Models\request_reasons.cs" />
     <Compile Include="Models\request_statuses.cs" />
     <Compile Include="Models\rest_holidays.cs" />

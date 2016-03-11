@@ -7,13 +7,13 @@ namespace DALCoordination.Entities
         public WfwEventResult()
         {
             this.WfwExecutionEvents = new List<WfwExecutionEvent>();
-            this.WfwDocumentWorkSchemes = new List<WfwDocumentWorkStages>();
+            this.WfwDocumentWorkStages = new List<WfwDocumentWorkStages>();
         }
 
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Success { get; set; }
         public virtual ICollection<WfwExecutionEvent> WfwExecutionEvents { get; set; }
-        public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkSchemes { get; set; }
+        public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkStages { get; set; }
     }
 }

@@ -16,6 +16,6 @@ namespace DALCoordination.Entities
         public virtual Employee Employee { get; set; }
         public virtual ICollection<WfwSchemeStage> WfwSchemeStages { get; set; }
         public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkSchemes { get; set; }
-
+        public virtual ICollection<WfwExecutionEvent> WfwExecutionEventsFromRole { get; set; }
     }
 }

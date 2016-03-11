@@ -110,6 +110,7 @@ namespace DALStuff.Models
         public DbSet<users_view> users_view { get; set; }
         public DbSet<TestClass> TestClasses { get; set; }
         public DbSet<Test> Tests { get; set; }
+        public DbSet<request_history> request_historyes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -185,6 +186,8 @@ namespace DALStuff.Models
             modelBuilder.Configurations.Add(new users_viewMap());
             modelBuilder.Configurations.Add(new TestClassMap());
             modelBuilder.Configurations.Add(new TestMap());
+            modelBuilder.Configurations.Add(new request_historyMap());
+
         }
     }
 }

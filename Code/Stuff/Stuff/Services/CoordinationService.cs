@@ -91,7 +91,7 @@ namespace Stuff.Services
                 var execution = coordinationContext.WfwDocumentExecutions.First(it => it.Enabled && it.Id == executionId);
 
                 return
-                    execution.WfwDocumentWorkSchemes
+                    execution.WfwDocumentWorkStages
                     .Any(it => it.Enabled && it.Level == execution.Level
                     && it.WfwEventResult == null
                     &&(it.CoordinatorSid == userSid ||

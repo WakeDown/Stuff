@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace DALCoordination.Entities
 {
@@ -18,5 +19,6 @@ namespace DALCoordination.Entities
         /// Кого замещают
         /// </summary>
         public virtual Employee Replaced { get; set; }
+        public virtual ICollection<WfwExecutionEvent> WfwExecutionEventFormAlternate { get; set; }
     }
 }

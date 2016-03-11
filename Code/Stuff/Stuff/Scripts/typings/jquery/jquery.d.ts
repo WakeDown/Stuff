@@ -32,7 +32,7 @@ interface JQueryAjaxSettings {
      */
     async?: boolean;
     /**
-     * A pre-request callback function that can be used to modify the jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object before it is sent. Use this to set custom headers, etc. The jqXHR and settings objects are passed as arguments. This is an Ajax Event. Returning false in the beforeSend function will cancel the request. As of jQuery 1.5, the beforeSend option will be called regardless of the type of request.
+     * A pre-request callback function that can be used to modify the jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object before it is sent. Use this to set custom headers, etc. The jqXHR and settings objects are passed as arguments. This is an Ajax Event. Returning false in the beforeSend function will cancel the Request. As of jQuery 1.5, the beforeSend option will be called regardless of the type of Request.
      */
     beforeSend? (jqXHR: JQueryXHR, settings: JQueryAjaxSettings): any;
     /**
@@ -40,7 +40,7 @@ interface JQueryAjaxSettings {
      */
     cache?: boolean;
     /**
-     * A function to be called when the request finishes (after success and error callbacks are executed). The function gets passed two arguments: The jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object and a string categorizing the status of the request ("success", "notmodified", "error", "timeout", "abort", or "parsererror"). As of jQuery 1.5, the complete setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
+     * A function to be called when the request finishes (after success and error callbacks are executed). The function gets passed two arguments: The jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object and a string categorizing the status of the Request ("success", "notmodified", "error", "timeout", "abort", or "parsererror"). As of jQuery 1.5, the complete setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
     complete? (jqXHR: JQueryXHR, textStatus: string): any;
     /**
@@ -90,7 +90,7 @@ interface JQueryAjaxSettings {
      */
     headers?: { [key: string]: any; };
     /**
-     * Allow the request to be successful only if the response has changed since the last request. This is done by checking the Last-Modified header. Default value is false, ignoring the header. In jQuery 1.4 this technique also checks the 'etag' specified by the server to catch unmodified data.
+     * Allow the request to be successful only if the response has changed since the last Request. This is done by checking the Last-Modified header. Default value is false, ignoring the header. In jQuery 1.4 this technique also checks the 'etag' specified by the server to catch unmodified data.
      */
     ifModified?: boolean;
     /**
@@ -134,7 +134,7 @@ interface JQueryAjaxSettings {
      */
     success? (data: any, textStatus: string, jqXHR: JQueryXHR): any;
     /**
-     * Set a timeout (in milliseconds) for the request. This will override any global timeout set with $.ajaxSetup(). The timeout period starts at the point the $.ajax call is made; if several other requests are in progress and the browser has no connections available, it is possible for a request to time out before it can be sent. In jQuery 1.4.x and below, the XMLHttpRequest object will be in an invalid state if the request times out; accessing any object members may throw an exception. In Firefox 3.0+ only, script and JSONP requests cannot be cancelled by a timeout; the script will run even if it arrives after the timeout period.
+     * Set a timeout (in milliseconds) for the request. This will override any global timeout set with $.ajaxSetup(). The timeout period starts at the point the $.ajax call is made; if several other requests are in progress and the browser has no connections available, it is possible for a Request to time out before it can be sent. In jQuery 1.4.x and below, the XMLHttpRequest object will be in an invalid state if the Request times out; accessing any object members may throw an exception. In Firefox 3.0+ only, script and JSONP requests cannot be cancelled by a timeout; the script will run even if it arrives after the timeout period.
      */
     timeout?: number;
     /**
@@ -142,7 +142,7 @@ interface JQueryAjaxSettings {
      */
     traditional?: boolean;
     /**
-     * The type of request to make ("POST" or "GET"), default is "GET". Note: Other HTTP request methods, such as PUT and DELETE, can also be used here, but they are not supported by all browsers.
+     * The type of request to make ("POST" or "GET"), default is "GET". Note: Other HTTP Request methods, such as PUT and DELETE, can also be used here, but they are not supported by all browsers.
      */
     type?: string;
     /**

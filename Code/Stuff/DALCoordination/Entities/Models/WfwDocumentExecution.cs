@@ -7,7 +7,7 @@ namespace DALCoordination.Entities
         public WfwDocumentExecution()
         {
             this.Documents = new List<Document>();
-            this.WfwDocumentWorkSchemes = new List<WfwDocumentWorkStages>();
+            this.WfwDocumentWorkStages = new List<WfwDocumentWorkStages>();
         }
 
         public int Level { get; set; }
@@ -16,6 +16,6 @@ namespace DALCoordination.Entities
         public System.DateTimeOffset? EndDate { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
         public virtual Employee CreatorEmployee { get; set; }
-        public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkSchemes { get; set; }
+        public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkStages { get; set; }
     }
 }

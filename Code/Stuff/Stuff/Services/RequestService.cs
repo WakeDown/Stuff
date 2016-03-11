@@ -214,7 +214,7 @@ namespace Stuff.Services
 
                     if (continueFromLastStage)
                     {
-                        var schemesToRevert = execution.WfwDocumentWorkSchemes.Where(it => it.Enabled
+                        var schemesToRevert = execution.WfwDocumentWorkStages.Where(it => it.Enabled
                             && it.Level == execution.Level && it.WfwEventResult != null && !it.WfwEventResult.Success);
                         schemesToRevert.All(it =>
                         {
@@ -226,7 +226,7 @@ namespace Stuff.Services
                     }
                     else
                     {
-                        var schemesToRevert = execution.WfwDocumentWorkSchemes.Where(it => it.Enabled);
+                        var schemesToRevert = execution.WfwDocumentWorkStages.Where(it => it.Enabled);
                         schemesToRevert.All(it =>
                         {
                             it.Date = null;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace DALStuff.Models
 {
@@ -69,5 +70,7 @@ namespace DALStuff.Models
         public virtual position Position { get; set; }
         public virtual RequestReason RequestReason { get; set; }
         public virtual RequestStatus RequestStatus { get; set; }
+        public virtual ICollection<request_history> RequestHistoryes { get; set; }
+
     }
 }

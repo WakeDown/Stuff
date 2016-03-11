@@ -51,5 +51,6 @@ namespace DALCoordination.Entities
         public virtual ICollection<WfwDocumentExecution> WfwDocumentExecutions { get; set; }
         public virtual ICollection<WfwExecutionEvent> WfwExecutionEvents { get; set; }
         public virtual ICollection<WfwDocumentWorkStages> WfwDocumentWorkSchemes { get; set; }
-        public virtual ICollection<WfwSchemeStage> WfwSchemeStages { get; set; }    }
+        public virtual ICollection<WfwSchemeStage> WfwSchemeStages { get; set; }
+    }
 }

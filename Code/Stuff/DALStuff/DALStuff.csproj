@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Mapping\request_historyMap.cs" />
     <Compile Include="Models\Models\branch_offices.cs" />
     <Compile Include="Models\Models\budget.cs" />
     <Compile Include="Models\Models\CaptureOutputLog.cs" />
@@ -181,13 +182,14 @@
     <Compile Include="Models\Models\recruit_vacancy_states.cs" />
     <Compile Include="Models\Models\recruit_vacancy_state_history.cs" />
     <Compile Include="Models\Models\request.cs" />
+    <Compile Include="Models\Models\request_history.cs" />
     <Compile Include="Models\Models\request_reason.cs" />
     <Compile Include="Models\Models\RequestStatus.cs" />
     <Compile Include="Models\Models\rest_holidays.cs" />
     <Compile Include="Models\Models\rest_holiday_transfer_days.cs" />
     <Compile Include="Models\Models\statement_printed.cs" />
     <Compile Include="Models\Models\statement_types.cs" />
-    <Compile Include="Models\Models\StuffContext.cs" />
+    <Compile Include="StuffContext.cs" />
     <Compile Include="Models\Models\sysdiagram.cs" />
     <Compile Include="Models\Models\Test.cs" />
     <Compile Include="Models\Models\TestClass.cs" />
