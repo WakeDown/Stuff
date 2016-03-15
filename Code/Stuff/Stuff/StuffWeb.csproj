@@ -228,6 +228,7 @@
     <Compile Include="Models\RecruitSelection.cs" />
     <Compile Include="Models\RecruitVacancy.cs" />
     <Compile Include="Models\RecruitVacancyCause.cs" />
+    <Compile Include="Models\RecruitVacancyType.cs" />
     <Compile Include="Models\Report.cs" />
     <Compile Include="Models\RestHoliday.cs" />
     <Compile Include="Models\StateItem.cs" />

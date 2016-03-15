@@ -901,7 +901,16 @@
         function saveVacancy() {
             var $this = $(this);
             showSpinnerAppendAndDisable($this);
+            @if (ViewBag.CurUser.HasAccess(AdGroup.RecruitControler))
+            {<text>
             var pesrManager = $('#personalManager').val();
+            </text>
+            }
+            else{
+                <text>
+            var pesrManager = '@Html.Raw(Model.PersonalManagerSid)';
+             </text>
+            }
             var comment = $('#comment').val();
             $.ajax({
                 url: '@Url.Action("ChangeVacancy")',
